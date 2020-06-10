@@ -23,6 +23,7 @@
   
   <ItemGroup>
     <PackageReference Include="MariGlobals" Version="2.0.1-alpha" />
+    <PackageReference Include="System.Collections.Immutable" Version="1.7.1" />
   </ItemGroup>
 
 </Project>
