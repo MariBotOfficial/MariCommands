@@ -18,7 +18,11 @@
   
   <ItemGroup>
     <None Include="MariDiscordRestIcon.png" Pack="true" Visible="false" PackagePath="" />
-    <None Include="..\LICENSE" Pack="true" Visible="true" PackagePath=""/>
+    <None Include="..\LICENSE" Pack="true" Visible="true" PackagePath="" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="MariGlobals" Version="2.0.1-alpha" />
   </ItemGroup>
 
 </Project>
