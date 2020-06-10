@@ -1,4 +1,4 @@
-namespace MariCommands.Services
+namespace MariCommands
 {
     /// <summary>
     /// A service that can build commands.
