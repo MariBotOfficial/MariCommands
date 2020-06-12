@@ -22,5 +22,8 @@ namespace MariCommands
 
         /// <inheritdoc />
         public string Separator { get; set; } = " ";
+
+        /// <inheritdoc />
+        public bool AutoCreateNullables { get; set; } = false;
     }
 }

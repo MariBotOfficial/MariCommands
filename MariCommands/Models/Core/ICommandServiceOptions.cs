@@ -43,5 +43,10 @@ namespace MariCommands
         /// Gets or sets the default command separator to be used for commands and groups.
         /// </summary>
         string Separator { get; set; }
+
+        /// <summary>
+        /// Gets or sets if this lib will auto create a nullable for type readers.
+        /// </summary>
+        bool AutoCreateNullables { get; set; }
     }
 }
