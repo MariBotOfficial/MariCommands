@@ -8,6 +8,13 @@ namespace MariCommands
     public interface ICommandServiceOptions
     {
         /// <summary>
+        /// Create an instance of <see cref="ICommandServiceOptions" /> with
+        /// default values.
+        /// </summary>
+        static ICommandServiceOptions Default
+            => new CommandServiceOptions();
+
+        /// <summary>
         /// Gets or sets the default lifetime for modules.
         /// </summary>
         ModuleLifetime ModuleLifetime { get; set; }
