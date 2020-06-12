@@ -20,7 +20,7 @@ namespace MariCommands
         /// <param name="provider">An <see cref="IServiceProvider" />.</param>
         public CommandService(IServiceProvider provider)
         {
-            _provider = provider ?? MariCommandsDependencyInjectionExtensions.CreateDefaultServiceProvider();
+            _provider = provider ?? ServiceUtils.CreateDefaultServiceProvider();
             _loggerFactory = _provider.GetOrDefault<ILoggerFactory, LoggerFactory>();
             // TODO: _moduleBuilder = _provider.GetOrDefault<IModuleBuilder, ModuleBuilder>();
             // TODO: _commandExecutor = _provider.GetOrDefault<ICommandExecutor, CommandExecutor>();

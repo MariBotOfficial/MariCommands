@@ -19,25 +19,16 @@ namespace MariCommands
             return provider.GetService<T>() ?? new TDefault();
         }
 
-        internal static T GetOrDefault<T, TDefault>(this IServiceProvider provider, TDefault defaultValue)
-            where TDefault : T, new()
+        internal static T GetOrDefault<T>(this IServiceProvider provider, T defaultValue)
         {
+
             if (provider.HasNoContent())
                 return defaultValue;
 
             return provider.GetService<T>() ?? defaultValue;
         }
 
-        internal static IServiceProvider CreateDefaultServiceProvider()
-        {
-            var collection = new ServiceCollection();
-
-            collection.AddSingleton<ILoggerFactory, LoggerFactory>();
-            //TODO: collection.AddSingleton<IModuleBuilder, ModuleBuilder>();
-            //TODO: collection.AddSingleton<IModuleSaver, ModuleSaver>();
-            //TODO: collection.AddSingleton<ICommandExecutor, CommandExecutor();
-
-            return collection.BuildServiceProvider();
-        }
+        internal static T Test<T>(this T t)
+            => t;
     }
 }
