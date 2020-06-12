@@ -27,8 +27,5 @@ namespace MariCommands
 
             return provider.GetService<T>() ?? defaultValue;
         }
-
-        internal static T Test<T>(this T t)
-            => t;
     }
 }
