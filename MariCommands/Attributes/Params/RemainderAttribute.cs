@@ -1,6 +1,6 @@
 using System;
 
-namespace MariCommands.Attributes.Params
+namespace MariCommands
 {
     /// <summary>
     /// Defines all remaining text will be used for parse this param.

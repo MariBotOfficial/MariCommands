@@ -26,13 +26,13 @@ namespace MariCommands
         public static void NotNull(this object obj, string argName)
         {
             if (obj.HasNoContent())
-                throw new ArgumentNullException(argName);
+                throw new ArgumentNullException($"{argName} must not be null.", argName);
         }
 
         public static void NotNullOrWhiteSpace(this string str, string argName)
         {
             if (string.IsNullOrWhiteSpace(str))
-                throw new ArgumentNullException(argName);
+                throw new ArgumentNullException($"{argName} must not be null or white space.", argName);
         }
     }
 }
