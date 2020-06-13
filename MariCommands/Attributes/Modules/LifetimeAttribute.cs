@@ -14,7 +14,7 @@ namespace MariCommands
         public ModuleLifetime Value { get; }
 
         /// <summary>
-        /// Creates a new instance off <see cref="LifetimeAttribute" />.
+        /// Creates a new instance of <see cref="LifetimeAttribute" />.
         /// </summary>
         /// <param name="lifeTime">The <see cref="ModuleLifetime" /> of this module.</param>
         public LifetimeAttribute(ModuleLifetime lifeTime)

@@ -14,7 +14,7 @@ namespace MariCommands
         public string Value { get; }
 
         /// <summary>
-        /// Creates a new instance off <see cref="RemarksAttribute" />.
+        /// Creates a new instance of <see cref="RemarksAttribute" />.
         /// </summary>
         /// <param name="remarks">Any remarks for this module, command or param.</param>
         /// <exception cref="ArgumentNullException">

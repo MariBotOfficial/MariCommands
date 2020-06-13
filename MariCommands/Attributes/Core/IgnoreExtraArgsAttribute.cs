@@ -14,7 +14,7 @@ namespace MariCommands
         public bool Value { get; }
 
         /// <summary>
-        /// Creates a new instance off <see cref="IgnoreExtraArgsAttribute" />
+        /// Creates a new instance of <see cref="IgnoreExtraArgsAttribute" />
         /// with value: <see langword="true" />.
         /// </summary>
         public IgnoreExtraArgsAttribute() : this(true)
@@ -23,7 +23,7 @@ namespace MariCommands
         }
 
         /// <summary>
-        /// Creates a new instance off <see cref="IgnoreExtraArgsAttribute" />.
+        /// Creates a new instance of <see cref="IgnoreExtraArgsAttribute" />.
         /// </summary>
         /// <param name="ignoreExtraArgs">If this module or command will ignore extra args.</param>
         public IgnoreExtraArgsAttribute(bool ignoreExtraArgs)

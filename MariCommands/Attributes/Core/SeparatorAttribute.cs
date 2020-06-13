@@ -14,7 +14,7 @@ namespace MariCommands
         public string Value { get; }
 
         /// <summary>
-        /// Creates a new instance off <see cref="SeparatorAttribute" />.
+        /// Creates a new instance of <see cref="SeparatorAttribute" />.
         /// </summary>
         /// <param name="separator">The separator of the args for this module or command.</param>
         /// <exception cref="ArgumentNullException">

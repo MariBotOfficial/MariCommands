@@ -15,7 +15,7 @@ namespace MariCommands
 
 
         /// <summary>
-        /// Creates a new instance off <see cref="MultiMatchHandlingAttribute" />.
+        /// Creates a new instance of <see cref="MultiMatchHandlingAttribute" />.
         /// </summary>
         /// <param name="multiMatchHandling">How multi matches will be handled for this module.</param>
         public MultiMatchHandlingAttribute(MultiMatchHandling multiMatchHandling)

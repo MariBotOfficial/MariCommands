@@ -14,7 +14,7 @@ namespace MariCommands
         public RunMode Value { get; }
 
         /// <summary>
-        /// Creates a new instance off <see cref="RunModeAttribute" />.
+        /// Creates a new instance of <see cref="RunModeAttribute" />.
         /// </summary>
         /// <param name="runMode">The <see cref="RunMode" /> for this module or command.</param>
         public RunModeAttribute(RunMode runMode)
