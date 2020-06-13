@@ -20,7 +20,7 @@ namespace MariCommands
         Task<ICommandBuilder> BuildCommandAsync(Type type, MethodInfo methodInfo);
 
         /// <summary>
-        /// Asynchronously verify if thhe method is command.
+        /// Asynchronously verify if hhe method is a command.
         /// </summary>
         /// <param name="type">The module type.</param>
         /// <param name="methodInfo">The real method info to be verified.</param>
