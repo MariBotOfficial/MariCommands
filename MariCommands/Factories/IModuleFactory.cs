@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace MariCommands.Factories
+namespace MariCommands
 {
     /// <summary>
     /// A service that can build and create modules.

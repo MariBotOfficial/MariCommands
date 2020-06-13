@@ -1,6 +1,6 @@
 using System;
 
-namespace MariCommands.Attributes.Core
+namespace MariCommands
 {
     /// <summary>
     /// Defines the <see cref="StringComparison" /> for search commands in this module or command.

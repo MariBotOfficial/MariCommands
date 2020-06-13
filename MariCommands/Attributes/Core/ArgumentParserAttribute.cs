@@ -17,7 +17,7 @@ namespace MariCommands
         /// Creates a new instance of <see cref="ArgumentParserAttribute" />.
         /// </summary>
         /// <param name="type">The type of <see cref="IArgumentParser" /> for this module or command.</param>
-        /// /// <exception cref="ArgumentNullException">
+        /// <exception cref="ArgumentNullException">
         /// <param ref="type" /> must not be null.
         /// </exception>
         public ArgumentParserAttribute(Type type)
