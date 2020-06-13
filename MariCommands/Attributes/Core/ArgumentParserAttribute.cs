@@ -1,6 +1,6 @@
 using System;
 
-namespace MariCommands.Attributes.Core
+namespace MariCommands
 {
     /// <summary>
     /// Defines the type of <see cref="IArgumentParser" /> for this module or command.
