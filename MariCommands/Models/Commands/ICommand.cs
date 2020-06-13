@@ -70,7 +70,10 @@ namespace MariCommands
         /// </summary>
         IReadOnlyCollection<PreconditionAttribute> Preconditions { get; }
 
-        // TODO: IReadOnlyCollection<IParameter> Parameters { get; }
+        /// <summary>
+        /// All parameters of this command.
+        /// </summary>
+        IReadOnlyCollection<IParameter> Parameters { get; }
 
         /// <summary>
         /// Indicates if this command is enabled or not.
