@@ -13,7 +13,6 @@ namespace MariCommands.Attributes.Core
         /// </summary>
         public StringComparison Value { get; }
 
-
         /// <summary>
         /// Creates a new instance off <see cref="StringComparisonAttribute" />.
         /// </summary>
