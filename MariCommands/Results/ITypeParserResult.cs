@@ -18,15 +18,13 @@ namespace MariCommands
         /// </summary>
         T Value { get; }
 
-        // TODO: change specified success and fail results.
-
         /// <summary>
         /// Build a success type parser result.
         /// </summary>
         /// <param name="value">The parsed value.</param>
         /// <returns>A success type parser result.</returns>
         static ITypeParserResult<T> FromSuccess(T value)
-            => new TypeParserResult<T>(value);
+            => new TypeParserSuccessResult<T>(value);
 
         /// <summary>
         /// Build a failed type parser result.
@@ -34,7 +32,7 @@ namespace MariCommands
         /// <param name="reason">The reason of the error.</param>
         /// <returns>A failed type parser result.</returns>
         static ITypeParserResult<T> FromError(string reason)
-            => new TypeParserResult<T>(reason);
+            => new TypeParserFailResult<T>(reason);
 
         /// <summary>
         /// Build a faile type parser result.
@@ -42,6 +40,6 @@ namespace MariCommands
         /// <param name="exception">The exception ocurried during the parsing.</param>
         /// <returns>A failed type parser result.</returns>
         static ITypeParserResult<T> FromException(Exception exception)
-            => new TypeParserResult<T>(exception);
+            => new TypeParserFailResult<T>(exception);
     }
 }
