@@ -21,7 +21,6 @@ namespace MariCommands
 
         internal static T GetOrDefault<T>(this IServiceProvider provider, T defaultValue)
         {
-
             if (provider.HasNoContent())
                 return defaultValue;
 
