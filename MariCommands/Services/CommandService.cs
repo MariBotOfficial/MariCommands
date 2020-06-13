@@ -28,19 +28,19 @@ namespace MariCommands
 
         /// <inheritdoc />
         public Task AddModuleAsync<T>(T type)
-            => _moduleBuilder.AddModuleAsync(type);
+            => throw new NotImplementedException();
 
         /// <inheritdoc />
         public Task AddModuleAsync<T>()
-            => _moduleBuilder.AddModuleAsync<T>();
+            => throw new NotImplementedException();
 
         /// <inheritdoc />
         public Task AddModuleAsync(Type type)
-            => _moduleBuilder.AddModuleAsync(type);
+            => throw new NotImplementedException();
 
         /// <inheritdoc />
         public Task AddModulesAsync(Assembly assembly)
-            => _moduleBuilder.AddModulesAsync(assembly);
+            => throw new NotImplementedException();
 
         /// <inheritdoc />
         public Task<IResult> ExecuteAsync(string command)
