@@ -35,7 +35,7 @@ namespace MariCommands
             => new TypeParserFailResult<T>(reason);
 
         /// <summary>
-        /// Build a faile type parser result.
+        /// Build a failed type parser result.
         /// </summary>
         /// <param name="exception">The exception ocurried during the parsing.</param>
         /// <returns>A failed type parser result.</returns>
