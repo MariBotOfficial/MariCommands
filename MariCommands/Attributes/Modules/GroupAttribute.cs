@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 
-namespace MariCommands.Attributes.Modules
+namespace MariCommands
 {
     /// <summary>
     /// Mark a class as group of the parent module.
