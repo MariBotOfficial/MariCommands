@@ -1,6 +1,6 @@
 using System;
 
-namespace MariCommands.Attributes.Core
+namespace MariCommands
 {
     /// <summary>
     /// Defines if this module or command will ignore extra args.
