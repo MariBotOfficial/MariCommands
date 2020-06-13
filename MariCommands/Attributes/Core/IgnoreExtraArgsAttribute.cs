@@ -6,7 +6,7 @@ namespace MariCommands
     /// Defines if this module or command will ignore extra args.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-    public class IgnoreExtraArgsAttribute : Attribute
+    public sealed class IgnoreExtraArgsAttribute : Attribute
     {
         /// <summary>
         /// If this module or command will ignore extra args.

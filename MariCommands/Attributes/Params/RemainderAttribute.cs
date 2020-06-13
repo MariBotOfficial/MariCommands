@@ -6,7 +6,7 @@ namespace MariCommands
     /// Defines all remaining text will be used for parse this param.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
-    public class RemainderAttribute : Attribute
+    public sealed class RemainderAttribute : Attribute
     {
 
     }

@@ -6,7 +6,7 @@ namespace MariCommands
     /// Prevents this specific module (not for inherited modules) to be listed in Modules.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, Inherited = false)]
-    public class DontLoadAttribute : Attribute
+    public sealed class DontLoadAttribute : Attribute
     {
 
     }
