@@ -25,7 +25,7 @@ namespace MariCommands
         string Remarks { get; }
 
         /// <summary>
-        /// The <see cref="RunMode" /> of this module.
+        /// The <see cref="RunMode" /> for this module.
         /// </summary>
         RunMode RunMode { get; }
 
@@ -35,9 +35,29 @@ namespace MariCommands
         bool IgnoreExtraArgs { get; }
 
         /// <summary>
-        /// The lifetime of this module.
+        /// The lifetime for this module.
         /// </summary>
         ModuleLifetime ModuleLifetime { get; }
+
+        /// <summary>
+        /// The default argument parser type for this module.
+        /// </summary>
+        Type ArgumentParserType { get; }
+
+        /// <summary>
+        /// Defines how multi matches will be handled in this module.
+        /// </summary>
+        MultiMatchHandling MultiMatchHandling { get; }
+
+        /// <summary>
+        /// The separator for this module.
+        /// </summary>
+        string Separator { get; }
+
+        /// <summary>
+        /// The default comparison for search commands in this module.
+        /// </summary>
+        StringComparison? Comparison { get; }
 
         /// <summary>
         /// Aliases for this module.
@@ -54,9 +74,15 @@ namespace MariCommands
         /// </summary>
         IReadOnlyCollection<Attribute> Attributes { get; }
 
-        // TODO: IReadOnlyCollection<ICommand> Commands { get; }
+        /// <summary>
+        /// All comands of this module.
+        /// </summary>
+        IReadOnlyCollection<ICommand> Commands { get; }
 
-        // TODO: IReadOnlyCollection<PreconditionAttribute> Preconditions { get; }
+        /// <summary>
+        /// All preconditions to be passed for this module.
+        /// </summary>
+        IReadOnlyCollection<PreconditionAttribute> Preconditions { get; }
 
         /// <summary>
         /// The parent module of this module.
