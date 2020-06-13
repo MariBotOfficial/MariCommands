@@ -17,5 +17,17 @@ namespace MariCommands
             if (collection.HasNoContent())
                 throw new ArgumentNullException(argName);
         }
+
+        public static void NotNull(this object obj, string argName)
+        {
+            if (obj.HasNoContent())
+                throw new ArgumentNullException(argName);
+        }
+
+        public static void NotNullOrWhiteSpace(this string str, string argName)
+        {
+            if (string.IsNullOrWhiteSpace(str))
+                throw new ArgumentNullException(argName);
+        }
     }
 }
