@@ -2,27 +2,27 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 
-namespace MariCommands
+namespace MariCommands.Attributes.Modules
 {
     /// <summary>
-    /// Mark a method to be a Command.
+    /// Mark a class as group of the parent module.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method)]
-    public class CommandAttribute : Attribute
+    [AttributeUsage(AttributeTargets.Class)]
+    public class GroupAttribute : Attribute
     {
         /// <summary>
-        /// All aliases for this command.
+        /// The aliases of this group.
         /// </summary>
         public IReadOnlyCollection<string> Aliases { get; }
 
         /// <summary>
-        /// Creates a new instance of <see cref="CommandAttribute" />.
+        /// Creates a new instance of <see cref="GroupAttribute" />.
         /// </summary>
-        /// <param name="aliases">All aliases for this command.</param>
+        /// <param name="aliases">The aliases of this group.</param>
         /// <exception cref="ArgumentNullException">
         /// <param ref="aliases" /> can not be null or empty.
         /// </exception>
-        public CommandAttribute(params string[] aliases)
+        public GroupAttribute(params string[] aliases)
         {
             aliases.NotNullOrEmpty(nameof(aliases));
 

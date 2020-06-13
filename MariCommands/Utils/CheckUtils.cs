@@ -9,13 +9,18 @@ namespace MariCommands
         public static void NotNullOrEmpty<T>(this T[] arr, string argName)
         {
             if (arr.HasNoContent())
-                throw new ArgumentNullException(argName);
+                ThrowNullOrEmpty(argName);
         }
 
         public static void NotNullOrEmpty<T>(this IEnumerable<T> collection, string argName)
         {
             if (collection.HasNoContent())
-                throw new ArgumentNullException(argName);
+                ThrowNullOrEmpty(argName);
+        }
+
+        private static void ThrowNullOrEmpty(string argName)
+        {
+            throw new ArgumentNullException($"{argName} must not be null or empty", argName);
         }
 
         public static void NotNull(this object obj, string argName)
