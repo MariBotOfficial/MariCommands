@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace MariCommands.Models.Contexts
+namespace MariCommands
 {
     /// <summary>
     /// Represents a command context execution.
