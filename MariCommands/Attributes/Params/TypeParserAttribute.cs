@@ -11,7 +11,7 @@ namespace MariCommands
         /// <summary>
         /// The type of the <see cref="ITypeParser{T}" />.
         /// </summary>
-        public Type Type { get; }
+        public Type Value { get; }
 
         /// <summary>
         /// Defines the <see cref="ITypeParser{T}" /> for this param.
@@ -24,7 +24,7 @@ namespace MariCommands
         {
             typeParserType.NotNull(nameof(typeParserType));
 
-            Type = typeParserType;
+            Value = typeParserType;
         }
     }
 }
