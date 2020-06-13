@@ -1,17 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using MariGlobals.Extensions;
 
 namespace MariCommands
 {
     /// <summary>
     /// Mark a method to be a Command.
     /// </summary>
-    [AttributeUsage(
-        AttributeTargets.Method,
-        Inherited = true,
-        AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Method)]
     public class CommandAttribute : Attribute
     {
         /// <summary>
