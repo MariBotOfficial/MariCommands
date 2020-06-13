@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MariCommands
 {
@@ -66,5 +67,22 @@ namespace MariCommands
         /// The real <see cref="Type" /> of this module.
         /// </summary>
         Type Type { get; }
+
+        /// <summary>
+        /// Indicates if this module is enabled or not.
+        /// </summary>
+        bool IsEnabled { get; }
+
+        /// <summary>
+        /// Asynchronously enable this module.
+        /// </summary>
+        /// <returns>A <see cref="Task" /> representing an asynchronous operation.</returns>
+        Task EnableAsync();
+
+        /// <summary>
+        /// Asynchronously disable this module.
+        /// </summary>
+        /// <returns>A <see cref="Task" /> representing an asynchronous operation.</returns>
+        Task DisableAsync();
     }
 }
