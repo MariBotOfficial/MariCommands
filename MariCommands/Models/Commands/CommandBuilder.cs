@@ -54,9 +54,6 @@ namespace MariCommands
 
         /// <inheritdoc />
         public ICommand Build(IModule module)
-        {
-            // TODO: return new Command(this, module);
-            throw new NotImplementedException();
-        }
+            => new Command(this, module);
     }
 }

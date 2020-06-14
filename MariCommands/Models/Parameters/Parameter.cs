@@ -23,8 +23,8 @@ namespace MariCommands
             IsOptional = builder.IsOptional;
             DefaultValue = builder.DefaultValue;
             TypeParserType = builder.TypeParserType;
-            Preconditions = builder.Preconditions.ToImmutableList();
-            Attributes = builder.Attributes.ToImmutableList();
+            Preconditions = builder.Preconditions.ToImmutableArray();
+            Attributes = builder.Attributes.ToImmutableArray();
             ParameterInfo = builder.ParameterInfo;
             Command = command;
         }

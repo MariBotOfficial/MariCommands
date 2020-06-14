@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 using MariGlobals.Extensions;
@@ -78,7 +79,7 @@ namespace MariCommands
                                             .Where(a => _commandFactory.IsCommand(builder, a))
                                             .ToList();
 
-            var commands = new List<ICommandBuilder>();
+            var commands = ImmutableArray.CreateBuilder<ICommandBuilder>(commandTypes.Count);
 
             foreach (var commandType in commandTypes)
             {
@@ -87,14 +88,16 @@ namespace MariCommands
                 commands.Add(commandBuilder);
             }
 
-            return commands;
+            return commands.ToImmutable();
         }
 
         private IEnumerable<IModuleBuilder> GetSubModules(IModuleBuilder parent, Type type)
         {
-            var subModuleTypes = GetSubModulesTypes(type);
+            var subModuleTypes = type.GetNestedTypes()
+                                        .Where(a => IsSubModule(type))
+                                        .ToList();
 
-            var subModules = new List<IModuleBuilder>();
+            var subModules = ImmutableArray.CreateBuilder<IModuleBuilder>(subModuleTypes.Count);
 
             foreach (var subModuleType in subModuleTypes)
             {
@@ -103,14 +106,7 @@ namespace MariCommands
                 subModules.Add(subModuleBuilder);
             }
 
-            return subModules;
-        }
-
-        private IEnumerable<Type> GetSubModulesTypes(Type type)
-        {
-            return type.GetNestedTypes()
-                        .Where(a => IsSubModule(type))
-                        .ToList();
+            return subModules.ToImmutable();
         }
 
         private bool GetEnabled(Type type)

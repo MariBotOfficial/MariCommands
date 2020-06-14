@@ -92,7 +92,7 @@ namespace MariCommands
         /// <returns>The current builder.</returns>
         public ParameterBuilder WithPreconditions(IEnumerable<ParamPreconditionAttribute> preconditions)
         {
-            Preconditions = ImmutableList.CreateRange(preconditions);
+            Preconditions = preconditions.ToImmutableArray();
 
             return this;
         }
@@ -104,7 +104,7 @@ namespace MariCommands
         /// <returns>The current builder.</returns>
         public ParameterBuilder WithAttributes(IEnumerable<Attribute> attributes)
         {
-            Attributes = ImmutableList.CreateRange(attributes);
+            Attributes = attributes.ToImmutableArray();
 
             return this;
         }

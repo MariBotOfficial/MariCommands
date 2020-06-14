@@ -111,7 +111,7 @@ namespace MariCommands
         /// <returns>The current builder.</returns>
         public ModuleBuilder WithPreconditions(IEnumerable<PreconditionAttribute> preconditions)
         {
-            Preconditions = ImmutableList.CreateRange(preconditions);
+            Preconditions = preconditions.ToImmutableArray();
 
             return this;
         }
@@ -123,7 +123,7 @@ namespace MariCommands
         /// <returns>The current builder.</returns>
         public ModuleBuilder WithAttributes(IEnumerable<Attribute> attributes)
         {
-            Attributes = ImmutableList.CreateRange(attributes);
+            Attributes = attributes.ToImmutableArray();
 
             return this;
         }
@@ -147,7 +147,7 @@ namespace MariCommands
         /// <returns>The current builder.</returns>
         public ModuleBuilder WithAlias(IEnumerable<string> alias)
         {
-            Aliases = ImmutableHashSet.CreateRange(alias);
+            Aliases = alias.ToImmutableHashSet();
 
             return this;
         }
@@ -261,7 +261,7 @@ namespace MariCommands
         /// <returns>The current builder.</returns>
         public ModuleBuilder WithSubmodules(IEnumerable<IModuleBuilder> submodules)
         {
-            Submodules = ImmutableList.CreateRange(submodules);
+            Submodules = submodules.ToImmutableArray();
 
             return this;
         }
@@ -273,7 +273,7 @@ namespace MariCommands
         /// <returns>The current builder.</returns>
         public ModuleBuilder WithCommands(IEnumerable<ICommandBuilder> commands)
         {
-            Commands = ImmutableList.CreateRange(commands);
+            Commands = commands.ToImmutableArray();
 
             return this;
         }
