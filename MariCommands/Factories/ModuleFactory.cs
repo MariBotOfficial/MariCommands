@@ -19,7 +19,7 @@ namespace MariCommands
         /// <param name="provider">A dependency container.</param>
         public ModuleFactory(IServiceProvider provider)
         {
-            _provider = provider ?? ServiceUtils.Instance;
+            _provider = provider ?? ServiceUtils.GetDefaultServiceProvider();
             _config = _provider.GetOrDefault<ICommandServiceOptions, CommandServiceOptions>();
             _commandFactory = _provider.GetOrDefault<ICommandFactory>(new CommandFactory(_provider));
         }

@@ -1,32 +1,48 @@
 using System;
+using MariGlobals.Extensions;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 
 namespace MariCommands
 {
     internal static class ServiceUtils
     {
-        public readonly static IServiceProvider Instance;
+        private static IServiceProvider Instance { get; set; }
 
         static ServiceUtils()
         {
             Instance = CreateDefaultServiceProvider();
         }
 
+        internal static IServiceProvider GetDefaultServiceProvider()
+        {
+            if (Instance.HasNoContent())
+                Instance = CreateDefaultServiceProvider();
+
+            return Instance;
+        }
+
         private static IServiceProvider CreateDefaultServiceProvider()
         {
-            var collection = new ServiceCollection();
+            return new ServiceCollection()
+                                    .TryAddDefaultServices()
+                                    .BuildServiceProvider();
+        }
 
+        internal static IServiceCollection TryAddDefaultServices(this IServiceCollection collection)
+        {
             // Don't inject ICommandService here.
 
-            collection.AddSingleton<ICommandServiceOptions, CommandServiceOptions>();
-            collection.AddSingleton<ILoggerFactory, LoggerFactory>();
-            collection.AddSingleton<IModuleFactory, ModuleFactory>();
-            collection.AddSingleton<ICommandFactory, CommandFactory>();
-            //TODO: collection.AddSingleton<ICommandCache, CommandCache>();
-            //TODO: collection.AddSingleton<ICommandExecutor, CommandExecutor>();
+            collection.TryAddSingleton<ICommandServiceOptions, CommandServiceOptions>();
+            collection.TryAddSingleton<ILoggerFactory, LoggerFactory>();
+            collection.TryAddSingleton<IModuleFactory, ModuleFactory>();
+            collection.TryAddSingleton<ICommandFactory, CommandFactory>();
+            collection.TryAddSingleton<IParameterFactory, ParameterFactory>();
+            //TODO: collection.TryAddSingleton<ICommandCache, CommandCache>();
+            //TODO: collection.TryAddSingleton<ICommandExecutor, CommandExecutor>();
 
-            return collection.BuildServiceProvider();
+            return collection;
         }
     }
 }
