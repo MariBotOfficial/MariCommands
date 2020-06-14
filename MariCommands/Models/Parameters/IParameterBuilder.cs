@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace MariCommands
 {
@@ -61,7 +62,7 @@ namespace MariCommands
         /// <summary>
         /// The real <see cref="Type" /> of this parameter.
         /// </summary>
-        Type Type { get; }
+        ParameterInfo ParameterInfo { get; }
 
         /// <summary>
         /// The command of this parameter.

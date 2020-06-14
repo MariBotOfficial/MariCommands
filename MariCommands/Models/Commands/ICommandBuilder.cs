@@ -77,7 +77,7 @@ namespace MariCommands
         /// <summary>
         /// The real <see cref="MethodInfo" /> of this command.
         /// </summary>
-        MethodInfo Method { get; }
+        MethodInfo MethodInfo { get; }
 
         /// <summary>
         /// The module of this command.

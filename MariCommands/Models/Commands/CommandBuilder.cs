@@ -47,7 +47,7 @@ namespace MariCommands
         public bool IsEnabled { get; private set; }
 
         /// <inheritdoc />    
-        public MethodInfo Method { get; private set; }
+        public MethodInfo MethodInfo { get; private set; }
 
         /// <inheritdoc />
         public IModuleBuilder Module { get; private set; }

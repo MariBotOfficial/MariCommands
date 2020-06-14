@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace MariCommands
 {
@@ -59,9 +60,9 @@ namespace MariCommands
         IReadOnlyCollection<Attribute> Attributes { get; }
 
         /// <summary>
-        /// The real <see cref="Type" /> of this parameter.
+        /// The real <see cref="ParameterInfo" /> of this parameter.
         /// </summary>
-        Type Type { get; }
+        ParameterInfo ParameterInfo { get; }
 
         /// <summary>
         /// The command of this parameter.

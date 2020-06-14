@@ -231,7 +231,7 @@ namespace MariCommands
             if (nameAttr.HasContent())
                 return nameAttr.Value;
 
-            return string.Empty;
+            return type.Name;
         }
 
         /// <inheritdoc />
