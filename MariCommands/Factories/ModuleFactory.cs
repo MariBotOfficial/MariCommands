@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using MariGlobals.Extensions;
 
 namespace MariCommands
@@ -24,11 +23,11 @@ namespace MariCommands
         }
 
         /// <inheritdoc />
-        public async Task<IModuleBuilder> BuildModuleAsync(Type type)
+        public IModuleBuilder BuildModule(Type type)
         {
             type.NotNull(nameof(type));
 
-            if (!await IsModuleAsync(type))
+            if (!IsModule(type))
                 throw new ArgumentException(nameof(type), $"{type.FullName} is not a valid module.");
 
             var name = GetName(type);
@@ -185,7 +184,7 @@ namespace MariCommands
         }
 
         /// <inheritdoc />
-        public Task<bool> IsModuleAsync(Type type)
+        public bool IsModule(Type type)
         {
             var isValid =
                 type.HasContent() &&
@@ -193,7 +192,7 @@ namespace MariCommands
                 !type.CustomAttributes
                         .Any(a => a.AttributeType.IsEquivalentTo(typeof(DontLoadAttribute)));
 
-            return Task.FromResult(isValid);
+            return isValid;
         }
     }
 }

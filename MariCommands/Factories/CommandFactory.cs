@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using MariGlobals.Extensions;
 
 namespace MariCommands
@@ -24,25 +23,25 @@ namespace MariCommands
 
 
         /// <inheritdoc />
-        public async Task<ICommandBuilder> BuildCommandAsync(Type type, MethodInfo methodInfo)
+        public ICommandBuilder BuildCommand(Type type, MethodInfo methodInfo)
         {
             type.NotNull(nameof(type));
             methodInfo.NotNull(nameof(methodInfo));
 
-            if (!await IsCommandAsync(type, methodInfo))
+            if (!IsCommand(type, methodInfo))
                 throw new ArgumentException(nameof(type), $"{methodInfo.Name} is not a valid command.");
 
             return null;
         }
 
         /// <inheritdoc />
-        public Task<bool> IsCommandAsync(Type type, MethodInfo methodInfo)
+        public bool IsCommand(Type type, MethodInfo methodInfo)
         {
             var isValid = type.HasContent() &&
                           methodInfo.HasContent() &&
                           methodInfo.CustomAttributes.Any(a => a.AttributeType.IsEquivalentTo(typeof(CommandAttribute)));
 
-            return Task.FromResult(isValid);
+            return isValid;
         }
     }
 }

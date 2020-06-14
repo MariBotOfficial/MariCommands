@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Reflection;
-using System.Threading.Tasks;
 
 namespace MariCommands
 {
@@ -11,21 +9,19 @@ namespace MariCommands
     public interface ICommandFactory
     {
         /// <summary>
-        /// Asynchronously build a comand for the specified method.
+        /// Build a comand for the specified method.
         /// </summary>
         /// <param name="type">The module type to build commands</param>
         /// <param name="methodInfo">The real method info.</param>
-        /// <returns>A <see cref="Task" /> representing an asynchronous operation
-        /// with a builded command.</returns>
-        Task<ICommandBuilder> BuildCommandAsync(Type type, MethodInfo methodInfo);
+        /// <returns>A builded command.</returns>
+        ICommandBuilder BuildCommand(Type type, MethodInfo methodInfo);
 
         /// <summary>
-        /// Asynchronously verify if hhe method is a command.
+        /// Verify if the method is a command.
         /// </summary>
         /// <param name="type">The module type.</param>
         /// <param name="methodInfo">The real method info to be verified.</param>
-        /// <returns>A <see cref="Task" /> representing an asynchronous operation
-        /// with a boolean.</returns>
-        Task<bool> IsCommandAsync(Type type, MethodInfo methodInfo);
+        /// <returns>If this is a valid command.</returns>
+        bool IsCommand(Type type, MethodInfo methodInfo);
     }
 }

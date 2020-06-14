@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Threading.Tasks;
 
 namespace MariCommands
 {
@@ -86,15 +85,13 @@ namespace MariCommands
         MethodInfo Method { get; }
 
         /// <summary>
-        /// Asynchronously enable this command.
+        /// Enable this command.
         /// </summary>
-        /// <returns>A <see cref="Task" /> representing an asynchronous operation.</returns>
-        Task EnableAsync();
+        void Enable();
 
         /// <summary>
-        /// Asynchronously disable this command.
+        /// Disable this command.
         /// </summary>
-        /// <returns>A <see cref="Task" /> representing an asynchronous operation.</returns>
-        Task DisableAsync();
+        void Disable();
     }
 }

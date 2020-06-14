@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks;
 
 namespace MariCommands
 {
@@ -9,19 +8,17 @@ namespace MariCommands
     public interface IModuleFactory
     {
         /// <summary>
-        /// Asynchronously build a module.
+        /// Build a module.
         /// </summary>
         /// <param name="type">The module type to build.</param>
-        /// <returns>A <see cref="Task" /> representing an asynchronous operation
-        /// with a builded module.</returns>
-        Task<IModuleBuilder> BuildModuleAsync(Type type);
+        /// <returns>A builded module.</returns>
+        IModuleBuilder BuildModule(Type type);
 
         /// <summary>
-        /// Asynchronously verify if the type is a module.
+        /// Verify if the type is a module.
         /// </summary>
         /// <param name="type">The module type.</param>
-        /// <returns>A <see cref="Task" /> representing an asynchronous operation
-        /// with a boolean.</returns>
-        Task<bool> IsModuleAsync(Type type);
+        /// <returns><see langword="true" /> if the specified type is a module.</returns>
+        bool IsModule(Type type);
     }
 }
