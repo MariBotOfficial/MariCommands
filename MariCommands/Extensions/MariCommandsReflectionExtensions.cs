@@ -10,6 +10,5 @@ namespace MariCommands
         {
             return type.GetCustomAttribute(typeof(T)) as T;
         }
-
     }
 }

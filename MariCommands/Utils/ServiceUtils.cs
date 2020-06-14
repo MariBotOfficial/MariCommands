@@ -6,12 +6,23 @@ namespace MariCommands
 {
     internal static class ServiceUtils
     {
-        internal static IServiceProvider CreateDefaultServiceProvider()
+        public readonly static IServiceProvider Instance;
+
+        static ServiceUtils()
+        {
+            Instance = CreateDefaultServiceProvider();
+        }
+
+        private static IServiceProvider CreateDefaultServiceProvider()
         {
             var collection = new ServiceCollection();
 
+            // Don't inject ICommandService here.
+
+            collection.AddSingleton<ICommandServiceOptions, CommandServiceOptions>();
             collection.AddSingleton<ILoggerFactory, LoggerFactory>();
-            //TODO: collection.AddSingleton<IModuleBuilder, ModuleBuilder>();
+            collection.AddSingleton<IModuleFactory, ModuleFactory>();
+            collection.AddSingleton<ICommandFactory, CommandFactory>();
             //TODO: collection.AddSingleton<IModuleSaver, ModuleSaver>();
             //TODO: collection.AddSingleton<ICommandExecutor, CommandExecutor();
 
