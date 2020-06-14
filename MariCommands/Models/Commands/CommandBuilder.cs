@@ -32,9 +32,6 @@ namespace MariCommands
         public string Separator { get; private set; }
 
         /// <inheritdoc />
-        public StringComparison? Comparison { get; private set; }
-
-        /// <inheritdoc />
         public IReadOnlyCollection<string> Aliases { get; private set; }
 
         /// <inheritdoc />

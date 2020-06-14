@@ -35,9 +35,6 @@ namespace MariCommands
         public string Separator { get; private set; }
 
         /// <inheritdoc />
-        public StringComparison? Comparison { get; private set; }
-
-        /// <inheritdoc />
         public IReadOnlyCollection<string> Aliases { get; private set; }
 
         /// <inheritdoc />
@@ -125,18 +122,6 @@ namespace MariCommands
         public ModuleBuilder WithAlias(IEnumerable<string> alias)
         {
             Aliases = ImmutableHashSet.CreateRange(alias);
-
-            return this;
-        }
-
-        /// <summary>
-        /// Sets the string comparison for this module.
-        /// </summary>
-        /// <param name="comparison">The string comparison to be setted.</param>
-        /// <returns>The current builder.</returns>
-        public ModuleBuilder WithComparison(StringComparison? comparison)
-        {
-            Comparison = comparison;
 
             return this;
         }

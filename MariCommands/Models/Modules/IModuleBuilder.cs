@@ -56,11 +56,6 @@ namespace MariCommands
         string Separator { get; }
 
         /// <summary>
-        /// The default comparison for search commands in this module.
-        /// </summary>
-        StringComparison? Comparison { get; }
-
-        /// <summary>
         /// Aliases for this module.
         /// </summary>
         IReadOnlyCollection<string> Aliases { get; }

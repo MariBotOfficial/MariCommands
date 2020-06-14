@@ -40,7 +40,6 @@ namespace MariCommands
             var argumentParserType = GetArgumentParserType(type);
             var multiMatchHandling = GetMultiMatch(type);
             var separator = GetSeparator(type);
-            var comparison = GetComparison(type);
             var alias = GetAlias(type);
             var enabled = GetEnabled(type);
             var attributes = GetAttributes(type);
@@ -56,7 +55,6 @@ namespace MariCommands
                                 .WithArgumentParserType(argumentParserType)
                                 .WithMultiMatch(multiMatchHandling)
                                 .WithSeparator(separator)
-                                .WithComparison(comparison)
                                 .WithAlias(alias)
                                 .WithEnabled(enabled)
                                 .WithAttributes(attributes)
@@ -96,16 +94,6 @@ namespace MariCommands
                 return aliasAttr.Aliases;
 
             return null;
-        }
-
-        private StringComparison? GetComparison(Type type)
-        {
-            var comparisonAttr = type.GetAttribute<StringComparisonAttribute>();
-
-            if (comparisonAttr.HasContent())
-                return comparisonAttr.Value;
-
-            return _config.Comparison;
         }
 
         private string GetSeparator(Type type)
