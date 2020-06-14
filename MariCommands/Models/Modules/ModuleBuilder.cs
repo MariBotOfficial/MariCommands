@@ -279,9 +279,9 @@ namespace MariCommands
         }
 
         /// <inheritdoc />
-        public IModule Build()
+        public IModule Build(IModule parent)
         {
-            // TODO: return new Module(this);
+            // TODO: return new Module(this, parent);
             throw new NotImplementedException();
         }
     }

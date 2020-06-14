@@ -87,6 +87,6 @@ namespace MariCommands
         /// <summary>
         /// Finishes the building of this command.
         /// </summary>
-        ICommand Build();
+        ICommand Build(IModule module);
     }
 }

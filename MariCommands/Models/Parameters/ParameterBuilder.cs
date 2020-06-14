@@ -187,9 +187,9 @@ namespace MariCommands
         }
 
         /// <inheritdoc />
-        public IParameter Build()
+        public IParameter Build(ICommand command)
         {
-            // TODO: return new Parameter(this);
+            // TODO: return new Parameter(this, command);
             throw new NotImplementedException();
         }
     }

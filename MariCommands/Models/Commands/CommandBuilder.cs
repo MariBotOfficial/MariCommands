@@ -53,9 +53,9 @@ namespace MariCommands
         public IModuleBuilder Module { get; private set; }
 
         /// <inheritdoc />
-        public ICommand Build()
+        public ICommand Build(IModule module)
         {
-            // TODO: return new Command(this);
+            // TODO: return new Command(this, module);
             throw new NotImplementedException();
         }
     }

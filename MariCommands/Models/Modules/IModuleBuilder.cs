@@ -96,6 +96,6 @@ namespace MariCommands
         /// <summary>
         /// Finishes the building of this module.
         /// </summary>
-        IModule Build();
+        IModule Build(IModule parent);
     }
 }

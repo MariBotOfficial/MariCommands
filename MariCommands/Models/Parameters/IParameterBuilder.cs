@@ -72,6 +72,6 @@ namespace MariCommands
         /// <summary>
         /// Finishes the building of this parameter.
         /// </summary>
-        IParameter Build();
+        IParameter Build(ICommand command);
     }
 }
