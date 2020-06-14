@@ -23,8 +23,8 @@ namespace MariCommands
             collection.AddSingleton<ILoggerFactory, LoggerFactory>();
             collection.AddSingleton<IModuleFactory, ModuleFactory>();
             collection.AddSingleton<ICommandFactory, CommandFactory>();
-            //TODO: collection.AddSingleton<IModuleSaver, ModuleSaver>();
-            //TODO: collection.AddSingleton<ICommandExecutor, CommandExecutor();
+            //TODO: collection.AddSingleton<ICommandCache, CommandCache>();
+            //TODO: collection.AddSingleton<ICommandExecutor, CommandExecutor>();
 
             return collection.BuildServiceProvider();
         }
