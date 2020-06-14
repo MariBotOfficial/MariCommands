@@ -67,7 +67,7 @@ namespace MariCommands
         /// <summary>
         /// All parameters of this command.
         /// </summary>
-        IReadOnlyCollection<IParameter> Parameters { get; }
+        IReadOnlyCollection<IParameterBuilder> Parameters { get; }
 
         /// <summary>
         /// Indicates if this command is enabled or not.
@@ -78,5 +78,10 @@ namespace MariCommands
         /// The real <see cref="MethodInfo" /> of this command.
         /// </summary>
         MethodInfo Method { get; }
+
+        /// <summary>
+        /// The module of this command.
+        /// </summary>
+        IModuleBuilder Module { get; }
     }
 }

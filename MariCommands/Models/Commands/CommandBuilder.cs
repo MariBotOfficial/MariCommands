@@ -41,12 +41,15 @@ namespace MariCommands
         public IReadOnlyCollection<PreconditionAttribute> Preconditions { get; private set; }
 
         /// <inheritdoc />
-        public IReadOnlyCollection<IParameter> Parameters { get; private set; }
+        public IReadOnlyCollection<IParameterBuilder> Parameters { get; private set; }
 
         /// <inheritdoc />
         public bool IsEnabled { get; private set; }
 
         /// <inheritdoc />    
         public MethodInfo Method { get; private set; }
+
+        /// <inheritdoc />
+        public IModuleBuilder Module { get; private set; }
     }
 }

@@ -49,6 +49,32 @@ namespace MariCommands
         /// <inheritdoc />
         public bool IsEnabled { get; private set; }
 
+        /// <inheritdoc />
+        public IModuleBuilder Parent { get; private set; }
+
+        /// <inheritdoc />
+        public IReadOnlyCollection<ICommandBuilder> Commands { get; private set; }
+
+        /// <inheritdoc />
+        public IReadOnlyCollection<IModuleBuilder> Submodules { get; private set; }
+
+        /// <summary>
+        /// Sets the real type of this module.
+        /// </summary>
+        /// <param name="type">The type to be setted.</param>
+        /// <returns>The current builder.</returns>
+        /// <exception cref="ArgumentNullException">
+        /// <param ref="type" /> must not be null.
+        /// </exception>
+        public ModuleBuilder WithType(Type type)
+        {
+            type.NotNull(nameof(type));
+
+            Type = type;
+
+            return this;
+        }
+
         /// <summary>
         /// Sets the name for this module.
         /// </summary>
@@ -212,6 +238,42 @@ namespace MariCommands
         public ModuleBuilder WithDescription(string description)
         {
             Description = description;
+
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the parent module for this module.
+        /// </summary>
+        /// <param name="parent">The parent module to be setted.</param>
+        /// <returns>The current builder.</returns>
+        public ModuleBuilder WithParent(IModuleBuilder parent)
+        {
+            Parent = parent;
+
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the submodules for this module.
+        /// </summary>
+        /// <param name="submodules">The submodules to be setted.</param>
+        /// <returns>The current builder.</returns>
+        public ModuleBuilder WithSubmodules(IEnumerable<IModuleBuilder> submodules)
+        {
+            Submodules = ImmutableList.CreateRange(submodules);
+
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the commands for this module.
+        /// </summary>
+        /// <param name="commands">The commands to be setted.</param>
+        /// <returns>The current builder.</returns>
+        public ModuleBuilder WithCommands(IEnumerable<ICommandBuilder> commands)
+        {
+            Commands = ImmutableList.CreateRange(commands);
 
             return this;
         }

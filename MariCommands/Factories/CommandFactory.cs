@@ -23,21 +23,21 @@ namespace MariCommands
 
 
         /// <inheritdoc />
-        public ICommandBuilder BuildCommand(Type type, MethodInfo methodInfo)
+        public ICommandBuilder BuildCommand(IModuleBuilder module, MethodInfo methodInfo)
         {
-            type.NotNull(nameof(type));
+            module.NotNull(nameof(module));
             methodInfo.NotNull(nameof(methodInfo));
 
-            if (!IsCommand(type, methodInfo))
-                throw new ArgumentException(nameof(type), $"{methodInfo.Name} is not a valid command.");
+            if (!IsCommand(module, methodInfo))
+                throw new ArgumentException(nameof(methodInfo), $"{methodInfo.Name} is not a valid command.");
 
             return null;
         }
 
         /// <inheritdoc />
-        public bool IsCommand(Type type, MethodInfo methodInfo)
+        public bool IsCommand(IModuleBuilder module, MethodInfo methodInfo)
         {
-            var isValid = type.HasContent() &&
+            var isValid = module.HasContent() &&
                           methodInfo.HasContent() &&
                           methodInfo.CustomAttributes.Any(a => a.AttributeType.IsEquivalentTo(typeof(CommandAttribute)));
 

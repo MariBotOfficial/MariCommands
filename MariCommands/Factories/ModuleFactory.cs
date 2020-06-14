@@ -11,6 +11,7 @@ namespace MariCommands
     {
         private readonly IServiceProvider _provider;
         private readonly ICommandServiceOptions _config;
+        private readonly ICommandFactory _commandFactory;
 
         /// <summary>
         /// Creates a new instance of <see cref="ModuleFactory" />.
@@ -20,10 +21,11 @@ namespace MariCommands
         {
             _provider = provider ?? ServiceUtils.Instance;
             _config = _provider.GetOrDefault<ICommandServiceOptions, CommandServiceOptions>();
+            _commandFactory = _provider.GetOrDefault<ICommandFactory>(new CommandFactory(_provider));
         }
 
         /// <inheritdoc />
-        public IModuleBuilder BuildModule(Type type)
+        public IModuleBuilder BuildModule(IModuleBuilder parent, Type type)
         {
             type.NotNull(nameof(type));
 
@@ -45,6 +47,7 @@ namespace MariCommands
             var preconditions = GetPreconditions(attributes);
 
             var builder = new ModuleBuilder()
+                                .WithType(type)
                                 .WithName(name)
                                 .WithDescription(description)
                                 .WithRemarks(remarks)
@@ -57,9 +60,57 @@ namespace MariCommands
                                 .WithAlias(alias)
                                 .WithEnabled(enabled)
                                 .WithAttributes(attributes)
-                                .WithPreconditions(preconditions);
+                                .WithPreconditions(preconditions)
+                                .WithParent(parent);
+
+            var subModules = GetSubModules(builder, type);
+            var commands = GetCommands(builder);
+
+            builder.WithSubmodules(subModules);
+            builder.WithCommands(commands);
 
             return builder;
+        }
+
+        private IEnumerable<ICommandBuilder> GetCommands(IModuleBuilder builder)
+        {
+            var commandTypes = builder.Type.GetMethods()
+                                            .Where(a => _commandFactory.IsCommand(builder, a))
+                                            .ToList();
+
+            var commands = new List<ICommandBuilder>();
+
+            foreach (var commandType in commandTypes)
+            {
+                var commandBuilder = _commandFactory.BuildCommand(builder, commandType);
+
+                commands.Add(commandBuilder);
+            }
+
+            return commands;
+        }
+
+        private IEnumerable<IModuleBuilder> GetSubModules(IModuleBuilder parent, Type type)
+        {
+            var subModuleTypes = GetSubModulesTypes(type);
+
+            var subModules = new List<IModuleBuilder>();
+
+            foreach (var subModuleType in subModuleTypes)
+            {
+                var subModuleBuilder = BuildModule(parent, type);
+
+                subModules.Add(subModuleBuilder);
+            }
+
+            return subModules;
+        }
+
+        private IEnumerable<Type> GetSubModulesTypes(Type type)
+        {
+            return type.GetNestedTypes()
+                        .Where(a => IsSubModule(type))
+                        .ToList();
         }
 
         private bool GetEnabled(Type type)
@@ -188,9 +239,24 @@ namespace MariCommands
         {
             var isValid =
                 type.HasContent() &&
+                !type.IsNested &&
                 type.IsEquivalentTo(typeof(IModuleBase<>)) &&
                 !type.CustomAttributes
                         .Any(a => a.AttributeType.IsEquivalentTo(typeof(DontLoadAttribute)));
+
+            return isValid;
+        }
+
+        /// <inheritdoc />
+        public bool IsSubModule(Type type)
+        {
+            var isValid =
+                type.HasContent() &&
+                type.IsNested &&
+                type.CustomAttributes
+                    .Any(a => a.AttributeType.IsEquivalentTo(typeof(GroupAttribute))) &&
+                !type.CustomAttributes
+                    .Any(a => a.AttributeType.IsEquivalentTo(typeof(DontLoadAttribute)));
 
             return isValid;
         }

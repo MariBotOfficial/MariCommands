@@ -77,5 +77,20 @@ namespace MariCommands
         /// Indicates if this module is enabled or not.
         /// </summary>
         bool IsEnabled { get; }
+
+        /// <summary>
+        /// The parent module of this module.
+        /// </summary>
+        IModuleBuilder Parent { get; }
+
+        /// <summary>
+        /// All comands of this module.
+        /// </summary>
+        IReadOnlyCollection<ICommandBuilder> Commands { get; }
+
+        /// <summary>
+        /// Submodules for this module.
+        /// </summary>
+        IReadOnlyCollection<IModuleBuilder> Submodules { get; }
     }
 }

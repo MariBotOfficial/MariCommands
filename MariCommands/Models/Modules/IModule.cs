@@ -59,7 +59,7 @@ namespace MariCommands
         IReadOnlyCollection<string> Aliases { get; }
 
         /// <summary>
-        /// Submoduels for this module.
+        /// Submodules for this module.
         /// </summary>
         IReadOnlyCollection<IModule> Submodules { get; }
 
