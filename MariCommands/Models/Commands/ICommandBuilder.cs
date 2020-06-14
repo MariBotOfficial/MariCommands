@@ -83,5 +83,10 @@ namespace MariCommands
         /// The module of this command.
         /// </summary>
         IModuleBuilder Module { get; }
+
+        /// <summary>
+        /// Finishes the building of this command.
+        /// </summary>
+        ICommand Build();
     }
 }

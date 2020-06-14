@@ -92,5 +92,10 @@ namespace MariCommands
         /// Submodules for this module.
         /// </summary>
         IReadOnlyCollection<IModuleBuilder> Submodules { get; }
+
+        /// <summary>
+        /// Finishes the building of this module.
+        /// </summary>
+        IModule Build();
     }
 }

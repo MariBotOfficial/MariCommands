@@ -68,5 +68,10 @@ namespace MariCommands
         /// The command of this parameter.
         /// </summary>
         ICommandBuilder Command { get; }
+
+        /// <summary>
+        /// Finishes the building of this parameter.
+        /// </summary>
+        IParameter Build();
     }
 }

@@ -277,5 +277,12 @@ namespace MariCommands
 
             return this;
         }
+
+        /// <inheritdoc />
+        public IModule Build()
+        {
+            // TODO: return new Module(this);
+            throw new NotImplementedException();
+        }
     }
 }

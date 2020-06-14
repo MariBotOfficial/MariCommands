@@ -185,5 +185,12 @@ namespace MariCommands
 
             return this;
         }
+
+        /// <inheritdoc />
+        public IParameter Build()
+        {
+            // TODO: return new Parameter(this);
+            throw new NotImplementedException();
+        }
     }
 }
