@@ -12,7 +12,7 @@ namespace MariCommands
         public RunMode RunMode { get; set; } = RunMode.Sequential;
 
         /// <inheritdoc />
-        public StringComparison? Comparison { get; set; } = null;
+        public StringComparison Comparison { get; set; } = StringComparison.OrdinalIgnoreCase;
 
         /// <inheritdoc />
         public bool IgnoreExtraArgs { get; set; } = false;

@@ -27,7 +27,7 @@ namespace MariCommands
         /// <summary>
         /// Gets or sets the default comparison for search commands.
         /// </summary>
-        StringComparison? Comparison { get; set; }
+        StringComparison Comparison { get; set; }
 
         /// <summary>
         /// Gets or sets if extra args in a command will be ignored.

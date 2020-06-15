@@ -9,20 +9,18 @@ namespace MariCommands
     public interface IModuleCache
     {
         /// <summary>
-        /// Asynchronously adds a module to the cache and returns if success.
+        /// Adds a module to the cache and returns if success.
         /// </summary>
         /// <param name="module">The module to be added.</param>
-        /// <returns>A <see cref="Task" /> representing an asynchronous operation
-        /// with a boolean.</returns>
-        Task<bool> AddModuleAsync(IModule module);
+        /// <returns>A boolean that indicates if this module is sucessfully added.</returns>
+        bool AddModule(IModule module);
 
         /// <summary>
-        /// Asynchronously removes a module to the cache and returns if success.
+        /// Removes a module to the cache and returns if success.
         /// </summary>
         /// <param name="module">The module to be removed.</param>
-        /// <returns>A <see cref="Task" /> representing an asynchronous operation
-        /// with a boolean.</returns>
-        Task<bool> RemoveModuleAsync(IModule module);
+        /// <returns>A boolean that indicates if this module is sucessfully removed.</returns>
+        bool RemoveModule(IModule module);
 
         /// <summary>
         /// Asynchronously search for commands with the specified input.

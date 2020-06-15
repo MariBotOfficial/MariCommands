@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,30 +18,38 @@ namespace MariCommands
         /// <summary>
         /// Creates an instance of <see cref="CommandService" />.
         /// </summary>
-        /// <param name="provider">An <see cref="IServiceProvider" />.</param>
+        /// <param name="provider">A dependency container.</param>
         public CommandService(IServiceProvider provider)
         {
             _provider = provider ?? ServiceUtils.GetDefaultServiceProvider();
             _loggerFactory = _provider.GetOrDefault<ILoggerFactory, LoggerFactory>();
-            // TODO: _moduleBuilder = _provider.GetOrDefault<IModuleBuilder, ModuleBuilder>();
+            // TODO: _moduleBuilder = _provider.GetOrDefault<IModuleFactory, ModuleFactory>();
             // TODO: _commandExecutor = _provider.GetOrDefault<ICommandExecutor, CommandExecutor>();
         }
 
         /// <inheritdoc />
-        public Task AddModuleAsync<T>(T type)
-            => throw new NotImplementedException();
+        public IModule AddModule<T>(T type) where T : IModule
+        {
+            throw new NotImplementedException();
+        }
 
         /// <inheritdoc />
-        public Task AddModuleAsync<T>()
-            => throw new NotImplementedException();
+        public IModule AddModule<T>() where T : IModule
+        {
+            throw new NotImplementedException();
+        }
 
         /// <inheritdoc />
-        public Task AddModuleAsync(Type type)
-            => throw new NotImplementedException();
+        public IModule AddModule(Type type)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <inheritdoc />
-        public Task AddModulesAsync(Assembly assembly)
-            => throw new NotImplementedException();
+        public IReadOnlyCollection<IModule> AddModules(Assembly assembly)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <inheritdoc />
         public Task<IResult> ExecuteAsync(string command)

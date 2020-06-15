@@ -12,33 +12,31 @@ namespace MariCommands
     public interface ICommandService
     {
         /// <summary>
-        /// Search all modules in your project and add them to command dependency.
+        /// Search all modules in your project and add them to modules dependency.
         /// </summary>
         /// <param name="assembly">The assembly.</param>
-        /// <returns>An async operation.</returns>
-        Task AddModulesAsync(Assembly assembly);
+        IReadOnlyCollection<IModule> AddModules(Assembly assembly);
 
         /// <summary>
         /// Add this module to dependency.
         /// </summary>
         /// <param name="type">Any module type.</param>
         /// <typeparam name="T">Any module type.</typeparam>
-        /// <returns>An async operation.</returns>
-        Task AddModuleAsync<T>(T type);
+        IModule AddModule<T>(T type)
+            where T : IModule;
 
         /// <summary>
         /// Add this module type to dependency.
         /// </summary>
         /// <typeparam name="T">Any module type.</typeparam>
-        /// <returns>An async operation.</returns>
-        Task AddModuleAsync<T>();
+        IModule AddModule<T>()
+            where T : IModule;
 
         /// <summary>
         /// Add this module type to dependency.
         /// </summary>
         /// <param name="type">Any module type.</param>
-        /// <returns>An async operation.</returns>
-        Task AddModuleAsync(Type type);
+        IModule AddModule(Type type);
 
         /// <summary>
         /// Execute a command with the params in the same string.
