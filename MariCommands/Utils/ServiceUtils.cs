@@ -27,12 +27,13 @@ namespace MariCommands
         {
             return new ServiceCollection()
                                     .TryAddDefaultServices()
-                                    .BuildServiceProvider();
+                                    .BuildServiceProvider(false);
         }
 
-        internal static IServiceCollection TryAddDefaultServices(this IServiceCollection collection)
+        internal static IServiceCollection TryAddDefaultServices(this IServiceCollection collection, bool injectCommandService = false)
         {
-            // Don't inject ICommandService here.
+            if (injectCommandService)
+                collection.TryAddSingleton<ICommandService, CommandService>();
 
             collection.TryAddSingleton<ICommandServiceOptions, CommandServiceOptions>();
             collection.TryAddSingleton<ILoggerFactory, LoggerFactory>();

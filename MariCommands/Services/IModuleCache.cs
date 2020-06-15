@@ -6,31 +6,30 @@ namespace MariCommands
     /// <summary>
     /// A service that can cache modules.
     /// </summary>
-    public interface ICommandCache
+    public interface IModuleCache
     {
         /// <summary>
-        /// Asynchronously adds a command to the cache and returns if success.
+        /// Asynchronously adds a module to the cache and returns if success.
         /// </summary>
-        /// <param name="command">The command to be added.</param>
+        /// <param name="module">The module to be added.</param>
         /// <returns>A <see cref="Task" /> representing an asynchronous operation
         /// with a boolean.</returns>
-        Task<bool> AddCommandAsync(ICommand command);
+        Task<bool> AddModuleAsync(IModule module);
 
         /// <summary>
-        /// Asynchronously removes a command to the cache and returns if success.
+        /// Asynchronously removes a module to the cache and returns if success.
         /// </summary>
-        /// <param name="command">The command to be removed.</param>
+        /// <param name="module">The module to be removed.</param>
         /// <returns>A <see cref="Task" /> representing an asynchronous operation
         /// with a boolean.</returns>
-        Task<bool> RemoveCommandAsync(ICommand command);
+        Task<bool> RemoveModuleAsync(IModule module);
 
         /// <summary>
         /// Asynchronously search for commands with the specified input.
         /// </summary>
         /// <param name="input">The input to search commands.</param>
-        /// <param name="comparison">The comparison to be used.</param>
         /// <returns>A <see cref="ValueTask" /> representing an asynchronous operation with
         /// a collection of matched commands.</returns>
-        ValueTask<ICommandMatch> SearchCommandsAsync(string input, StringComparison? comparison = null);
+        ValueTask<ICommandMatch> SearchCommandsAsync(string input);
     }
 }
