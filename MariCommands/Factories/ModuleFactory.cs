@@ -224,6 +224,7 @@ namespace MariCommands
             var isValid =
                 type.HasContent() &&
                 !type.IsNested &&
+                type.IsPublic &&
                 type.IsEquivalentTo(typeof(IModuleBase<>)) &&
                 !type.CustomAttributes
                         .Any(a => a.AttributeType.IsEquivalentTo(typeof(DontLoadAttribute)));
@@ -237,6 +238,7 @@ namespace MariCommands
             var isValid =
                 type.HasContent() &&
                 type.IsNested &&
+                type.IsPublic &&
                 type.CustomAttributes
                     .Any(a => a.AttributeType.IsEquivalentTo(typeof(GroupAttribute))) &&
                 !type.CustomAttributes

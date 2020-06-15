@@ -41,6 +41,7 @@ namespace MariCommands
         {
             var isValid = module.HasContent() &&
                           methodInfo.HasContent() &&
+                          methodInfo.IsPublic &&
                           methodInfo.CustomAttributes.Any(a => a.AttributeType.IsEquivalentTo(typeof(CommandAttribute)));
 
             return isValid;
