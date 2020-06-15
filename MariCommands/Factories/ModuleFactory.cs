@@ -41,7 +41,6 @@ namespace MariCommands
             var lifeTime = GetLifeTime(type);
             var argumentParserType = GetArgumentParserType(type);
             var multiMatchHandling = GetMultiMatch(type);
-            var separator = GetSeparator(type);
             var alias = GetAlias(type);
             var enabled = GetEnabled(type);
             var attributes = GetAttributes(type);
@@ -57,7 +56,6 @@ namespace MariCommands
                                 .WithLifeTime(lifeTime)
                                 .WithArgumentParserType(argumentParserType)
                                 .WithMultiMatch(multiMatchHandling)
-                                .WithSeparator(separator)
                                 .WithAlias(alias)
                                 .WithEnabled(enabled)
                                 .WithAttributes(attributes)
@@ -140,16 +138,6 @@ namespace MariCommands
                 return aliasAttr.Aliases;
 
             return null;
-        }
-
-        private string GetSeparator(Type type)
-        {
-            var separatorAttr = type.GetAttribute<SeparatorAttribute>();
-
-            if (separatorAttr.HasContent())
-                return separatorAttr.Value;
-
-            return _config.Separator;
         }
 
         private MultiMatchHandling GetMultiMatch(Type type)

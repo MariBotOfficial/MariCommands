@@ -31,9 +31,6 @@ namespace MariCommands
         public Type ArgumentParserType { get; }
 
         /// <inheritdoc />
-        public string Separator { get; }
-
-        /// <inheritdoc />
         public IReadOnlyCollection<string> Aliases { get; }
 
         /// <inheritdoc />
@@ -61,7 +58,6 @@ namespace MariCommands
             RunMode = builder.RunMode;
             IgnoreExtraArgs = builder.IgnoreExtraArgs;
             ArgumentParserType = builder.ArgumentParserType;
-            Separator = builder.Separator;
             Aliases = builder.Aliases;
             Attributes = builder.Attributes;
             Preconditions = builder.Preconditions;

@@ -49,11 +49,6 @@ namespace MariCommands
         MultiMatchHandling MultiMatchHandling { get; }
 
         /// <summary>
-        /// The separator for this module.
-        /// </summary>
-        string Separator { get; }
-
-        /// <summary>
         /// Aliases for this module.
         /// </summary>
         IReadOnlyCollection<string> Aliases { get; }

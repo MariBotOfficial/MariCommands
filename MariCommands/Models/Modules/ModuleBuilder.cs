@@ -32,9 +32,6 @@ namespace MariCommands
         public MultiMatchHandling MultiMatchHandling { get; private set; }
 
         /// <inheritdoc />
-        public string Separator { get; private set; }
-
-        /// <inheritdoc />
         public IReadOnlyCollection<string> Aliases { get; private set; }
 
         /// <inheritdoc />
@@ -148,23 +145,6 @@ namespace MariCommands
         public ModuleBuilder WithAlias(IEnumerable<string> alias)
         {
             Aliases = alias.ToImmutableArray();
-
-            return this;
-        }
-
-        /// <summary>
-        /// Sets the separator for this module.
-        /// </summary>
-        /// <param name="separator">The separator to be setted.</param>
-        /// <returns>The current builder.</returns>
-        /// <exception cref="ArgumentNullException">
-        /// <param ref="separator" /> must not be null or white space.
-        /// </exception>
-        public ModuleBuilder WithSeparator(string separator)
-        {
-            separator.NotNullOrWhiteSpace(nameof(separator));
-
-            Separator = separator;
 
             return this;
         }

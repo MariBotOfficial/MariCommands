@@ -34,9 +34,6 @@ namespace MariCommands
         public MultiMatchHandling MultiMatchHandling { get; }
 
         /// <inheritdoc />
-        public string Separator { get; }
-
-        /// <inheritdoc />
         public IReadOnlyCollection<string> Aliases { get; }
 
         /// <inheritdoc />
@@ -86,7 +83,6 @@ namespace MariCommands
             ModuleLifetime = builder.ModuleLifetime;
             ArgumentParserType = builder.ArgumentParserType;
             MultiMatchHandling = builder.MultiMatchHandling;
-            Separator = builder.Separator;
             Aliases = builder.Aliases.ToImmutableArray();
             Attributes = builder.Attributes.ToImmutableArray();
             Preconditions = builder.Preconditions.ToImmutableArray();

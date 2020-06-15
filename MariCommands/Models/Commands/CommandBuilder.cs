@@ -29,9 +29,6 @@ namespace MariCommands
         public Type ArgumentParserType { get; private set; }
 
         /// <inheritdoc />
-        public string Separator { get; private set; }
-
-        /// <inheritdoc />
         public IReadOnlyCollection<string> Aliases { get; private set; }
 
         /// <inheritdoc />

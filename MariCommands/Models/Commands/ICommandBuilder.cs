@@ -45,11 +45,6 @@ namespace MariCommands
         Type ArgumentParserType { get; }
 
         /// <summary>
-        /// The separator for this command.
-        /// </summary>
-        string Separator { get; }
-
-        /// <summary>
         /// Aliases for this command.
         /// </summary>
         IReadOnlyCollection<string> Aliases { get; }
