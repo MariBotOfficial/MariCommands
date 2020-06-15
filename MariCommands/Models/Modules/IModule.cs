@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using MariGlobals.Extensions;
 
 namespace MariCommands
 {
@@ -97,5 +98,97 @@ namespace MariCommands
         /// Disable this module.
         /// </summary>
         void Disable();
+
+        /// <summary>
+        /// Gets the <see cref="RunMode" /> for this module.
+        /// </summary>
+        /// <param name="options">The options with default <see cref="RunMode" /> value.</param>
+        /// <returns>The <see cref="RunMode" /> for this module.</returns>
+        RunMode GetRunMode(ICommandServiceOptions options)
+        {
+            if (RunMode.HasValue)
+                return RunMode.Value;
+
+            if (Parent.HasContent())
+                return Parent.GetRunMode(options);
+
+            return options?.RunMode ?? new CommandServiceOptions().RunMode;
+        }
+
+        /// <summary>
+        /// Gets ifs this module ignore extra args.
+        /// </summary>
+        /// <param name="options">The options with default ignore extra args value.</param>
+        /// <returns><see langword="true" /> if this module ignore extra args.</returns>
+        bool GetIgnoreExtraArgs(ICommandServiceOptions options)
+        {
+            if (IgnoreExtraArgs.HasValue)
+                return IgnoreExtraArgs.Value;
+
+            if (Parent.HasContent())
+                return Parent.GetIgnoreExtraArgs(options);
+
+            return options?.IgnoreExtraArgs ?? new CommandServiceOptions().IgnoreExtraArgs;
+        }
+
+        /// <summary>
+        /// Gets the <see cref="ModuleLifetime" /> for this module.
+        /// </summary>
+        /// <param name="options">The options with default <see cref="ModuleLifetime" /> value.</param>
+        /// <returns>The <see cref="ModuleLifetime" /> for this module.</returns>
+        ModuleLifetime GetModuleLifetime(ICommandServiceOptions options)
+        {
+            if (ModuleLifetime.HasValue)
+                return ModuleLifetime.Value;
+
+            if (Parent.HasContent())
+                return Parent.GetModuleLifetime(options);
+
+            return options?.ModuleLifetime ?? new CommandServiceOptions().ModuleLifetime;
+        }
+
+        /// <summary>
+        /// Gets the <see cref="MultiMatchHandling" /> for this module.
+        /// </summary>
+        /// <param name="options">The options with default <see cref="MultiMatchHandling" /> value.</param>
+        /// <returns>The <see cref="MultiMatchHandling" /> for this module.</returns>
+        MultiMatchHandling GetMatchHandling(ICommandServiceOptions options)
+        {
+            if (MultiMatchHandling.HasValue)
+                return MultiMatchHandling.Value;
+
+            if (Parent.HasContent())
+                return Parent.GetMatchHandling(options);
+
+            return options?.MatchHandling ?? new CommandServiceOptions().MatchHandling;
+        }
+
+        /// <summary>
+        /// Gets the default argument parser type for this module.
+        /// </summary>
+        /// <returns>The default argument parser type for this module (can be <see langword="null" />).</returns>
+        Type GetArgumentParserType()
+        {
+            if (ArgumentParserType.HasContent())
+                return ArgumentParserType;
+
+            return Parent?.GetArgumentParserType();
+        }
+
+        /// <summary>
+        /// Gets all preconditions for this module.
+        /// </summary>
+        /// <returns>All preconditions for this module.</returns>
+        IReadOnlyCollection<PreconditionAttribute> GetAllPreconditions()
+        {
+            var preconditions = new List<PreconditionAttribute>();
+
+            preconditions.AddRange(Preconditions);
+
+            if (Parent.HasContent())
+                preconditions.AddRange(Parent.GetAllPreconditions());
+
+            return preconditions;
+        }
     }
 }

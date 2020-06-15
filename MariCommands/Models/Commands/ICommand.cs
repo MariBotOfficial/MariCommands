@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using MariGlobals.Extensions;
 
 namespace MariCommands
 {
@@ -88,5 +89,65 @@ namespace MariCommands
         /// Disable this command.
         /// </summary>
         void Disable();
+
+        /// <summary>
+        /// Gets the <see cref="RunMode" /> for this command.
+        /// </summary>
+        /// <param name="options">The options with default <see cref="RunMode" /> value.</param>
+        /// <returns>The <see cref="RunMode" /> for this command.</returns>
+        RunMode GetRunMode(ICommandServiceOptions options)
+        {
+            if (RunMode.HasValue)
+                return RunMode.Value;
+
+            if (Module.HasContent())
+                return Module.GetRunMode(options);
+
+            return options?.RunMode ?? new CommandServiceOptions().RunMode;
+        }
+
+        /// <summary>
+        /// Gets ifs this command ignore extra args.
+        /// </summary>
+        /// <param name="options">The options with default ignore extra args value.</param>
+        /// <returns><see langword="true" /> if this command ignore extra args.</returns>
+        bool GetIgnoreExtraArgs(ICommandServiceOptions options)
+        {
+            if (IgnoreExtraArgs.HasValue)
+                return IgnoreExtraArgs.Value;
+
+            if (Module.HasContent())
+                return Module.GetIgnoreExtraArgs(options);
+
+            return options?.IgnoreExtraArgs ?? new CommandServiceOptions().IgnoreExtraArgs;
+        }
+
+        /// <summary>
+        /// Gets the default argument parser type for this command.
+        /// </summary>
+        /// <returns>The default argument parser type for this command (can be <see langword="null" />).</returns>
+        Type GetArgumentParserType()
+        {
+            if (ArgumentParserType.HasContent())
+                return ArgumentParserType;
+
+            return Module?.GetArgumentParserType();
+        }
+
+        /// <summary>
+        /// Gets all preconditions for this command.
+        /// </summary>
+        /// <returns>All preconditions for this command.</returns>
+        IReadOnlyCollection<PreconditionAttribute> GetAllPreconditions()
+        {
+            var preconditions = new List<PreconditionAttribute>();
+
+            preconditions.AddRange(Preconditions);
+
+            if (Module.HasContent())
+                preconditions.AddRange(Module.GetAllPreconditions());
+
+            return preconditions;
+        }
     }
 }
