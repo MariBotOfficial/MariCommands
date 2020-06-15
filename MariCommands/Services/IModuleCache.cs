@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MariCommands
@@ -28,6 +29,6 @@ namespace MariCommands
         /// <param name="input">The input to search commands.</param>
         /// <returns>A <see cref="ValueTask" /> representing an asynchronous operation with
         /// a collection of matched commands.</returns>
-        ValueTask<ICommandMatch> SearchCommandsAsync(string input);
+        ValueTask<IReadOnlyCollection<ICommandMatch>> SearchCommandsAsync(string input);
     }
 }

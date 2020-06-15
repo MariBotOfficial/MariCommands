@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using MariGlobals.Extensions;
@@ -130,9 +131,27 @@ namespace MariCommands.Services
         }
 
         /// <inheritdoc />
-        public ValueTask<ICommandMatch> SearchCommandsAsync(string input)
+        public ValueTask<IReadOnlyCollection<ICommandMatch>> SearchCommandsAsync(string input)
         {
-            throw new System.NotImplementedException();
+            var paths = input.Split(_config.Separator);
+
+            var fullPath = string.Empty;
+
+            var matches = new List<CommandMatch>();
+
+            for (var i = 0; i < paths.Count(); i++)
+            {
+                fullPath += paths[i];
+
+                if (_commands.TryGetValue(fullPath, out var commands))
+                {
+                    matches.AddRange(commands
+                                    .Select(a => new CommandMatch(a, fullPath, input))
+                                    .ToList());
+                }
+            }
+
+            return new ValueTask<IReadOnlyCollection<ICommandMatch>>(matches);
         }
     }
 }
