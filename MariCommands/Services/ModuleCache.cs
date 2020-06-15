@@ -68,19 +68,6 @@ namespace MariCommands.Services
                 AddCommandInternal(command, path);
         }
 
-        // private void AddCommandInternal(ICommand command, List<string> moduleAliases)
-        // {
-        //     if (moduleAliases.HasNoContent())
-        //     {
-        //         AddCommandWithModuleAlias(command, string.Empty);
-        //     }
-        //     else
-        //     {
-        //         foreach (var moduleAlias in moduleAliases)
-        //             AddCommandWithModuleAlias(command, moduleAlias);
-        //     }
-        // }
-
         private void AddCommandInternal(ICommand command, string moduleAlias)
         {
             foreach (var alias in command.Aliases)
@@ -101,7 +88,45 @@ namespace MariCommands.Services
         /// <inheritdoc />
         public void RemoveModule(IModule module)
         {
-            throw new System.NotImplementedException();
+            var lastNestedModule = GetLastNestedModule(module);
+
+            RemoveModuleInternal(lastNestedModule, string.Empty);
+        }
+
+        private void RemoveModuleInternal(IModule module, string parentAlias)
+        {
+            if (module.Aliases.HasNoContent())
+            {
+                RemoveModuleWithPath(module, parentAlias);
+            }
+            else
+            {
+                foreach (var alias in module.Aliases)
+                {
+                    var path = $"{parentAlias}{_config.Separator}{alias}";
+
+                    RemoveModuleWithPath(module, path);
+                }
+            }
+        }
+
+        private void RemoveModuleWithPath(IModule module, string path)
+        {
+            foreach (var subModule in module.Submodules)
+                RemoveModuleInternal(subModule, path);
+
+            foreach (var command in module.Commands)
+                RemoveCommandInternal(command, path);
+        }
+
+        private void RemoveCommandInternal(ICommand command, string moduleAlias)
+        {
+            foreach (var alias in command.Aliases)
+            {
+                var path = $"{moduleAlias}{_config.Separator}{alias}";
+
+                _commands.TryRemove(path, out var _);
+            }
         }
 
         /// <inheritdoc />
