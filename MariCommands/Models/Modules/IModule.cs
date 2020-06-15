@@ -26,17 +26,17 @@ namespace MariCommands
         /// <summary>
         /// The <see cref="RunMode" /> for this module.
         /// </summary>
-        RunMode RunMode { get; }
+        RunMode? RunMode { get; }
 
         /// <summary>
         /// If this module will ignore extra args.
         /// </summary>
-        bool IgnoreExtraArgs { get; }
+        bool? IgnoreExtraArgs { get; }
 
         /// <summary>
         /// The lifetime for this module.
         /// </summary>
-        ModuleLifetime ModuleLifetime { get; }
+        ModuleLifetime? ModuleLifetime { get; }
 
         /// <summary>
         /// The default argument parser type for this module.
@@ -46,7 +46,7 @@ namespace MariCommands
         /// <summary>
         /// Defines how multi matches will be handled in this module.
         /// </summary>
-        MultiMatchHandling MultiMatchHandling { get; }
+        MultiMatchHandling? MultiMatchHandling { get; }
 
         /// <summary>
         /// Aliases for this module.

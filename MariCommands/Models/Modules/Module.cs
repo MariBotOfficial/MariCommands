@@ -19,19 +19,19 @@ namespace MariCommands
         public string Remarks { get; }
 
         /// <inheritdoc />
-        public RunMode RunMode { get; }
+        public RunMode? RunMode { get; }
 
         /// <inheritdoc />
-        public bool IgnoreExtraArgs { get; }
+        public bool? IgnoreExtraArgs { get; }
 
         /// <inheritdoc />
-        public ModuleLifetime ModuleLifetime { get; }
+        public ModuleLifetime? ModuleLifetime { get; }
 
         /// <inheritdoc />
         public Type ArgumentParserType { get; }
 
         /// <inheritdoc />
-        public MultiMatchHandling MultiMatchHandling { get; }
+        public MultiMatchHandling? MultiMatchHandling { get; }
 
         /// <inheritdoc />
         public IReadOnlyCollection<string> Aliases { get; }

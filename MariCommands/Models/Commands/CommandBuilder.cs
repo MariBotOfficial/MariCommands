@@ -20,10 +20,10 @@ namespace MariCommands
         public int Priority { get; private set; }
 
         /// <inheritdoc />
-        public RunMode RunMode { get; private set; }
+        public RunMode? RunMode { get; private set; }
 
         /// <inheritdoc />
-        public bool IgnoreExtraArgs { get; private set; }
+        public bool? IgnoreExtraArgs { get; private set; }
 
         /// <inheritdoc />
         public Type ArgumentParserType { get; private set; }

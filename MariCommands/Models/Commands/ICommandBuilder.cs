@@ -32,12 +32,12 @@ namespace MariCommands
         /// <summary>
         /// The <see cref="RunMode" /> for this command.
         /// </summary>
-        RunMode RunMode { get; }
+        RunMode? RunMode { get; }
 
         /// <summary>
         /// If this command will ignore extra args.
         /// </summary>
-        bool IgnoreExtraArgs { get; }
+        bool? IgnoreExtraArgs { get; }
 
         /// <summary>
         /// The default argument parser type for this command.

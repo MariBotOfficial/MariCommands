@@ -17,19 +17,19 @@ namespace MariCommands
         public string Remarks { get; private set; }
 
         /// <inheritdoc />
-        public RunMode RunMode { get; private set; }
+        public RunMode? RunMode { get; private set; }
 
         /// <inheritdoc />
-        public bool IgnoreExtraArgs { get; private set; }
+        public bool? IgnoreExtraArgs { get; private set; }
 
         /// <inheritdoc />
-        public ModuleLifetime ModuleLifetime { get; private set; }
+        public ModuleLifetime? ModuleLifetime { get; private set; }
 
         /// <inheritdoc />
         public Type ArgumentParserType { get; private set; }
 
         /// <inheritdoc />
-        public MultiMatchHandling MultiMatchHandling { get; private set; }
+        public MultiMatchHandling? MultiMatchHandling { get; private set; }
 
         /// <inheritdoc />
         public IReadOnlyCollection<string> Aliases { get; private set; }
@@ -94,7 +94,7 @@ namespace MariCommands
         /// </summary>
         /// <param name="multiMatchHandling">The multi match handling to be setted.</param>
         /// <returns>The current builder.</returns>
-        public ModuleBuilder WithMultiMatch(MultiMatchHandling multiMatchHandling)
+        public ModuleBuilder WithMultiMatch(MultiMatchHandling? multiMatchHandling)
         {
             MultiMatchHandling = multiMatchHandling;
 
@@ -167,7 +167,7 @@ namespace MariCommands
         /// </summary>
         /// <param name="lifeTime">The life time to be setted.</param>
         /// <returns>The current builder.</returns>
-        public ModuleBuilder WithLifeTime(ModuleLifetime lifeTime)
+        public ModuleBuilder WithLifeTime(ModuleLifetime? lifeTime)
         {
             ModuleLifetime = lifeTime;
 
@@ -179,7 +179,7 @@ namespace MariCommands
         /// </summary>
         /// <param name="ignoreExtraArgs">The ignore extra args value to be setted.</param>
         /// <returns>The current builder.</returns>
-        public ModuleBuilder WithIgnoreExtraArgs(bool ignoreExtraArgs)
+        public ModuleBuilder WithIgnoreExtraArgs(bool? ignoreExtraArgs)
         {
             IgnoreExtraArgs = ignoreExtraArgs;
 
@@ -191,7 +191,7 @@ namespace MariCommands
         /// </summary>
         /// <param name="runMode">The run mode to be setted.</param>
         /// <returns>The current builder.</returns>
-        public ModuleBuilder WithRunMode(RunMode runMode)
+        public ModuleBuilder WithRunMode(RunMode? runMode)
         {
             RunMode = runMode;
 
