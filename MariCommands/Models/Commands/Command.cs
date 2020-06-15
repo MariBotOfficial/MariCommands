@@ -74,7 +74,7 @@ namespace MariCommands
             foreach (var parameterBuilder in builder.Parameters)
                 parameters.Add(parameterBuilder.Build(this));
 
-            Parameters = parameters.ToImmutable();
+            Parameters = parameters.MoveToImmutable();
         }
 
         /// <inheritdoc />

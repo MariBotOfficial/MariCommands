@@ -147,7 +147,7 @@ namespace MariCommands
         /// <returns>The current builder.</returns>
         public ModuleBuilder WithAlias(IEnumerable<string> alias)
         {
-            Aliases = alias.ToImmutableHashSet();
+            Aliases = alias.ToImmutableArray();
 
             return this;
         }
@@ -280,9 +280,6 @@ namespace MariCommands
 
         /// <inheritdoc />
         public IModule Build(IModule parent)
-        {
-            // TODO: return new Module(this, parent);
-            throw new NotImplementedException();
-        }
+            => new Module(this, parent);
     }
 }

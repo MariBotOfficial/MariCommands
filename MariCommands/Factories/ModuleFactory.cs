@@ -88,7 +88,7 @@ namespace MariCommands
                 commands.Add(commandBuilder);
             }
 
-            return commands.ToImmutable();
+            return commands.MoveToImmutable();
         }
 
         private IEnumerable<IModuleBuilder> GetSubModules(IModuleBuilder parent, Type type)
@@ -106,7 +106,7 @@ namespace MariCommands
                 subModules.Add(subModuleBuilder);
             }
 
-            return subModules.ToImmutable();
+            return subModules.MoveToImmutable();
         }
 
         private bool GetEnabled(Type type)

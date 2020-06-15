@@ -26,7 +26,7 @@ namespace MariCommands
         {
             aliases.NotNullOrEmpty(nameof(aliases));
 
-            Aliases = aliases.ToImmutableHashSet();
+            Aliases = aliases.ToImmutableArray();
         }
     }
 }
