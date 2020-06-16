@@ -25,7 +25,6 @@ namespace MariCommands
             _parameterFactory = _provider.GetOrDefault<IParameterFactory>(new ParameterFactory(_provider));
         }
 
-
         /// <inheritdoc />
         public ICommandBuilder BuildCommand(IModuleBuilder module, MethodInfo methodInfo)
         {
@@ -197,6 +196,7 @@ namespace MariCommands
 
             return string.Empty;
         }
+
         private string GetName(MethodInfo methodInfo)
         {
             var nameAttr = methodInfo.GetAttribute<NameAttribute>();
