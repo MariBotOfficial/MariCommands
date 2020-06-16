@@ -15,6 +15,8 @@ namespace MariCommands
         /// <param name="command">The command of this parameter.</param>
         public Parameter(IParameterBuilder builder, ICommand command)
         {
+            Validate(builder, command);
+
             Name = builder.Name;
             Description = builder.Description;
             Remarks = builder.Remarks;
@@ -27,6 +29,14 @@ namespace MariCommands
             Attributes = builder.Attributes.ToImmutableArray();
             ParameterInfo = builder.ParameterInfo;
             Command = command;
+        }
+
+        private void Validate(IParameterBuilder builder, ICommand command)
+        {
+            builder.NotNull(nameof(builder));
+            command.NotNull(nameof(command));
+            builder.Name.NotNullOrWhiteSpace(nameof(builder.Name));
+            builder.ParameterInfo.NotNull(nameof(builder.ParameterInfo));
         }
 
         /// <inheritdoc />

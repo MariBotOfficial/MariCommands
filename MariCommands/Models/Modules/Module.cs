@@ -75,6 +75,8 @@ namespace MariCommands
         /// <param name="parent">The parent module.</param>
         public Module(IModuleBuilder builder, IModule parent)
         {
+            Validate(builder);
+
             Name = builder.Name;
             Description = builder.Description;
             Remarks = builder.Remarks;
@@ -103,6 +105,13 @@ namespace MariCommands
                 commands.Add(commandBuilder.Build(this));
 
             Commands = commands.MoveToImmutable();
+        }
+
+        private void Validate(IModuleBuilder builder)
+        {
+            builder.NotNull(nameof(builder));
+            builder.Type.NotNull(nameof(builder.Type));
+            builder.Name.NotNullOrWhiteSpace(nameof(builder.Name));
         }
 
         /// <inheritdoc />

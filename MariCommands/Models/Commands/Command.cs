@@ -51,6 +51,8 @@ namespace MariCommands
         /// <param name="module">The module of this command.</param>
         public Command(ICommandBuilder builder, IModule module)
         {
+            Validate(builder, module);
+
             Name = builder.Name;
             Description = builder.Description;
             Remarks = builder.Remarks;
@@ -73,6 +75,16 @@ namespace MariCommands
             Parameters = parameters.MoveToImmutable();
 
             CommandDelegate = builder.CommandDelegate;
+        }
+
+        private void Validate(ICommandBuilder builder, IModule module)
+        {
+            builder.NotNull(nameof(builder));
+            module.NotNull(nameof(module));
+            builder.Name.NotNullOrWhiteSpace(nameof(builder.Name));
+            builder.MethodInfo.NotNull(nameof(builder.MethodInfo));
+            builder.Aliases.NotNullOrEmpty(nameof(builder.Aliases));
+            builder.CommandDelegate.NotNull(nameof(builder.CommandDelegate));
         }
 
         /// <inheritdoc />
