@@ -50,6 +50,9 @@ namespace MariCommands
         /// <inheritdoc />
         public IModuleBuilder Module { get; private set; }
 
+        /// <inheritdoc />
+        public CommandDelegate CommandDelegate { get; private set; }
+
 
         /// <summary>
         /// Sets the parent module for this command.
@@ -149,7 +152,7 @@ namespace MariCommands
             return this;
         }
 
-           /// <summary>
+        /// <summary>
         /// Sets the run mode for this command.
         /// </summary>
         /// <param name="runMode">The run mode to be setted.</param>
@@ -210,6 +213,23 @@ namespace MariCommands
         public CommandBuilder WithParameters(IEnumerable<IParameterBuilder> parameters)
         {
             Parameters = parameters.ToImmutableArray();
+
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the CommandDelegate for this command.
+        /// </summary>
+        /// <param name="commandDelegate">The CommandDelegate to be setted.</param>
+        /// <returns>The current builder.</returns>
+        /// <exception cref="ArgumentNullException">
+        /// <param ref="commandDelegate" /> must not be null.
+        /// </exception>
+        public CommandBuilder WithCommandDelegate(CommandDelegate commandDelegate)
+        {
+            commandDelegate.NotNull(nameof(commandDelegate));
+
+            CommandDelegate = commandDelegate;
 
             return this;
         }

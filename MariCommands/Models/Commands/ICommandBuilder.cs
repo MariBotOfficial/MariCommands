@@ -80,6 +80,11 @@ namespace MariCommands
         IModuleBuilder Module { get; }
 
         /// <summary>
+        /// A function that can process a request for this command.
+        /// </summary>
+        CommandDelegate CommandDelegate { get; }
+
+        /// <summary>
         /// Finishes the building of this command.
         /// </summary>
         ICommand Build(IModule module);

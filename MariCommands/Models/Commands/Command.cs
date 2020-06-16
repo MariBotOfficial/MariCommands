@@ -71,6 +71,8 @@ namespace MariCommands
                 parameters.Add(parameterBuilder.Build(this));
 
             Parameters = parameters.MoveToImmutable();
+
+            CommandDelegate = builder.CommandDelegate;
         }
 
         /// <inheritdoc />
@@ -82,6 +84,9 @@ namespace MariCommands
 
         /// <inheritdoc />
         public MethodInfo MethodInfo { get; }
+
+        /// <inheritdoc />        
+        public CommandDelegate CommandDelegate { get; }
 
         /// <inheritdoc />
         public void Disable()

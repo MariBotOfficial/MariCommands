@@ -11,6 +11,11 @@ namespace MariCommands
     public interface ICommand
     {
         /// <summary>
+        /// A function that can process a request for this command.
+        /// </summary>
+        CommandDelegate CommandDelegate { get; }
+
+        /// <summary>
         /// The name for this command.
         /// </summary>
         string Name { get; }
