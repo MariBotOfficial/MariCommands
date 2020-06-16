@@ -16,6 +16,6 @@ namespace MariCommands
         /// <param name="context">The current command execution context.</param>
         /// <returns>A <see cref="Task" /> representing an asynchronous operation with an
         /// <see cref="ITypeParserResult{T}" />.</returns>
-        Task<ITypeParserResult<T>> ParseAsync(string value, IParameter parameter, ICommandContext context);
+        Task<ITypeParserResult<T>> ParseAsync(string value, IParameter parameter, CommandContext context);
     }
 }

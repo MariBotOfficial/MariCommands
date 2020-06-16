@@ -5,9 +5,9 @@ namespace MariCommands
     /// <summary>
     /// When implemented will mark the object as a <see cref="IModule" />.
     /// </summary>
-    /// <typeparam name="T">The <see cref="ICommandContext" /> this module will use.</typeparam>
+    /// <typeparam name="T">The <see cref="CommandContext" /> this module will use.</typeparam>
     public interface IModuleBase<T>
-        where T : ICommandContext
+        where T : CommandContext
     {
         /// <summary>
         /// The command context in this module.
