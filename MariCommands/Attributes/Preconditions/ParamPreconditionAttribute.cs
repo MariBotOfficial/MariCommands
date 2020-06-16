@@ -21,7 +21,7 @@ namespace MariCommands
         public abstract Task<IPreconditionResult> ExecuteAsync(
             object value,
             IParameter parameter,
-            ICommandContext context,
+            CommandContext context,
             IServiceProvider provider);
     }
 }
