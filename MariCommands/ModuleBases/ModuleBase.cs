@@ -1,4 +1,6 @@
+using System;
 using System.Threading.Tasks;
+using MariGlobals.Extensions;
 
 namespace MariCommands
 {
@@ -6,24 +8,34 @@ namespace MariCommands
     /// When implemented will mark the object as a <see cref="IModule" />.
     /// </summary>
     /// <typeparam name="T">The <see cref="CommandContext" /> this module will use.</typeparam>
-    public interface IModuleBase<T>
+    public class ModuleBase<T>
         where T : CommandContext
     {
         /// <summary>
         /// The command context in this module.
         /// </summary>
-        T Context { get; }
+        public T Context { get; private set; }
 
         /// <summary>
         /// An asynchronous operation that will be executed before the command execution.
         /// </summary>
         /// <returns>A <see cref="Task" /> representing an asynchronous operation.</returns>
-        Task OnCommandExecutingAsync();
+        public virtual Task OnCommandExecutingAsync()
+            => Task.CompletedTask;
 
         /// <summary>
         /// An asynchronous operation that will be executed after the command execution.
         /// </summary>
         /// <returns>A <see cref="Task" /> representing an asynchronous operation.</returns>
-        Task OnCommandExecutedAsync();
+        public virtual Task OnCommandExecutedAsync()
+            => Task.CompletedTask;
+
+        internal void SetContext(CommandContext context)
+        {
+            if (!context.OfType<T>())
+                throw new InvalidCastException($"Cannot cast the current context of type {context.GetType()} to {typeof(T)}.");
+
+            Context = context as T;
+        }
     }
 }

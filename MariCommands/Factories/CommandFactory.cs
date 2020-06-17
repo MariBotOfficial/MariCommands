@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using MariGlobals.Extensions;
 
 namespace MariCommands
@@ -45,6 +46,7 @@ namespace MariCommands
             var attributes = GetAttributes(methodInfo);
             var preconditions = GetPreconditions(attributes);
             var enabled = GetEnabled(methodInfo);
+            var commandDelegate = GetCommandDelegate(methodInfo);
 
             var builder = new CommandBuilder()
                                 .WithName(name)
@@ -217,5 +219,26 @@ namespace MariCommands
 
             return isValid;
         }
+
+        private CommandDelegate GetCommandDelegate(MethodInfo methodInfo)
+        {
+            return null;
+
+            // if (methodInfo.ReturnType.HasNoContent())
+            //     return GetCommandVoidDelegate(methodInfo);
+
+            // return methodInfo.ReturnType switch
+            // {
+            //     _ => GetCommandObjectDelegate(methodInfo),
+            // };
+        }
+
+        // private CommandDelegate GetCommandVoidDelegate(MethodInfo method)
+        // {
+        //     CommandDelegate commandDelegate = async context =>
+        //     {
+        //         await Task.Run(() => method.Invoke(context.CommandContext.))
+        //     };
+        // }
     }
 }

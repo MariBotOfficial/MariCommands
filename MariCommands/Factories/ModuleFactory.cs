@@ -225,7 +225,7 @@ namespace MariCommands
                 type.HasContent() &&
                 !type.IsNested &&
                 type.IsPublic &&
-                type.IsEquivalentTo(typeof(IModuleBase<>)) &&
+                type.IsEquivalentTo(typeof(ModuleBase<>)) &&
                 !type.CustomAttributes
                         .Any(a => a.AttributeType.IsEquivalentTo(typeof(DontLoadAttribute)));
 
