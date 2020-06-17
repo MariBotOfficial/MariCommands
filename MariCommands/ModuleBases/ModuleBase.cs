@@ -8,7 +8,7 @@ namespace MariCommands
     /// When implemented will mark the object as a <see cref="IModule" />.
     /// </summary>
     /// <typeparam name="T">The <see cref="CommandContext" /> this module will use.</typeparam>
-    public class ModuleBase<T>
+    public class ModuleBase<T> : IModuleBase
         where T : CommandContext
     {
         /// <summary>
@@ -30,7 +30,7 @@ namespace MariCommands
         public virtual Task OnCommandExecutedAsync()
             => Task.CompletedTask;
 
-        internal void SetContext(CommandContext context)
+        void IModuleBase.SetContext(CommandContext context)
         {
             if (!context.OfType<T>())
                 throw new InvalidCastException($"Cannot cast the current context of type {context.GetType()} to {typeof(T)}.");

@@ -120,7 +120,7 @@ namespace MariCommands
         private IEnumerable<PreconditionAttribute> GetPreconditions(IEnumerable<Attribute> attributes)
         {
             return attributes
-                    .Where(a => a.GetType().IsEquivalentTo(typeof(PreconditionAttribute)))
+                    .Where(a => typeof(PreconditionAttribute).IsAssignableFrom(a.GetType()))
                     .Select(a => a as PreconditionAttribute)
                     .ToList();
         }
@@ -225,9 +225,9 @@ namespace MariCommands
                 type.HasContent() &&
                 !type.IsNested &&
                 type.IsPublic &&
-                type.IsEquivalentTo(typeof(ModuleBase<>)) &&
+                typeof(IModuleBase).IsAssignableFrom(type) &&
                 !type.CustomAttributes
-                        .Any(a => a.AttributeType.IsEquivalentTo(typeof(DontLoadAttribute)));
+                        .Any(a => typeof(DontLoadAttribute).IsAssignableFrom(a.AttributeType));
 
             return isValid;
         }
@@ -240,9 +240,9 @@ namespace MariCommands
                 type.IsNested &&
                 type.IsPublic &&
                 type.CustomAttributes
-                    .Any(a => a.AttributeType.IsEquivalentTo(typeof(GroupAttribute))) &&
+                    .Any(a => typeof(GroupAttribute).IsAssignableFrom(a.AttributeType)) &&
                 !type.CustomAttributes
-                    .Any(a => a.AttributeType.IsEquivalentTo(typeof(DontLoadAttribute)));
+                    .Any(a => typeof(DontLoadAttribute).IsAssignableFrom(a.AttributeType));
 
             return isValid;
         }

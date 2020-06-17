@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 
@@ -27,6 +28,16 @@ namespace MariCommands
         /// The parsed arguments.
         /// </summary>
         public IReadOnlyCollection<object> Args { get; private set; }
+
+        /// <summary>
+        /// The dependency container of this context.
+        /// </summary>
+        public IServiceProvider ServiceProvider { get; private set; }
+
+        internal void SetServiceProvider(IServiceProvider provider)
+        {
+            ServiceProvider = provider ?? ServiceUtils.GetDefaultServiceProvider();
+        }
 
         internal void SetCommandMatch(ICommandMatch match)
         {

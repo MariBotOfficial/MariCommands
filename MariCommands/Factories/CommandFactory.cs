@@ -101,7 +101,7 @@ namespace MariCommands
         private IEnumerable<PreconditionAttribute> GetPreconditions(IEnumerable<Attribute> attributes)
         {
             return attributes
-                    .Where(a => a.GetType().IsEquivalentTo(typeof(PreconditionAttribute)))
+                    .Where(a => typeof(PreconditionAttribute).IsAssignableFrom(a.GetType()))
                     .Select(a => a as PreconditionAttribute)
                     .ToList();
         }
@@ -215,30 +215,138 @@ namespace MariCommands
             var isValid = module.HasContent() &&
                           methodInfo.HasContent() &&
                           methodInfo.IsPublic &&
-                          methodInfo.CustomAttributes.Any(a => a.AttributeType.IsEquivalentTo(typeof(CommandAttribute)));
+                          methodInfo.CustomAttributes.Any(a => typeof(CommandAttribute).IsAssignableFrom(a.AttributeType));
 
             return isValid;
         }
 
         private CommandDelegate GetCommandDelegate(MethodInfo methodInfo)
         {
-            return null;
+            var returnType = methodInfo.ReturnType;
 
-            // if (methodInfo.ReturnType.HasNoContent())
-            //     return GetCommandVoidDelegate(methodInfo);
+            if (returnType.HasNoContent() || returnType == typeof(void))
+                return GetCommandVoidDelegate();
 
-            // return methodInfo.ReturnType switch
-            // {
-            //     _ => GetCommandObjectDelegate(methodInfo),
-            // };
+            if (typeof(IResult).IsAssignableFrom(returnType))
+                return GetCommandResultDelegate();
+
+            if (returnType == typeof(Task) && !returnType.IsGenericType)
+                return GetCommandTaskDelegate();
+
+            if (returnType == typeof(ValueTask) && !returnType.IsGenericType)
+                return GetCommandValueTaskDelegate();
+
+            if (returnType.IsGenericTypeDefinition)
+            {
+                var genericDefinition = returnType.GetGenericTypeDefinition();
+
+
+            }
+
+            return GetCommandObjectDelegate();
         }
 
-        // private CommandDelegate GetCommandVoidDelegate(MethodInfo method)
-        // {
-        //     CommandDelegate commandDelegate = async context =>
-        //     {
-        //         await Task.Run(() => method.Invoke(context.CommandContext.))
-        //     };
-        // }
+        private CommandDelegate GetCommandValueTaskDelegate()
+        {
+            CommandDelegate commandDelegate = async context =>
+            {
+                var instance = PrepareExecution(context.CommandContext);
+
+                await InvokeValueTask(instance, context.CommandContext);
+
+                // TODO: Set OkResult.
+            };
+
+            return commandDelegate;
+        }
+
+        private CommandDelegate GetCommandTaskDelegate()
+        {
+            CommandDelegate commandDelegate = async context =>
+            {
+                var instance = PrepareExecution(context.CommandContext);
+
+                await InvokeTask(instance, context.CommandContext);
+
+                // TODO: Set OkResult.
+            };
+
+            return commandDelegate;
+        }
+
+        private CommandDelegate GetCommandResultDelegate()
+        {
+            CommandDelegate commandDelegate = async context =>
+            {
+                var instance = PrepareExecution(context.CommandContext);
+                var result = await Task.Run(() => InvokeResult(instance, context.CommandContext));
+
+                context.Result = result;
+            };
+
+            return commandDelegate;
+        }
+
+        private CommandDelegate GetCommandVoidDelegate()
+        {
+            CommandDelegate commandDelegate = async context =>
+            {
+                var instance = PrepareExecution(context.CommandContext);
+                await Task.Run(() => InvokeVoid(instance, context.CommandContext));
+
+                // TODO: Set OkResult.
+            };
+
+            return commandDelegate;
+        }
+
+        private CommandDelegate GetCommandObjectDelegate()
+        {
+            CommandDelegate commandDelegate = async context =>
+            {
+                var instance = PrepareExecution(context.CommandContext);
+                var result = await Task.Run(() => InvokeObject(instance, context.CommandContext));
+
+                // TODO: Set OkObjectResult.
+            };
+
+            return commandDelegate;
+        }
+
+        private ValueTask InvokeValueTask(object instance, CommandContext context)
+            => (ValueTask)context.Command.MethodInfo.Invoke(instance, context.Args.ToArray());
+
+        private Task InvokeTask(object instance, CommandContext context)
+            => (Task)context.Command.MethodInfo.Invoke(instance, context.Args.ToArray());
+
+        private IResult InvokeResult(object instance, CommandContext context)
+            => (IResult)context.Command.MethodInfo.Invoke(instance, context.Args.ToArray());
+
+        private object InvokeObject(object instance, CommandContext context)
+            => context.Command.MethodInfo.Invoke(instance, context.Args.ToArray());
+
+        private void InvokeVoid(object instance, CommandContext context)
+            => context.Command.MethodInfo.Invoke(instance, context.Args.ToArray());
+
+        private object PrepareExecution(CommandContext context)
+        {
+            var provider = context.ServiceProvider;
+            var moduleProvider = provider.GetOrDefault<IModuleProvider>(new ModuleProvider(provider));
+
+            var instance = moduleProvider.Instantiate(context);
+
+            if (!instance.OfType<IModuleBase>())
+            {
+                var message =
+                    $"Cannot instantiate {context.Command.Module.Name} because this module doesn't" +
+                    $"implements {nameof(IModuleBase)}, see if your module inherits ModuleBase<T>.";
+
+                throw new InvalidCastException(message);
+            }
+
+            (instance as IModuleBase).SetContext(context);
+
+            return instance;
+        }
     }
 }

@@ -40,7 +40,7 @@ namespace MariCommands
             collection.TryAddSingleton<IModuleFactory, ModuleFactory>();
             collection.TryAddSingleton<ICommandFactory, CommandFactory>();
             collection.TryAddSingleton<IParameterFactory, ParameterFactory>();
-            //TODO: collection.TryAddSingleton<ICommandCache, CommandCache>();
+            collection.TryAddSingleton<IModuleCache, ModuleCache>();
             //TODO: collection.TryAddSingleton<ICommandExecutor, CommandExecutor>();
 
             return collection;

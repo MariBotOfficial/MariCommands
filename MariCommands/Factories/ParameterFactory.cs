@@ -61,7 +61,7 @@ namespace MariCommands
         private IEnumerable<ParamPreconditionAttribute> GetPreconditions(IEnumerable<Attribute> attributes)
         {
             return attributes
-                    .Where(a => a.GetType().IsEquivalentTo(typeof(ParamPreconditionAttribute)))
+                    .Where(a => typeof(ParamPreconditionAttribute).IsAssignableFrom(a.GetType()))
                     .Select(a => a as ParamPreconditionAttribute)
                     .ToList();
         }

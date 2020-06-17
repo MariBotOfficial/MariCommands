@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MariGlobals.Extensions;
 
-namespace MariCommands.Services
+namespace MariCommands
 {
     /// <inheritdoc />
     public class ModuleCache : IModuleCache
