@@ -60,7 +60,8 @@ namespace MariCommands
                                 .WithEnabled(enabled)
                                 .WithAttributes(attributes)
                                 .WithPreconditions(preconditions)
-                                .WithModule(module);
+                                .WithModule(module)
+                                .WithCommandDelegate(commandDelegate);
 
             var parameters = GetParameters(builder);
             builder.WithParameters(parameters);
@@ -240,10 +241,86 @@ namespace MariCommands
             {
                 var genericDefinition = returnType.GetGenericTypeDefinition();
 
+                var genericTypes = returnType.GetGenericArguments();
 
+                var isNotTaskOrValueTask =
+                        genericDefinition != typeof(Task<>) &&
+                        genericDefinition != typeof(ValueTask<>);
+
+                if (genericTypes.Count() > 1 || !isNotTaskOrValueTask)
+                    return GetCommandObjectDelegate();
+
+                var genericType = genericTypes.FirstOrDefault();
+                var isTask = genericDefinition == typeof(Task<>);
+
+
+                if (typeof(IResult).IsAssignableFrom(genericType) && isTask)
+                    return GetCommandTaskResultDelegate();
+                if (isTask)
+                    return GetCommandTaskObjectDelegate();
+                if (typeof(IResult).IsAssignableFrom(genericType))
+                    return GetCommandValueTaskResultDelegate();
+
+                return GetCommandValueTaskObjectDelegate();
             }
 
             return GetCommandObjectDelegate();
+        }
+
+        private CommandDelegate GetCommandValueTaskObjectDelegate()
+        {
+            CommandDelegate commandDelegate = async context =>
+            {
+                var instance = PrepareExecution(context.CommandContext);
+
+                var result = await InvokeValueTaskObject(instance, context.CommandContext);
+
+                // TODO: OkObjectResult
+            };
+
+            return commandDelegate;
+        }
+
+        private CommandDelegate GetCommandValueTaskResultDelegate()
+        {
+            CommandDelegate commandDelegate = async context =>
+            {
+                var instance = PrepareExecution(context.CommandContext);
+
+                var result = await InvokeValueTaskResult(instance, context.CommandContext);
+
+                context.Result = result;
+            };
+
+            return commandDelegate;
+        }
+
+        private CommandDelegate GetCommandTaskObjectDelegate()
+        {
+            CommandDelegate commandDelegate = async context =>
+            {
+                var instance = PrepareExecution(context.CommandContext);
+
+                var result = await InvokeTaskObject(instance, context.CommandContext);
+
+                // TODO: OkObjectResult
+            };
+
+            return commandDelegate;
+        }
+
+        private CommandDelegate GetCommandTaskResultDelegate()
+        {
+            CommandDelegate commandDelegate = async context =>
+            {
+                var instance = PrepareExecution(context.CommandContext);
+
+                var result = await InvokeTaskResult(instance, context.CommandContext);
+
+                context.Result = result;
+            };
+
+            return commandDelegate;
         }
 
         private CommandDelegate GetCommandValueTaskDelegate()
@@ -276,12 +353,21 @@ namespace MariCommands
 
         private CommandDelegate GetCommandResultDelegate()
         {
-            CommandDelegate commandDelegate = async context =>
+            CommandDelegate commandDelegate = context =>
             {
-                var instance = PrepareExecution(context.CommandContext);
-                var result = await Task.Run(() => InvokeResult(instance, context.CommandContext));
+                try
+                {
+                    var instance = PrepareExecution(context.CommandContext);
+                    var result = InvokeResult(instance, context.CommandContext);
 
-                context.Result = result;
+                    context.Result = result;
+
+                    return Task.CompletedTask;
+                }
+                catch (Exception ex)
+                {
+                    return Task.FromException(ex);
+                }
             };
 
             return commandDelegate;
@@ -289,12 +375,21 @@ namespace MariCommands
 
         private CommandDelegate GetCommandVoidDelegate()
         {
-            CommandDelegate commandDelegate = async context =>
+            CommandDelegate commandDelegate = context =>
             {
-                var instance = PrepareExecution(context.CommandContext);
-                await Task.Run(() => InvokeVoid(instance, context.CommandContext));
+                try
+                {
+                    var instance = PrepareExecution(context.CommandContext);
 
-                // TODO: Set OkResult.
+                    InvokeVoid(instance, context.CommandContext);
+                    // TODO: Set OkResult.
+
+                    return Task.CompletedTask;
+                }
+                catch (Exception ex)
+                {
+                    return Task.FromException(ex);
+                }
             };
 
             return commandDelegate;
@@ -302,15 +397,55 @@ namespace MariCommands
 
         private CommandDelegate GetCommandObjectDelegate()
         {
-            CommandDelegate commandDelegate = async context =>
+            CommandDelegate commandDelegate = context =>
             {
-                var instance = PrepareExecution(context.CommandContext);
-                var result = await Task.Run(() => InvokeObject(instance, context.CommandContext));
+                try
+                {
+                    var instance = PrepareExecution(context.CommandContext);
 
-                // TODO: Set OkObjectResult.
+                    var result = InvokeObject(instance, context.CommandContext);
+
+                    // TODO: Set OkObjectResult.
+
+                    return Task.CompletedTask;
+                }
+                catch (Exception ex)
+                {
+                    return Task.FromException(ex);
+                }
             };
 
             return commandDelegate;
+        }
+
+        private ValueTask<object> InvokeValueTaskObject(object instance, CommandContext context)
+            => InvokeGenericValueTask<object>(instance, context);
+
+        private ValueTask<IResult> InvokeValueTaskResult(object instance, CommandContext context)
+            => InvokeGenericValueTask<IResult>(instance, context);
+
+        private Task<object> InvokeTaskObject(object instance, CommandContext context)
+            => InvokeGenericTask<object>(instance, context);
+
+        private Task<IResult> InvokeTaskResult(object instance, CommandContext context)
+            => InvokeGenericTask<IResult>(instance, context);
+
+        private async Task<T> InvokeGenericTask<T>(object instance, CommandContext context)
+        {
+            dynamic awaitable = context.Command.MethodInfo.Invoke(instance, context.Args.ToArray());
+
+            await awaitable;
+
+            return (T)awaitable.GetAwaiter().GetResult();
+        }
+
+        private async ValueTask<T> InvokeGenericValueTask<T>(object instance, CommandContext context)
+        {
+            dynamic awaitable = context.Command.MethodInfo.Invoke(instance, context.Args.ToArray());
+
+            await awaitable;
+
+            return (T)awaitable.GetAwaiter().GetResult();
         }
 
         private ValueTask InvokeValueTask(object instance, CommandContext context)
