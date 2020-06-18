@@ -12,7 +12,7 @@ namespace MariCommands
     {
         private readonly IServiceProvider _provider;
         private readonly ILoggerFactory _loggerFactory;
-        private readonly IModuleBuilder _moduleBuilder;
+        private readonly IModuleFactory _moduleFactory;
         private readonly ICommandExecutor _commandExecutor;
 
         /// <summary>
@@ -23,7 +23,7 @@ namespace MariCommands
         {
             _provider = provider ?? ServiceUtils.GetDefaultServiceProvider();
             _loggerFactory = _provider.GetOrDefault<ILoggerFactory, LoggerFactory>();
-            // TODO: _moduleBuilder = _provider.GetOrDefault<IModuleFactory, ModuleFactory>();
+            _moduleFactory = _provider.GetOrDefault<IModuleFactory>(new ModuleFactory(_provider));
             // TODO: _commandExecutor = _provider.GetOrDefault<ICommandExecutor, CommandExecutor>();
         }
 
@@ -52,11 +52,15 @@ namespace MariCommands
         }
 
         /// <inheritdoc />
-        public Task<IResult> ExecuteAsync(string command)
-            => _commandExecutor.ExecuteAsync(command);
+        public Task<IResult> ExecuteAsync(string input, CommandContext commandContext)
+            => _commandExecutor.ExecuteAsync(input, commandContext);
 
         /// <inheritdoc />
-        public Task<IResult> ExecuteAsync(string command, string[] args)
-            => _commandExecutor.ExecuteAsync(command, args);
+        public Task<IResult> ExecuteAsync(ICommand command, string args, CommandContext commandContext)
+            => _commandExecutor.ExecuteAsync(command, args, commandContext);
+
+        /// <inheritdoc />
+        public Task<IResult> ExecuteAsync(ICommand command, IEnumerable<object> args, CommandContext commandContext)
+            => _commandExecutor.ExecuteAsync(command, args, commandContext);
     }
 }
