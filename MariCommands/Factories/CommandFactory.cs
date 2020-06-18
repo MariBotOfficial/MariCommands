@@ -178,7 +178,7 @@ namespace MariCommands
             return string.Empty;
         }
 
-        private string GetName(MethodInfo methodInfo, IEnumerable<string> alias )
+        private string GetName(MethodInfo methodInfo, IEnumerable<string> alias)
         {
             var nameAttr = methodInfo.GetAttribute<NameAttribute>();
 
@@ -186,7 +186,7 @@ namespace MariCommands
                 return nameAttr.Value;
 
 
-            return alias.FirstOrDefault(); ;
+            return alias.FirstOrDefault();
         }
 
         /// <inheritdoc />
