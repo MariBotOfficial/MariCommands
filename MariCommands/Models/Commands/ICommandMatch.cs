@@ -19,5 +19,10 @@ namespace MariCommands
         /// The raw input used to search this command.
         /// </summary>
         string RawArgs { get; }
+
+        /// <summary>
+        /// The remaining input.
+        /// </summary>
+        string RemainingInput { get; }
     }
 }

@@ -9,11 +9,13 @@ namespace MariCommands
         /// <param name="command">The matched command.</param>
         /// <param name="alias">The alias used to find this command.</param>
         /// <param name="rawArgs">The raw input used.</param>
-        public CommandMatch(ICommand command, string alias, string rawArgs)
+        /// <param name="remainingInput">The remaining input.</param>
+        public CommandMatch(ICommand command, string alias, string rawArgs, string remainingInput)
         {
             Command = command;
             Alias = alias;
             RawArgs = rawArgs;
+            RemainingInput = remainingInput;
         }
 
         /// <inheritdoc />
@@ -24,5 +26,8 @@ namespace MariCommands
 
         /// <inheritdoc />
         public string RawArgs { get; }
+
+        /// <inheritdoc />
+        public string RemainingInput { get; }
     }
 }

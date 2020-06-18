@@ -145,8 +145,10 @@ namespace MariCommands
 
                 if (_commands.TryGetValue(fullPath, out var commands))
                 {
+                    var remainingInput = string.Join(_config.Separator, paths.Skip(i));
+
                     matches.AddRange(commands
-                                    .Select(a => new CommandMatch(a, fullPath, input))
+                                    .Select(a => new CommandMatch(a, fullPath, input, remainingInput))
                                     .ToList());
                 }
             }
