@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using MariGlobals.Extensions;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace MariCommands
 {
@@ -58,7 +59,7 @@ namespace MariCommands
         {
             CommandDelegate commandDelegate = async context =>
             {
-                var instance = PrepareExecution(context.CommandContext);
+                var instance = PrepareExecution(context);
 
                 var result = await InvokeValueTaskObject(instance, context.CommandContext);
 
@@ -72,7 +73,7 @@ namespace MariCommands
         {
             CommandDelegate commandDelegate = async context =>
             {
-                var instance = PrepareExecution(context.CommandContext);
+                var instance = PrepareExecution(context);
 
                 var result = await InvokeValueTaskResult(instance, context.CommandContext);
 
@@ -86,7 +87,7 @@ namespace MariCommands
         {
             CommandDelegate commandDelegate = async context =>
             {
-                var instance = PrepareExecution(context.CommandContext);
+                var instance = PrepareExecution(context);
 
                 var result = await InvokeTaskObject(instance, context.CommandContext);
 
@@ -100,7 +101,7 @@ namespace MariCommands
         {
             CommandDelegate commandDelegate = async context =>
             {
-                var instance = PrepareExecution(context.CommandContext);
+                var instance = PrepareExecution(context);
 
                 var result = await InvokeTaskResult(instance, context.CommandContext);
 
@@ -114,7 +115,7 @@ namespace MariCommands
         {
             CommandDelegate commandDelegate = async context =>
             {
-                var instance = PrepareExecution(context.CommandContext);
+                var instance = PrepareExecution(context);
 
                 await InvokeValueTask(instance, context.CommandContext);
 
@@ -128,7 +129,7 @@ namespace MariCommands
         {
             CommandDelegate commandDelegate = async context =>
             {
-                var instance = PrepareExecution(context.CommandContext);
+                var instance = PrepareExecution(context);
 
                 await InvokeTask(instance, context.CommandContext);
 
@@ -144,7 +145,7 @@ namespace MariCommands
             {
                 try
                 {
-                    var instance = PrepareExecution(context.CommandContext);
+                    var instance = PrepareExecution(context);
                     var result = InvokeResult(instance, context.CommandContext);
 
                     context.Result = result;
@@ -166,7 +167,7 @@ namespace MariCommands
             {
                 try
                 {
-                    var instance = PrepareExecution(context.CommandContext);
+                    var instance = PrepareExecution(context);
 
                     InvokeVoid(instance, context.CommandContext);
                     // TODO: Set OkResult.
@@ -188,7 +189,7 @@ namespace MariCommands
             {
                 try
                 {
-                    var instance = PrepareExecution(context.CommandContext);
+                    var instance = PrepareExecution(context);
 
                     var result = InvokeObject(instance, context.CommandContext);
 
@@ -250,9 +251,10 @@ namespace MariCommands
         private void InvokeVoid(object instance, CommandContext context)
             => context.Command.MethodInfo.Invoke(instance, context.Args.ToArray());
 
-        private object PrepareExecution(CommandContext context)
+        private object PrepareExecution(CommandExecutionContext context)
         {
-            var provider = context.ServiceProvider;
+            var cmdCtx = context.CommandContext;
+            var provider = cmdCtx.ServiceProvider;
             var moduleProvider = provider.GetOrDefault<IModuleProvider>(new ModuleProvider(provider));
 
             var instance = moduleProvider.Instantiate(context);
@@ -260,13 +262,13 @@ namespace MariCommands
             if (!instance.OfType<IModuleBase>())
             {
                 var message =
-                    $"Cannot instantiate {context.Command.Module.Name} because this module doesn't" +
+                    $"Cannot instantiate {cmdCtx.Command.Module.Name} because this module doesn't" +
                     $"implements {nameof(IModuleBase)}, see if your module inherits ModuleBase<T>.";
 
                 throw new InvalidCastException(message);
             }
 
-            (instance as IModuleBase).SetContext(context);
+            (instance as IModuleBase).SetContext(cmdCtx);
 
             return instance;
         }

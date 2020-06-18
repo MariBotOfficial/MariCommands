@@ -10,6 +10,8 @@ namespace MariCommands
     {
         private static IServiceProvider Instance { get; set; }
 
+        internal const string NEED_DISPOSE = "NEED_TO_DISPOSE";
+
         static ServiceUtils()
         {
             Instance = CreateDefaultServiceProvider();

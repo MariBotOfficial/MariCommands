@@ -25,17 +25,30 @@ namespace MariCommands
 
 
         /// <inheritdoc />
-        public object Instantiate(CommandContext context)
+        public object Instantiate(CommandExecutionContext context)
         {
-            var module = context.Command.Module;
+            var cmdContext = context.CommandContext;
+            var module = cmdContext.Command.Module;
             var lifeTime = module.GetModuleLifetime(_config);
 
-            object instance;
+            var instance = _provider.GetService(module.Type);
+
+            if (instance.HasContent())
+            {
+                SetNeedDispose(context, false);
+                return instance;
+            }
 
             if (lifeTime == ModuleLifetime.Transient)
+            {
+                SetNeedDispose(context, true);
                 instance = GetTransient(module.Type);
+            }
             else
+            {
+                SetNeedDispose(context, false);
                 instance = GetSingleton(module.Type);
+            }
 
             // TODO: Property Injection.
 
@@ -43,16 +56,11 @@ namespace MariCommands
         }
 
         private object GetTransient(Type type)
-            => ActivatorUtilities.GetServiceOrCreateInstance(_provider, type);
+            => ActivatorUtilities.CreateInstance(_provider, type);
 
         private object GetSingleton(Type type)
         {
-            var instance = _provider.GetService(type);
-
-            if (instance.HasContent())
-                return instance;
-
-            if (_instances.TryGetValue(type, out instance))
+            if (_instances.TryGetValue(type, out var instance))
                 return instance;
 
             instance = ActivatorUtilities.CreateInstance(_provider, type);
@@ -60,6 +68,18 @@ namespace MariCommands
             _instances.TryAdd(type, instance);
 
             return instance;
+        }
+
+        private void SetNeedDispose(CommandExecutionContext context, bool value)
+        {
+            if (context.Items.ContainsKey(ServiceUtils.NEED_DISPOSE))
+            {
+                context.Items[ServiceUtils.NEED_DISPOSE] = value;
+            }
+            else
+            {
+                context.Items.Add(ServiceUtils.NEED_DISPOSE, value);
+            }
         }
     }
 }
