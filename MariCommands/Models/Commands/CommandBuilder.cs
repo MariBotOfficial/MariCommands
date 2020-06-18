@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Reflection;
+using MariGlobals.Extensions;
 
 namespace MariCommands
 {
@@ -109,7 +110,11 @@ namespace MariCommands
         /// <returns>The current builder.</returns>
         public CommandBuilder WithAlias(IEnumerable<string> alias)
         {
-            Aliases = alias.ToImmutableArray();
+            if (string.IsNullOrWhiteSpace(alias.ToString()))
+            {
+                Aliases = alias.ToImmutableArray();
+
+            }
 
             return this;
         }
@@ -177,7 +182,7 @@ namespace MariCommands
         }
 
         /// <summary>
-        /// Sets the description for this parameter.
+        /// Sets the description for this command.
         /// </summary>
         /// <param name="description">The description to be setted.</param>
         /// <returns>The current builder.</returns>
@@ -189,7 +194,7 @@ namespace MariCommands
         }
 
         /// <summary>
-        /// Sets the name for this parameter.
+        /// Sets the name for this command.
         /// </summary>
         /// <param name="name">The name to be setted.</param>
         /// <returns>The current builder.</returns>
@@ -206,9 +211,9 @@ namespace MariCommands
         }
 
         /// <summary>
-        /// Sets the commands for this command.
+        /// Sets the parameters for this command.
         /// </summary>
-        /// <param name="parameters">The commands to be setted.</param>
+        /// <param name="parameters">The parameters to be setted.</param>
         /// <returns>The current builder.</returns>
         public CommandBuilder WithParameters(IEnumerable<IParameterBuilder> parameters)
         {

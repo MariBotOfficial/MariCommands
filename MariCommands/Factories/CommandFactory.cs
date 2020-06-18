@@ -35,14 +35,14 @@ namespace MariCommands
             if (!IsCommand(module, methodInfo))
                 throw new ArgumentException(nameof(methodInfo), $"{methodInfo.Name} is not a valid command.");
 
-            var name = GetName(methodInfo);
+            var alias = GetAlias(methodInfo);
+            var name = GetName(methodInfo, alias);
             var description = GetDescription(methodInfo);
             var remarks = GetRemarks(methodInfo);
             var priority = GetPriority(methodInfo);
             var runMode = GetRunMode(methodInfo);
             var ignoreExtraArgs = GetIgnoreExtraArgs(methodInfo);
             var argumentParserType = GetArgumentParserType(methodInfo);
-            var alias = GetAlias(methodInfo);
             var attributes = GetAttributes(methodInfo);
             var preconditions = GetPreconditions(attributes);
             var enabled = GetEnabled(methodInfo);
@@ -121,27 +121,6 @@ namespace MariCommands
             return null;
         }
 
-        private MultiMatchHandling GetMultiMatch(MethodInfo methodInfo)
-        {
-            var multiMatchAttr = methodInfo.GetAttribute<MultiMatchHandlingAttribute>();
-
-            if (multiMatchAttr.HasContent())
-                return multiMatchAttr.Value;
-
-            return _config.MatchHandling;
-        }
-
-        private ModuleLifetime GetLifeTime(MethodInfo methodInfo)
-        {
-            var lifeTimeAttr = methodInfo.GetAttribute<LifetimeAttribute>();
-
-            if (lifeTimeAttr.HasContent())
-                return lifeTimeAttr.Value;
-
-            return _config.ModuleLifetime;
-        }
-
-
         private bool GetIgnoreExtraArgs(MethodInfo methodInfo)
         {
             var ignoreArgsAttr = methodInfo.GetAttribute<IgnoreExtraArgsAttribute>();
@@ -199,14 +178,15 @@ namespace MariCommands
             return string.Empty;
         }
 
-        private string GetName(MethodInfo methodInfo)
+        private string GetName(MethodInfo methodInfo, IEnumerable<string> alias )
         {
             var nameAttr = methodInfo.GetAttribute<NameAttribute>();
 
             if (nameAttr.HasContent())
                 return nameAttr.Value;
 
-            return methodInfo.Name;
+
+            return alias.FirstOrDefault(); ;
         }
 
         /// <inheritdoc />
