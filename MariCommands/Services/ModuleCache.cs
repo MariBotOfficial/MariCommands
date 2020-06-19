@@ -141,11 +141,18 @@ namespace MariCommands
 
             for (var i = 0; i < paths.Count(); i++)
             {
-                fullPath += paths[i];
+                if (i == 0)
+                {
+                    fullPath += paths[i];
+                }
+                else
+                {
+                    fullPath += $"{_config.Separator}{paths[i]}";
+                }
 
                 if (_commands.TryGetValue(fullPath, out var commands))
                 {
-                    var remainingInput = string.Join(_config.Separator, paths.Skip(i));
+                    var remainingInput = string.Join(_config.Separator, paths.Skip(i + 1));
 
                     matches.AddRange(commands
                                     .Select(a => new CommandMatch(a, fullPath, input, remainingInput))
