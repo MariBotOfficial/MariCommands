@@ -22,9 +22,18 @@ namespace MariCommands
         /// <inheritdoc />
         public CommandExecutionRequest Instantiate(CommandExecutionContext context)
         {
+            context.NotNull(nameof(context));
+
             var cmdContext = context.CommandContext;
+
+            cmdContext.NotNull(nameof(context.CommandContext));
+            cmdContext.Command.NotNull(nameof(context.CommandContext.Command));
+
             var module = cmdContext.Command.Module;
-            var provider = cmdContext.ServiceProvider;
+
+            module.NotNull(nameof(context.CommandContext.Command.Module));
+
+            var provider = cmdContext.ServiceProvider ?? ServiceUtils.GetDefaultServiceProvider();
             var config = provider.GetOrDefault<ICommandServiceOptions, CommandServiceOptions>();
 
             var lifeTime = module.GetModuleLifetime(config);

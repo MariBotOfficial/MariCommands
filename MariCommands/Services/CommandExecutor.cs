@@ -27,14 +27,22 @@ namespace MariCommands
         /// <inheritdoc />
         public async Task<IResult> ExecuteAsync(string input, CommandContext commandContext)
         {
+            input.NotNullOrWhiteSpace(nameof(input));
+            commandContext.NotNull(nameof(commandContext));
+
             var matches = await _moduleCache.SearchCommandsAsync(input);
 
             if (matches.HasNoContent())
                 return CommandNotFoundResult.FromInput(input);
 
-            if (matches.Count == 1)
+            if (matches.Count == 1 && !matches.FirstOrDefault().Command.IsEnabled)
+            {
+                return CommandNotFoundResult.FromInput(input);
+            }
+            else if (matches.Count == 1)
             {
                 var match = matches.FirstOrDefault();
+
                 return await ExecuteAsync(match.Command, match.RemainingInput, commandContext);
             }
             else
@@ -45,6 +53,11 @@ namespace MariCommands
 
                 if (!hasBestMatch)
                     return MultiMatchErrorResult.FromMatches(matches);
+
+                foreach (var match in matches)
+                {
+
+                }
 
                 return default;
             }

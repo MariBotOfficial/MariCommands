@@ -28,6 +28,8 @@ namespace MariCommands
         /// <inheritdoc />
         public void AddModule(IModule module)
         {
+            module.NotNull(nameof(module));
+
             var lastNestedModule = GetLastNestedModule(module);
 
             AddModuleInternal(lastNestedModule, string.Empty);
@@ -133,6 +135,8 @@ namespace MariCommands
         /// <inheritdoc />
         public ValueTask<IReadOnlyCollection<ICommandMatch>> SearchCommandsAsync(string input)
         {
+            input.NotNullOrEmpty(nameof(input));
+
             var paths = input.Split(_config.Separator);
 
             var fullPath = string.Empty;
