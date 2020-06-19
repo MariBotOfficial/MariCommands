@@ -110,11 +110,10 @@ namespace MariCommands
         /// <returns>The current builder.</returns>
         public CommandBuilder WithAlias(IEnumerable<string> alias)
         {
-            if (string.IsNullOrWhiteSpace(alias.ToString()))
-            {
-                Aliases = alias.ToImmutableArray();
-
-            }
+            alias.NotNullOrEmpty(nameof(alias));
+            
+            Aliases = alias.ToImmutableArray();
+            
 
             return this;
         }
