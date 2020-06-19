@@ -30,20 +30,18 @@ namespace MariCommands
             input.NotNullOrWhiteSpace(nameof(input));
             commandContext.NotNull(nameof(commandContext));
 
-            var matches = await _moduleCache.SearchCommandsAsync(input);
+            var matches = await _moduleCache.SearchCommandsAsync(input)
+                                                        .ConfigureAwait(false);
 
             if (matches.HasNoContent())
                 return CommandNotFoundResult.FromInput(input);
 
-            if (matches.Count == 1 && !matches.FirstOrDefault().Command.IsEnabled)
-            {
-                return CommandNotFoundResult.FromInput(input);
-            }
-            else if (matches.Count == 1)
+            if (matches.Count == 1)
             {
                 var match = matches.FirstOrDefault();
 
-                return await ExecuteAsync(match.Command, match.RemainingInput, commandContext);
+                return await ExecuteAsync(match.Command, match.RemainingInput, commandContext)
+                                .ConfigureAwait(false);
             }
             else
             {
@@ -54,13 +52,43 @@ namespace MariCommands
                 if (!hasBestMatch)
                     return MultiMatchErrorResult.FromMatches(matches);
 
+                var bestMatches = new List<ICommandMatch>();
+
                 foreach (var match in matches)
                 {
+                    var inputCount = match.RemainingInput.Split(_config.Separator).Count();
 
+                    var command = match.Command;
+
+                    if (command.Parameters.Count > inputCount)
+                    {
+                        var hasAnyOptional = command.Parameters.Any(a => IsOptional(a));
+
+                        if (!hasAnyOptional)
+                            continue;
+
+                        var optionalsCount = command.Parameters.Count(a => IsOptional(a));
+
+                        var missingCount = command.Parameters.Count - inputCount;
+
+                        if (optionalsCount < missingCount)
+                            continue;
+
+                        bestMatches.Add(match);
+                    }
+                    else
+                    {
+
+                    }
                 }
 
                 return default;
             }
+        }
+
+        private bool IsOptional(IParameter parameter)
+        {
+            return parameter.IsOptional || parameter.DefaultValue.HasContent() || parameter.IsParams;
         }
 
         /// <inheritdoc />

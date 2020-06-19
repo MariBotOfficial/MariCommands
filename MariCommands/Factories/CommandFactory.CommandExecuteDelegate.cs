@@ -60,7 +60,8 @@ namespace MariCommands
             {
                 var cmdCtx = request.Context.CommandContext;
 
-                var result = await InvokeValueTaskObject(request.Instance, cmdCtx);
+                var result = await InvokeValueTaskObject(request.Instance, cmdCtx)
+                                            .ConfigureAwait(false);
 
                 // TODO: OkObjectResult
             };
@@ -74,7 +75,8 @@ namespace MariCommands
             {
                 var cmdCtx = request.Context.CommandContext;
 
-                var result = await InvokeValueTaskResult(request.Instance, cmdCtx);
+                var result = await InvokeValueTaskResult(request.Instance, cmdCtx)
+                                            .ConfigureAwait(false);
 
                 request.Context.Result = result;
             };
@@ -88,7 +90,8 @@ namespace MariCommands
             {
                 var cmdCtx = request.Context.CommandContext;
 
-                var result = await InvokeTaskObject(request.Instance, cmdCtx);
+                var result = await InvokeTaskObject(request.Instance, cmdCtx)
+                                            .ConfigureAwait(false);
 
                 // TODO: OkObjectResult
             };
@@ -102,7 +105,8 @@ namespace MariCommands
             {
                 var cmdCtx = request.Context.CommandContext;
 
-                var result = await InvokeTaskResult(request.Instance, cmdCtx);
+                var result = await InvokeTaskResult(request.Instance, cmdCtx)
+                                            .ConfigureAwait(false);
 
                 request.Context.Result = result;
             };
@@ -116,7 +120,8 @@ namespace MariCommands
             {
                 var cmdCtx = request.Context.CommandContext;
 
-                await InvokeValueTask(request.Instance, cmdCtx);
+                await InvokeValueTask(request.Instance, cmdCtx)
+                                        .ConfigureAwait(false);
 
                 // TODO: Set OkResult.
             };
@@ -130,7 +135,8 @@ namespace MariCommands
             {
                 var cmdCtx = request.Context.CommandContext;
 
-                await InvokeTask(request.Instance, cmdCtx);
+                await InvokeTask(request.Instance, cmdCtx)
+                                    .ConfigureAwait(false);
 
                 // TODO: Set OkResult.
             };
@@ -222,7 +228,7 @@ namespace MariCommands
         {
             dynamic awaitable = context.Command.MethodInfo.Invoke(instance, context.Args.ToArray());
 
-            await awaitable;
+            await awaitable.ConfigureAwait(false);
 
             return (T)awaitable.GetAwaiter().GetResult();
         }
@@ -231,7 +237,7 @@ namespace MariCommands
         {
             dynamic awaitable = context.Command.MethodInfo.Invoke(instance, context.Args.ToArray());
 
-            await awaitable;
+            await awaitable.ConfigureAwait(false);
 
             return (T)awaitable.GetAwaiter().GetResult();
         }
