@@ -10,6 +10,6 @@ namespace MariCommands
         /// </summary>
         /// <param name="context">The current command context execution.</param>
         /// <returns>The module instantiated.</returns>
-        object Instantiate(CommandExecutionContext context);
+        CommandExecutionRequest Instantiate(CommandExecutionContext context);
     }
 }

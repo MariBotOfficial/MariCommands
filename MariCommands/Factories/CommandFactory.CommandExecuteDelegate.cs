@@ -3,7 +3,6 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using MariGlobals.Extensions;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace MariCommands
 {
@@ -256,7 +255,7 @@ namespace MariCommands
         {
             var cmdCtx = context.CommandContext;
             var provider = cmdCtx.ServiceProvider;
-            var moduleProvider = provider.GetOrDefault<IModuleProvider>(new ModuleProvider(provider));
+            var moduleProvider = provider.GetOrDefault<IModuleProvider, ModuleProvider>();
 
             var instance = moduleProvider.Instantiate(context);
 
