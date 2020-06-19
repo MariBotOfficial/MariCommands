@@ -57,11 +57,11 @@ namespace MariCommands
 
         private CommandExecuteDelegate GetCommandValueTaskObjectDelegate()
         {
-            CommandExecuteDelegate commandDelegate = async context =>
+            CommandExecuteDelegate commandDelegate = async request =>
             {
-                var instance = PrepareExecution(context);
+                var cmdCtx = request.Context.CommandContext;
 
-                var result = await InvokeValueTaskObject(instance, context.CommandContext);
+                var result = await InvokeValueTaskObject(request.Instance, cmdCtx);
 
                 // TODO: OkObjectResult
             };
@@ -71,13 +71,13 @@ namespace MariCommands
 
         private CommandExecuteDelegate GetCommandValueTaskResultDelegate()
         {
-            CommandExecuteDelegate commandDelegate = async context =>
+            CommandExecuteDelegate commandDelegate = async request =>
             {
-                var instance = PrepareExecution(context);
+                var cmdCtx = request.Context.CommandContext;
 
-                var result = await InvokeValueTaskResult(instance, context.CommandContext);
+                var result = await InvokeValueTaskResult(request.Instance, cmdCtx);
 
-                context.Result = result;
+                request.Context.Result = result;
             };
 
             return commandDelegate;
@@ -85,11 +85,11 @@ namespace MariCommands
 
         private CommandExecuteDelegate GetCommandTaskObjectDelegate()
         {
-            CommandExecuteDelegate commandDelegate = async context =>
+            CommandExecuteDelegate commandDelegate = async request =>
             {
-                var instance = PrepareExecution(context);
+                var cmdCtx = request.Context.CommandContext;
 
-                var result = await InvokeTaskObject(instance, context.CommandContext);
+                var result = await InvokeTaskObject(request.Instance, cmdCtx);
 
                 // TODO: OkObjectResult
             };
@@ -99,13 +99,13 @@ namespace MariCommands
 
         private CommandExecuteDelegate GetCommandTaskResultDelegate()
         {
-            CommandExecuteDelegate commandDelegate = async context =>
+            CommandExecuteDelegate commandDelegate = async request =>
             {
-                var instance = PrepareExecution(context);
+                var cmdCtx = request.Context.CommandContext;
 
-                var result = await InvokeTaskResult(instance, context.CommandContext);
+                var result = await InvokeTaskResult(request.Instance, cmdCtx);
 
-                context.Result = result;
+                request.Context.Result = result;
             };
 
             return commandDelegate;
@@ -113,11 +113,11 @@ namespace MariCommands
 
         private CommandExecuteDelegate GetCommandValueTaskDelegate()
         {
-            CommandExecuteDelegate commandDelegate = async context =>
+            CommandExecuteDelegate commandDelegate = async request =>
             {
-                var instance = PrepareExecution(context);
+                var cmdCtx = request.Context.CommandContext;
 
-                await InvokeValueTask(instance, context.CommandContext);
+                await InvokeValueTask(request.Instance, cmdCtx);
 
                 // TODO: Set OkResult.
             };
@@ -127,11 +127,11 @@ namespace MariCommands
 
         private CommandExecuteDelegate GetCommandTaskDelegate()
         {
-            CommandExecuteDelegate commandDelegate = async context =>
+            CommandExecuteDelegate commandDelegate = async request =>
             {
-                var instance = PrepareExecution(context);
+                var cmdCtx = request.Context.CommandContext;
 
-                await InvokeTask(instance, context.CommandContext);
+                await InvokeTask(request.Instance, cmdCtx);
 
                 // TODO: Set OkResult.
             };
@@ -141,14 +141,15 @@ namespace MariCommands
 
         private CommandExecuteDelegate GetCommandResultDelegate()
         {
-            CommandExecuteDelegate commandDelegate = context =>
+            CommandExecuteDelegate commandDelegate = request =>
             {
                 try
                 {
-                    var instance = PrepareExecution(context);
-                    var result = InvokeResult(instance, context.CommandContext);
+                    var cmdCtx = request.Context.CommandContext;
 
-                    context.Result = result;
+                    var result = InvokeResult(request.Instance, cmdCtx);
+
+                    request.Context.Result = result;
 
                     return Task.CompletedTask;
                 }
@@ -163,13 +164,13 @@ namespace MariCommands
 
         private CommandExecuteDelegate GetCommandVoidDelegate()
         {
-            CommandExecuteDelegate commandDelegate = context =>
+            CommandExecuteDelegate commandDelegate = request =>
             {
                 try
                 {
-                    var instance = PrepareExecution(context);
+                    var cmdCtx = request.Context.CommandContext;
 
-                    InvokeVoid(instance, context.CommandContext);
+                    InvokeVoid(request.Instance, cmdCtx);
                     // TODO: Set OkResult.
 
                     return Task.CompletedTask;
@@ -185,13 +186,13 @@ namespace MariCommands
 
         private CommandExecuteDelegate GetCommandObjectDelegate()
         {
-            CommandExecuteDelegate commandDelegate = context =>
+            CommandExecuteDelegate commandDelegate = request =>
             {
                 try
                 {
-                    var instance = PrepareExecution(context);
+                    var cmdCtx = request.Context.CommandContext;
 
-                    var result = InvokeObject(instance, context.CommandContext);
+                    var result = InvokeObject(request.Instance, cmdCtx);
 
                     // TODO: Set OkObjectResult.
 
