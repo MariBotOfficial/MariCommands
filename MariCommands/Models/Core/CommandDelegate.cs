@@ -7,5 +7,5 @@ namespace MariCommands
     /// </summary>
     /// <param name="context">The <see cref="CommandExecutionContext" /> for the command request.</param>
     /// <returns>A task that represents the completion of command request processing.</returns>
-    public delegate Task CommandDelegate(CommandExecutionContext context);
+    public delegate Task CommandExecuteDelegate(CommandExecutionContext context);
 }

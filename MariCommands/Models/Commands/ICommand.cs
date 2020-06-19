@@ -13,7 +13,7 @@ namespace MariCommands
         /// <summary>
         /// A function that can process a request for this command.
         /// </summary>
-        CommandDelegate CommandDelegate { get; }
+        CommandExecuteDelegate CommandDelegate { get; }
 
         /// <summary>
         /// The name for this command.

@@ -9,7 +9,7 @@ namespace MariCommands
 {
     public partial class CommandFactory : ICommandFactory
     {
-        private CommandDelegate GetCommandDelegate(MethodInfo methodInfo)
+        private CommandExecuteDelegate GetCommandDelegate(MethodInfo methodInfo)
         {
             var returnType = methodInfo.ReturnType;
 
@@ -55,9 +55,9 @@ namespace MariCommands
             return GetCommandObjectDelegate();
         }
 
-        private CommandDelegate GetCommandValueTaskObjectDelegate()
+        private CommandExecuteDelegate GetCommandValueTaskObjectDelegate()
         {
-            CommandDelegate commandDelegate = async context =>
+            CommandExecuteDelegate commandDelegate = async context =>
             {
                 var instance = PrepareExecution(context);
 
@@ -69,9 +69,9 @@ namespace MariCommands
             return commandDelegate;
         }
 
-        private CommandDelegate GetCommandValueTaskResultDelegate()
+        private CommandExecuteDelegate GetCommandValueTaskResultDelegate()
         {
-            CommandDelegate commandDelegate = async context =>
+            CommandExecuteDelegate commandDelegate = async context =>
             {
                 var instance = PrepareExecution(context);
 
@@ -83,9 +83,9 @@ namespace MariCommands
             return commandDelegate;
         }
 
-        private CommandDelegate GetCommandTaskObjectDelegate()
+        private CommandExecuteDelegate GetCommandTaskObjectDelegate()
         {
-            CommandDelegate commandDelegate = async context =>
+            CommandExecuteDelegate commandDelegate = async context =>
             {
                 var instance = PrepareExecution(context);
 
@@ -97,9 +97,9 @@ namespace MariCommands
             return commandDelegate;
         }
 
-        private CommandDelegate GetCommandTaskResultDelegate()
+        private CommandExecuteDelegate GetCommandTaskResultDelegate()
         {
-            CommandDelegate commandDelegate = async context =>
+            CommandExecuteDelegate commandDelegate = async context =>
             {
                 var instance = PrepareExecution(context);
 
@@ -111,9 +111,9 @@ namespace MariCommands
             return commandDelegate;
         }
 
-        private CommandDelegate GetCommandValueTaskDelegate()
+        private CommandExecuteDelegate GetCommandValueTaskDelegate()
         {
-            CommandDelegate commandDelegate = async context =>
+            CommandExecuteDelegate commandDelegate = async context =>
             {
                 var instance = PrepareExecution(context);
 
@@ -125,9 +125,9 @@ namespace MariCommands
             return commandDelegate;
         }
 
-        private CommandDelegate GetCommandTaskDelegate()
+        private CommandExecuteDelegate GetCommandTaskDelegate()
         {
-            CommandDelegate commandDelegate = async context =>
+            CommandExecuteDelegate commandDelegate = async context =>
             {
                 var instance = PrepareExecution(context);
 
@@ -139,9 +139,9 @@ namespace MariCommands
             return commandDelegate;
         }
 
-        private CommandDelegate GetCommandResultDelegate()
+        private CommandExecuteDelegate GetCommandResultDelegate()
         {
-            CommandDelegate commandDelegate = context =>
+            CommandExecuteDelegate commandDelegate = context =>
             {
                 try
                 {
@@ -161,9 +161,9 @@ namespace MariCommands
             return commandDelegate;
         }
 
-        private CommandDelegate GetCommandVoidDelegate()
+        private CommandExecuteDelegate GetCommandVoidDelegate()
         {
-            CommandDelegate commandDelegate = context =>
+            CommandExecuteDelegate commandDelegate = context =>
             {
                 try
                 {
@@ -183,9 +183,9 @@ namespace MariCommands
             return commandDelegate;
         }
 
-        private CommandDelegate GetCommandObjectDelegate()
+        private CommandExecuteDelegate GetCommandObjectDelegate()
         {
-            CommandDelegate commandDelegate = context =>
+            CommandExecuteDelegate commandDelegate = context =>
             {
                 try
                 {

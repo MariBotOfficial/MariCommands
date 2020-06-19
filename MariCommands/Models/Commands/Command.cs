@@ -98,7 +98,7 @@ namespace MariCommands
         public MethodInfo MethodInfo { get; }
 
         /// <inheritdoc />        
-        public CommandDelegate CommandDelegate { get; }
+        public CommandExecuteDelegate CommandDelegate { get; }
 
         /// <inheritdoc />
         public void Disable()

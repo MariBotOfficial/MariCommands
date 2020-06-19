@@ -52,7 +52,7 @@ namespace MariCommands
         public IModuleBuilder Module { get; private set; }
 
         /// <inheritdoc />
-        public CommandDelegate CommandDelegate { get; private set; }
+        public CommandExecuteDelegate CommandDelegate { get; private set; }
 
 
         /// <summary>
@@ -111,9 +111,9 @@ namespace MariCommands
         public CommandBuilder WithAlias(IEnumerable<string> alias)
         {
             alias.NotNullOrEmpty(nameof(alias));
-            
+
             Aliases = alias.ToImmutableArray();
-            
+
 
             return this;
         }
@@ -229,7 +229,7 @@ namespace MariCommands
         /// <exception cref="ArgumentNullException">
         /// <param ref="commandDelegate" /> must not be null.
         /// </exception>
-        public CommandBuilder WithCommandDelegate(CommandDelegate commandDelegate)
+        public CommandBuilder WithCommandDelegate(CommandExecuteDelegate commandDelegate)
         {
             commandDelegate.NotNull(nameof(commandDelegate));
 
