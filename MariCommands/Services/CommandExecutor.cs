@@ -95,13 +95,9 @@ namespace MariCommands
                         fails.Add(command, BadArgCountResult.FromCommand(command));
                         continue;
                     }
+                }
 
-                    bestMatches.Add(match);
-                }
-                else
-                {
-                    bestMatches.Add(match);
-                }
+                bestMatches.Add(match);
             }
 
             if (bestMatches.HasNoContent())
