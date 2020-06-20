@@ -29,5 +29,13 @@ namespace MariCommands
 
         /// <inheritdoc />
         public Exception Exception => null;
+
+        /// <summary>
+        /// Returns a <see cref="CommandDisabledResult"/> with the specified command.
+        /// </summary>
+        /// <param name="command">The command that is disabled.</param>
+        /// <returns>A <see cref="CommandDisabledResult"/>.</returns>
+        public static CommandDisabledResult FromCommand(ICommand command)
+            => new CommandDisabledResult(command);
     }
 }

@@ -40,50 +40,82 @@ namespace MariCommands
             {
                 var match = matches.FirstOrDefault();
 
+                if (!match.Command.IsEnabled)
+                    return CommandDisabledResult.FromCommand(match.Command);
+
                 return await ExecuteAsync(match.Command, match.RemainingInput, commandContext)
                                 .ConfigureAwait(false);
             }
             else
             {
-                var hasBestMatch = matches
-                                        .Any(a =>
-                                            a.Command.Module.GetMatchHandling(_config) == MultiMatchHandling.Best);
-
-                if (!hasBestMatch)
-                    return MultiMatchErrorResult.FromMatches(matches);
-
-                var bestMatches = new List<ICommandMatch>();
-
-                foreach (var match in matches)
-                {
-                    var inputCount = match.RemainingInput.Split(_config.Separator).Count();
-
-                    var command = match.Command;
-
-                    if (command.Parameters.Count > inputCount)
-                    {
-                        var hasAnyOptional = command.Parameters.Any(a => IsOptional(a));
-
-                        if (!hasAnyOptional)
-                            continue;
-
-                        var optionalsCount = command.Parameters.Count(a => IsOptional(a));
-
-                        var missingCount = command.Parameters.Count - inputCount;
-
-                        if (optionalsCount < missingCount)
-                            continue;
-
-                        bestMatches.Add(match);
-                    }
-                    else
-                    {
-
-                    }
-                }
-
-                return default;
+                return await HandleMatchesAsync(input, commandContext, matches)
+                                .ConfigureAwait(false);
             }
+        }
+
+        private async Task<IResult> HandleMatchesAsync(string input, CommandContext commandContext, IReadOnlyCollection<ICommandMatch> matches)
+        {
+            var hasBestMatch = matches
+                                .Any(a =>
+                                    a.Command.Module.GetMatchHandling(_config) == MultiMatchHandling.Best);
+
+            if (!hasBestMatch)
+                return MultiMatchErrorResult.FromMatches(matches);
+
+            matches = matches
+                        .OrderBy(a => a.Command.Priority)
+                        .ToList();
+
+            var bestMatches = new List<ICommandMatch>();
+
+            var fails = new Dictionary<ICommand, IResult>();
+
+            foreach (var match in matches)
+            {
+                var inputCount = match.RemainingInput.Split(_config.Separator).Count();
+
+                var command = match.Command;
+
+                if (command.Parameters.Count > inputCount)
+                {
+                    var hasAnyOptional = command.Parameters.Any(a => IsOptional(a));
+
+                    if (!hasAnyOptional)
+                    {
+                        fails.Add(command, BadArgCountResult.FromCommand(command));
+                        continue;
+                    }
+
+                    var optionalsCount = command.Parameters.Count(a => IsOptional(a));
+
+                    var missingCount = command.Parameters.Count - inputCount;
+
+                    if (optionalsCount < missingCount)
+                    {
+                        fails.Add(command, BadArgCountResult.FromCommand(command));
+                        continue;
+                    }
+
+                    bestMatches.Add(match);
+                }
+                else
+                {
+                    bestMatches.Add(match);
+                }
+            }
+
+            if (bestMatches.HasNoContent())
+            {
+                return MatchesFailedResult.FromFaileds(fails);
+            }
+
+            return await HandleMatchesFromParser(input, commandContext, bestMatches)
+                            .ConfigureAwait(false);
+        }
+
+        private Task<IResult> HandleMatchesFromParser(string input, CommandContext commandContext, IReadOnlyCollection<ICommandMatch> matches)
+        {
+            return Task.FromResult<IResult>(default);
         }
 
         private bool IsOptional(IParameter parameter)
