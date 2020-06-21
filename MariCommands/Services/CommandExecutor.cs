@@ -96,6 +96,16 @@ namespace MariCommands
                         continue;
                     }
                 }
+                else if (command.Parameters.Count < inputCount)
+                {
+                    var ignoreExtraArgs = command.GetIgnoreExtraArgs(_config);
+
+                    if (!ignoreExtraArgs)
+                    {
+                        fails.Add(command, BadArgCountResult.FromCommand(command));
+                        continue;
+                    }
+                }
 
                 bestMatches.Add(match);
             }
