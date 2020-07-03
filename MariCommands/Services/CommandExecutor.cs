@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MariGlobals.Extensions;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace MariCommands
 {
@@ -115,13 +116,32 @@ namespace MariCommands
                 return MatchesFailedResult.FromFaileds(fails);
             }
 
-            return await HandleMatchesFromParser(input, commandContext, bestMatches)
+            return await HandleMatchesFromPreconditions(input, commandContext, bestMatches)
                             .ConfigureAwait(false);
         }
 
-        private Task<IResult> HandleMatchesFromParser(string input, CommandContext commandContext, IReadOnlyCollection<ICommandMatch> matches)
+        private async Task<IResult> HandleMatchesFromPreconditions(string input, CommandContext commandContext, IReadOnlyCollection<ICommandMatch> matches)
         {
-            return Task.FromResult<IResult>(default);
+            await Task.Delay(0);
+            foreach (var match in matches)
+            {
+                commandContext.SetCommandMatch(match);
+            }
+
+            return null;
+        }
+
+        private async Task<IResult> HandleMatchesFromParser(string input, CommandContext commandContext, IReadOnlyCollection<ICommandMatch> matches)
+        {
+            foreach (var match in matches)
+            {
+                var parser = GetParser(match);
+
+                await parser.ParseAsync(commandContext);
+            }
+
+
+            return null;
         }
 
         private bool IsOptional(IParameter parameter)
@@ -139,6 +159,21 @@ namespace MariCommands
         public Task<IResult> ExecuteAsync(ICommand command, IEnumerable<object> args, CommandContext commandContext)
         {
             throw new System.NotImplementedException();
+        }
+
+        private IArgumentParser GetParser(ICommandMatch match)
+        {
+            var type = match.Command.GetArgumentParserType();
+
+            IArgumentParser parser = null;
+
+            if (type.HasContent())
+                parser = ActivatorUtilities.GetServiceOrCreateInstance(_provider, type) as IArgumentParser;
+
+            if (parser.HasNoContent())
+                parser = _provider.GetOrDefault<IArgumentParser>(new ArgumentParser(_provider));
+
+            return parser;
         }
     }
 }
