@@ -19,7 +19,7 @@ namespace MariCommands.Hosting
         private void ConfigureInternal(IApplicationBuilder builder)
         {
             var service = builder.ApplicationServices.GetRequiredService<ICommandService>();
-            var startup = builder.ApplicationServices.GetRequiredService<ICommandStartup>();
+            var startup = builder.ApplicationServices.GetService<ICommandStartup>();
         }
     }
 }
