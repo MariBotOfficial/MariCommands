@@ -32,6 +32,7 @@ namespace MariCommands.Extensions
                 services.AddTransient<IStartupFilter, CommandStartupFilter>();
                 services.TryAddSingleton<ICommandService, CommandService>();
                 services.TryAddTransient<ICommandApplicationBuilderFactory, CommandApplicationBuilderFactory>();
+                services.TryAddSingleton<ICommandServiceOptions, CommandServiceOptions>();
             });
 
             return webBuilder;

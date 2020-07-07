@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
+using MariGlobals.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -26,6 +27,8 @@ namespace MariCommands
             _moduleFactory = _provider.GetOrDefault<IModuleFactory>(new ModuleFactory(_provider));
             // TODO: _commandExecutor = _provider.GetOrDefault<ICommandExecutor, CommandExecutor>();
         }
+
+        private CommandDelegate CommandDelegate { get; set; }
 
         /// <inheritdoc />
         public IModule AddModule<T>(T type) where T : IModule
@@ -62,5 +65,16 @@ namespace MariCommands
         /// <inheritdoc />
         public Task<IResult> ExecuteAsync(ICommand command, IEnumerable<object> args, CommandContext commandContext)
             => _commandExecutor.ExecuteAsync(command, args, commandContext);
+
+        /// <inheritdoc />
+        public void Initialize(CommandDelegate commandDelegate)
+        {
+            if (CommandDelegate.HasContent())
+                throw new InvalidOperationException("The current application has already started.");
+
+            commandDelegate.NotNull(nameof(commandDelegate));
+
+            CommandDelegate = commandDelegate;
+        }
     }
 }

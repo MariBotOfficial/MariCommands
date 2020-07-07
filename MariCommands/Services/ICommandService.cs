@@ -90,5 +90,11 @@ namespace MariCommands
         ///     <param ref="commandContext" /> must not be null.
         /// </exception>
         Task<IResult> ExecuteAsync(ICommand command, IEnumerable<object> args, CommandContext commandContext);
+
+        /// <summary>
+        /// Initialize the current command service with the specified command middleware pipeline.
+        /// </summary>
+        /// <param name="commandDelegate">The command middleware for proccess command requests.</param>
+        void Initialize(CommandDelegate commandDelegate);
     }
 }
