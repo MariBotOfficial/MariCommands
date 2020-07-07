@@ -74,7 +74,7 @@ namespace MariCommands
 
             Parameters = parameters.MoveToImmutable();
 
-            CommandDelegate = builder.CommandDelegate;
+            // CommandDelegate = builder.CommandDelegate;
         }
 
         private void Validate(ICommandBuilder builder, IModule module)
@@ -84,7 +84,7 @@ namespace MariCommands
             builder.Name.NotNullOrWhiteSpace(nameof(builder.Name));
             builder.MethodInfo.NotNull(nameof(builder.MethodInfo));
             builder.Aliases.NotNullOrEmpty(nameof(builder.Aliases));
-            builder.CommandDelegate.NotNull(nameof(builder.CommandDelegate));
+            //builder.CommandDelegate.NotNull(nameof(builder.CommandDelegate));
         }
 
         /// <inheritdoc />
@@ -97,8 +97,8 @@ namespace MariCommands
         /// <inheritdoc />
         public MethodInfo MethodInfo { get; }
 
-        /// <inheritdoc />        
-        public CommandExecuteDelegate CommandDelegate { get; }
+        ///// <inheritdoc />        
+        //public CommandExecuteDelegate CommandDelegate { get; }
 
         /// <inheritdoc />
         public void Disable()

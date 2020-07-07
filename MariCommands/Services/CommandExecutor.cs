@@ -125,7 +125,7 @@ namespace MariCommands
             await Task.Delay(0);
             foreach (var match in matches)
             {
-                commandContext.SetCommandMatch(match);
+                // Set command match.
             }
 
             return null;

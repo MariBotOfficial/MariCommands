@@ -46,7 +46,7 @@ namespace MariCommands
             var attributes = GetAttributes(methodInfo);
             var preconditions = GetPreconditions(attributes);
             var enabled = GetEnabled(methodInfo);
-            var commandDelegate = GetCommandDelegate(methodInfo);
+            //var commandDelegate = GetCommandDelegate(methodInfo);
 
             var builder = new CommandBuilder()
                                 .WithName(name)
@@ -60,8 +60,8 @@ namespace MariCommands
                                 .WithEnabled(enabled)
                                 .WithAttributes(attributes)
                                 .WithPreconditions(preconditions)
-                                .WithModule(module)
-                                .WithCommandDelegate(commandDelegate);
+                                .WithModule(module);
+            // .WithCommandDelegate(commandDelegate);
 
             var parameters = GetParameters(builder);
             builder.WithParameters(parameters);

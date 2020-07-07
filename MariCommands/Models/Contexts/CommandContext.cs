@@ -13,43 +13,36 @@ namespace MariCommands
         /// <summary>
         /// The currently command of this context.
         /// </summary>
-        public ICommand Command { get; private set; }
+        public ICommand Command { get; set; }
 
         /// <summary>
         /// The alias used for this command.
         /// </summary>
-        public string Alias { get; private set; }
+        public string Alias { get; set; }
 
         /// <summary>
         /// The raw arguments of this context.
         /// </summary>
-        public string RawArgs { get; private set; }
+        public string RawArgs { get; set; }
 
         /// <summary>
         /// The parsed arguments.
         /// </summary>
-        public IReadOnlyCollection<object> Args { get; private set; }
+        public IReadOnlyCollection<object> Args { get; set; }
 
         /// <summary>
         /// The dependency container of this context.
         /// </summary>
-        public IServiceProvider ServiceProvider { get; private set; }
+        public IServiceProvider ServiceProvider { get; set; }
 
-        internal void SetServiceProvider(IServiceProvider provider)
-        {
-            ServiceProvider = provider ?? ServiceUtils.GetDefaultServiceProvider();
-        }
+        /// <summary>
+        /// The result of this execution context.
+        /// </summary>
+        public IResult Result { get; set; }
 
-        internal void SetCommandMatch(ICommandMatch match)
-        {
-            Command = match.Command;
-            Alias = match.Alias;
-            RawArgs = match.RawArgs;
-        }
-
-        internal void SetParsedArgs(IEnumerable<object> args)
-        {
-            Args = args.ToImmutableArray();
-        }
+        /// <summary>
+        /// A key/value collection to share data within the execution.
+        /// </summary>
+        public IDictionary<object, object> Items { get; set; }
     }
 }

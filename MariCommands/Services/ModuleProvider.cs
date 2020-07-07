@@ -20,44 +20,44 @@ namespace MariCommands
 
 
         /// <inheritdoc />
-        public CommandExecutionRequest Instantiate(CommandExecutionContext context)
-        {
-            context.NotNull(nameof(context));
+        // public CommandExecutionRequest Instantiate(CommandExecutionContext context)
+        // {
+        //     context.NotNull(nameof(context));
 
-            var cmdContext = context.CommandContext;
+        //     var cmdContext = context.CommandContext;
 
-            cmdContext.NotNull(nameof(context.CommandContext));
-            cmdContext.Command.NotNull(nameof(context.CommandContext.Command));
+        //     cmdContext.NotNull(nameof(context.CommandContext));
+        //     cmdContext.Command.NotNull(nameof(context.CommandContext.Command));
 
-            var module = cmdContext.Command.Module;
+        //     var module = cmdContext.Command.Module;
 
-            module.NotNull(nameof(context.CommandContext.Command.Module));
+        //     module.NotNull(nameof(context.CommandContext.Command.Module));
 
-            var provider = cmdContext.ServiceProvider ?? ServiceUtils.GetDefaultServiceProvider();
-            var config = provider.GetOrDefault<ICommandServiceOptions, CommandServiceOptions>();
+        //     var provider = cmdContext.ServiceProvider ?? ServiceUtils.GetDefaultServiceProvider();
+        //     var config = provider.GetOrDefault<ICommandServiceOptions, CommandServiceOptions>();
 
-            var lifeTime = module.GetModuleLifetime(config);
+        //     var lifeTime = module.GetModuleLifetime(config);
 
-            var instance = provider.GetService(module.Type);
+        //     var instance = provider.GetService(module.Type);
 
-            if (instance.HasContent())
-            {
-                return new CommandExecutionRequest(instance, context, false);
-            }
+        //     if (instance.HasContent())
+        //     {
+        //         return new CommandExecutionRequest(instance, context, false);
+        //     }
 
-            if (lifeTime == ModuleLifetime.Transient)
-            {
-                instance = GetTransient(module.Type, provider);
-                return new CommandExecutionRequest(instance, context, true);
-            }
-            else
-            {
-                instance = GetSingleton(module.Type, provider);
-                return new CommandExecutionRequest(instance, context, false);
-            }
+        //     if (lifeTime == ModuleLifetime.Transient)
+        //     {
+        //         instance = GetTransient(module.Type, provider);
+        //         return new CommandExecutionRequest(instance, context, true);
+        //     }
+        //     else
+        //     {
+        //         instance = GetSingleton(module.Type, provider);
+        //         return new CommandExecutionRequest(instance, context, false);
+        //     }
 
-            // TODO: Property Injection.
-        }
+        //     // TODO: Property Injection.
+        // }
 
         private object GetTransient(Type type, IServiceProvider provider)
             => ActivatorUtilities.CreateInstance(provider, type);

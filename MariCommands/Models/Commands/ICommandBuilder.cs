@@ -79,10 +79,10 @@ namespace MariCommands
         /// </summary>
         IModuleBuilder Module { get; }
 
-        /// <summary>
-        /// A function that can process a request for this command.
-        /// </summary>
-        CommandExecuteDelegate CommandDelegate { get; }
+        // /// <summary>
+        // /// A function that can process a request for this command.
+        // /// </summary>
+        // CommandExecuteDelegate CommandDelegate { get; }
 
         /// <summary>
         /// Finishes the building of this command.
