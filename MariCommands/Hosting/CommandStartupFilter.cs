@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using MariCommands.Factories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,8 +20,13 @@ namespace MariCommands.Hosting
 
         private void ConfigureInternal(IApplicationBuilder builder)
         {
-            var service = builder.ApplicationServices.GetRequiredService<ICommandService>();
-            var startup = builder.ApplicationServices.GetService<ICommandStartup>();
+            var applicationBuilderFactory = builder.ApplicationServices.GetRequiredService<ICommandApplicationBuilderFactory>();
+
+            var applicationBuilder = applicationBuilderFactory.Create(new Dictionary<string, object>(), builder.ApplicationServices);
+            var provider = applicationBuilder.ApplicationServices;
+
+            var service = provider.GetRequiredService<ICommandService>();
+            var startup = provider.GetService<ICommandStartup>();
         }
     }
 }

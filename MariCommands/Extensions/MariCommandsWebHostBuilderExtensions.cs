@@ -1,4 +1,5 @@
 using System;
+using MariCommands.Factories;
 using MariCommands.Hosting;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,6 +31,7 @@ namespace MariCommands.Extensions
                 services.AddTransient<ICommandStartup, TStartup>();
                 services.AddTransient<IStartupFilter, CommandStartupFilter>();
                 services.TryAddSingleton<ICommandService, CommandService>();
+                services.TryAddTransient<ICommandApplicationBuilderFactory, CommandApplicationBuilderFactory>();
             });
 
             return webBuilder;
