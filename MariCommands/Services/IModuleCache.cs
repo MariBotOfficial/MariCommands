@@ -13,14 +13,14 @@ namespace MariCommands
         /// Adds a module to the cache and returns if success.
         /// </summary>
         /// <param name="module">The module to be added.</param>
-        ///// <returns>A boolean that indicates if this module is sucessfully added.</returns>
+        /// <returns>A boolean that indicates if this module is sucessfully added.</returns>
         void AddModule(IModule module);
 
         /// <summary>
         /// Removes a module to the cache and returns if success.
         /// </summary>
         /// <param name="module">The module to be removed.</param>
-        ///// <returns>A boolean that indicates if this module is sucessfully removed.</returns>
+        /// <returns>A boolean that indicates if this module is sucessfully removed.</returns>
         void RemoveModule(IModule module);
 
         /// <summary>
