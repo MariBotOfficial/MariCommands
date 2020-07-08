@@ -41,7 +41,7 @@ namespace MariCommands
             collection.TryAddSingleton<ICommandFactory, CommandFactory>();
             collection.TryAddSingleton<IParameterFactory, ParameterFactory>();
             collection.TryAddSingleton<IModuleCache, ModuleCache>();
-            collection.TryAddSingleton<ICommandExecutor, CommandExecutor>();
+            collection.TryAddSingleton<IContextExecutor, ContextExecutor>();
             collection.TryAddSingleton<IArgumentParser, ArgumentParser>();
 
             return collection;
