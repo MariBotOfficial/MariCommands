@@ -12,11 +12,13 @@ namespace MariCommands
     /// <inheritdoc />
     public class CommandService : ICommandService
     {
+        private readonly IServiceProvider _provider;
         /// <summary>
         /// Creates an instance of <see cref="CommandService" />.
         /// </summary>
-        public CommandService()
+        public CommandService(IServiceProvider provider)
         {
+            _provider = provider;
         }
 
         private CommandDelegate CommandDelegate { get; set; }
@@ -46,35 +48,43 @@ namespace MariCommands
         }
 
         /// <inheritdoc />
-        public async Task<IResult> ExecuteAsync(string input, CommandContext commandContext)
+        public Task<IResult> ExecuteAsync(string input, CommandContext context)
         {
-            commandContext.RawArgs = input;
+            context.RawArgs = input;
 
-            await CommandDelegate(commandContext);
-
-            return commandContext.Result;
+            return ExecuteAsync(context);
         }
 
         /// <inheritdoc />
-        public async Task<IResult> ExecuteAsync(ICommand command, string args, CommandContext commandContext)
+        public Task<IResult> ExecuteAsync(ICommand command, string args, CommandContext context)
         {
-            commandContext.Command = command;
-            commandContext.RawArgs = args;
+            context.Command = command;
+            context.RawArgs = args;
 
-            await CommandDelegate(commandContext);
-
-            return commandContext.Result;
+            return ExecuteAsync(context);
         }
 
         /// <inheritdoc />
-        public async Task<IResult> ExecuteAsync(ICommand command, IEnumerable<object> args, CommandContext commandContext)
+        public Task<IResult> ExecuteAsync(ICommand command, IEnumerable<object> args, CommandContext context)
         {
-            commandContext.Command = command;
-            commandContext.Args = args.ToList();
+            context.Command = command;
+            context.Args = args.ToList();
 
-            await CommandDelegate(commandContext);
+            return ExecuteAsync(context);
+        }
 
-            return commandContext.Result;
+        private async Task<IResult> ExecuteAsync(CommandContext context)
+        {
+            CheckInitialized();
+
+            var scope = _provider.CreateScope();
+
+            context.ServiceProvider = scope.ServiceProvider;
+            context.RegisterForDispose(scope);
+
+            await CommandDelegate(context);
+
+            return context.Result;
         }
 
         /// <inheritdoc />
