@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using MariGlobals.Extensions;
@@ -11,21 +12,11 @@ namespace MariCommands
     /// <inheritdoc />
     public class CommandService : ICommandService
     {
-        private readonly IServiceProvider _provider;
-        private readonly ILoggerFactory _loggerFactory;
-        private readonly IModuleFactory _moduleFactory;
-        private readonly ICommandExecutor _commandExecutor;
-
         /// <summary>
         /// Creates an instance of <see cref="CommandService" />.
         /// </summary>
-        /// <param name="provider">A dependency container.</param>
-        public CommandService(IServiceProvider provider)
+        public CommandService()
         {
-            _provider = provider ?? ServiceUtils.GetDefaultServiceProvider();
-            _loggerFactory = _provider.GetOrDefault<ILoggerFactory, LoggerFactory>();
-            _moduleFactory = _provider.GetOrDefault<IModuleFactory>(new ModuleFactory(_provider));
-            // TODO: _commandExecutor = _provider.GetOrDefault<ICommandExecutor, CommandExecutor>();
         }
 
         private CommandDelegate CommandDelegate { get; set; }
@@ -55,16 +46,36 @@ namespace MariCommands
         }
 
         /// <inheritdoc />
-        public Task<IResult> ExecuteAsync(string input, CommandContext commandContext)
-            => _commandExecutor.ExecuteAsync(input, commandContext);
+        public async Task<IResult> ExecuteAsync(string input, CommandContext commandContext)
+        {
+            commandContext.RawArgs = input;
+
+            await CommandDelegate(commandContext);
+
+            return commandContext.Result;
+        }
 
         /// <inheritdoc />
-        public Task<IResult> ExecuteAsync(ICommand command, string args, CommandContext commandContext)
-            => _commandExecutor.ExecuteAsync(command, args, commandContext);
+        public async Task<IResult> ExecuteAsync(ICommand command, string args, CommandContext commandContext)
+        {
+            commandContext.Command = command;
+            commandContext.RawArgs = args;
+
+            await CommandDelegate(commandContext);
+
+            return commandContext.Result;
+        }
 
         /// <inheritdoc />
-        public Task<IResult> ExecuteAsync(ICommand command, IEnumerable<object> args, CommandContext commandContext)
-            => _commandExecutor.ExecuteAsync(command, args, commandContext);
+        public async Task<IResult> ExecuteAsync(ICommand command, IEnumerable<object> args, CommandContext commandContext)
+        {
+            commandContext.Command = command;
+            commandContext.Args = args.ToList();
+
+            await CommandDelegate(commandContext);
+
+            return commandContext.Result;
+        }
 
         /// <inheritdoc />
         public void Initialize(CommandDelegate commandDelegate)
@@ -75,6 +86,12 @@ namespace MariCommands
             commandDelegate.NotNull(nameof(commandDelegate));
 
             CommandDelegate = commandDelegate;
+        }
+
+        private void CheckInitialized()
+        {
+            if (CommandDelegate.HasNoContent())
+                throw new InvalidOperationException("The current application has not started yet.");
         }
     }
 }
