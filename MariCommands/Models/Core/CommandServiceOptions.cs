@@ -25,5 +25,8 @@ namespace MariCommands
 
         /// <inheritdoc />
         public bool AutoCreateNullables { get; set; } = false;
+
+        /// <inheritdoc />
+        public bool AutoAddRunningAssembly { get; set; } = false;
     }
 }

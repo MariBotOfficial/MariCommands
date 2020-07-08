@@ -48,5 +48,10 @@ namespace MariCommands
         /// Gets or sets if this lib will auto create a nullable for type readers.
         /// </summary>
         bool AutoCreateNullables { get; set; }
+
+        /// <summary>
+        /// Gets or sets if this lib will auto add the running assembly in modules.
+        /// </summary>
+        bool AutoAddRunningAssembly { get; set; }
     }
 }

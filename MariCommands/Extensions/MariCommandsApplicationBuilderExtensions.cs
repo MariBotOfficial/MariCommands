@@ -7,7 +7,7 @@ namespace MariCommands.Extensions
     /// <summary>
     /// Extensions to use in a Command Application Builder.
     /// </summary>
-    public static class CommandApplicationBuilderExtensions
+    public static class MariCommandsApplicationBuilderExtensions
     {
         /// <summary>
         /// Add a middleware type to the command request pipeline.

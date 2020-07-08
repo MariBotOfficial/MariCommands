@@ -8,6 +8,12 @@ namespace MariCommands.Hosting
     public interface ICommandStartup
     {
         /// <summary>
+        /// Configure the modules for the current command app.
+        /// </summary>
+        /// <param name="moduleConfigurer">The module configurer to be configured.</param>
+        void ConfigureModules(IModuleConfigurer moduleConfigurer);
+
+        /// <summary>
         /// Configure the current middleware pipeline command execution.
         /// </summary>
         /// <param name="app">The current application builder.</param>

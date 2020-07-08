@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
+using MariCommands.Builder;
 
 namespace MariCommands
 {
@@ -10,38 +11,33 @@ namespace MariCommands
     {
         private readonly IContextExecutor _contextExecutor;
 
+        private readonly IModuleConfigurer _moduleConfigurer;
+
         /// <summary>
         /// Creates an instance of <see cref="CommandService" />.
         /// </summary>
-        public CommandService(IContextExecutor contextExecutor)
+        public CommandService(IContextExecutor contextExecutor, IModuleConfigurer moduleConfigurer)
         {
             _contextExecutor = contextExecutor;
+            _moduleConfigurer = moduleConfigurer;
         }
 
 
         /// <inheritdoc />
         public IModule AddModule<T>(T type) where T : IModule
-        {
-            throw new NotImplementedException();
-        }
+            => _moduleConfigurer.AddModule(type);
 
         /// <inheritdoc />
         public IModule AddModule<T>() where T : IModule
-        {
-            throw new NotImplementedException();
-        }
+            => _moduleConfigurer.AddModule<T>();
 
         /// <inheritdoc />
         public IModule AddModule(Type type)
-        {
-            throw new NotImplementedException();
-        }
+            => _moduleConfigurer.AddModule(type);
 
         /// <inheritdoc />
         public IReadOnlyCollection<IModule> AddModules(Assembly assembly)
-        {
-            throw new NotImplementedException();
-        }
+            => _moduleConfigurer.AddModules(assembly);
 
         /// <inheritdoc />
         public Task<IResult> ExecuteAsync(string input, CommandContext context)

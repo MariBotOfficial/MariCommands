@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
+using MariCommands.Builder;
 using MariCommands.Factories;
 using MariCommands.Utils;
 using MariGlobals.Extensions;
@@ -28,6 +30,7 @@ namespace MariCommands.Hosting
             var applicationBuilder = applicationBuilderFactory.Create(new Dictionary<string, object>(), builder.ApplicationServices);
             var provider = applicationBuilder.ApplicationServices;
 
+            var configurer = provider.GetRequiredService<IModuleConfigurer>();
             var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
             var logger = loggerFactory.CreateLogger(LoggingUtils.HOSTING_CATEGORY_NAME);
             var service = provider.GetRequiredService<ICommandService>();
@@ -36,6 +39,13 @@ namespace MariCommands.Hosting
             if (startup.HasContent())
             {
                 logger.LogDebug("Startup found.");
+
+                logger.LogDebug($"Executing {nameof(ICommandStartup.ConfigureModules)}");
+
+                startup.ConfigureModules(configurer);
+
+                logger.LogDebug($"{nameof(ICommandStartup.ConfigureModules)} executed sucessfully.");
+
                 logger.LogDebug($"Executing {nameof(ICommandStartup.ConfigureApp)}");
 
                 startup.ConfigureApp(applicationBuilder);
@@ -44,7 +54,17 @@ namespace MariCommands.Hosting
             }
             else
             {
-                logger.LogDebug("No startup injected injecting default middlewares.");
+                var config = provider.GetRequiredService<ICommandServiceOptions>();
+
+                if (config.AutoAddRunningAssembly)
+                {
+                    logger.LogDebug($"{nameof(ICommandServiceOptions.AutoAddRunningAssembly)}" +
+                    "is setted to true the lib will auto inject all modules in this running assembly.");
+
+                    configurer.AddModules(Assembly.GetExecutingAssembly());
+                }
+
+                logger.LogDebug("No startup injected, the lib wll injecting the default middlewares.");
 
                 // TODO: inject default middlewares.
 
