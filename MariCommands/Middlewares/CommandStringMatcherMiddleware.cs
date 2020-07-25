@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
+using MariCommands.Utils;
 using MariGlobals.Extensions;
 using Microsoft.Extensions.Logging;
 
@@ -7,8 +8,7 @@ namespace MariCommands.Middlewares
 {
     internal sealed class CommandStringMatcherMiddleware : ICommandMiddleware
     {
-        private const string COMMAND_MATCH = "CommandMatch";
-        private const string COMMAND_MATCHES = "CommandMatches";
+
 
         private readonly IModuleCache _moduleCache;
         private readonly ILogger _logger;
@@ -57,13 +57,13 @@ namespace MariCommands.Middlewares
                 }
 
                 context.Command = match.Command;
-                context.Items.Add(COMMAND_MATCH, match);
+                context.Items.Add(MiddlewareUtils.COMMAND_MATCH, match);
                 await next(context);
 
                 return;
             }
 
-            context.Items.Add(COMMAND_MATCHES, matches);
+            context.Items.Add(MiddlewareUtils.COMMAND_MATCHES, matches);
 
             await next(context);
 
