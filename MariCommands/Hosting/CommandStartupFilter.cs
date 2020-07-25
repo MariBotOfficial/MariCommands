@@ -70,6 +70,7 @@ namespace MariCommands.Hosting
 
                 applicationBuilder.UseDefaultExceptionMiddleware();
                 applicationBuilder.UseStringMatcher();
+                applicationBuilder.UseInputCountMatcher();
 
                 logger.LogDebug("Successfully injected default middlewares.");
             }

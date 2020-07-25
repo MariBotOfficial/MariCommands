@@ -45,5 +45,13 @@ namespace MariCommands.Extensions
         /// <returns>The current command aplication builder.</returns>
         public static ICommandApplicationBuilder UseStringMatcher(this ICommandApplicationBuilder app)
             => app.UseMiddleware<CommandStringMatcherMiddleware>();
+
+        /// <summary>
+        /// Use the default command input count matcher middleware.
+        /// </summary>
+        /// <param name="app">The current command aplication builder.</param>
+        /// <returns>The current command aplication builder.</returns>
+        public static ICommandApplicationBuilder UseInputCountMatcher(this ICommandApplicationBuilder app)
+            => app.UseMiddleware<CommandInputCountMatcherMiddleware>();
     }
 }
