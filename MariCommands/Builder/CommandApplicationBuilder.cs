@@ -57,6 +57,8 @@ namespace MariCommands.Builder
                     // TODO: Put the parser middleware here.
                     var message =
                         $"The request reached the end of the pipeline without a command defined";
+
+                    throw new InvalidOperationException(message);
                 }
 
                 if (context.Result.HasNoContent())
@@ -64,6 +66,8 @@ namespace MariCommands.Builder
                     // TODO: Put the executor middleware here.
                     var message =
                         $"The request reached the end of the pipeline without executing the command: '{command.Name}'.";
+
+                    throw new InvalidOperationException(message);
                 }
 
                 return Task.CompletedTask;
