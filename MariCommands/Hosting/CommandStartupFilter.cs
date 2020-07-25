@@ -69,6 +69,7 @@ namespace MariCommands.Hosting
                 logger.LogDebug("No startup injected, the lib wll injecting the default middlewares.");
 
                 applicationBuilder.UseDefaultExceptionMiddleware();
+                applicationBuilder.UseStringMatcher();
 
                 logger.LogDebug("Successfully injected default middlewares.");
             }

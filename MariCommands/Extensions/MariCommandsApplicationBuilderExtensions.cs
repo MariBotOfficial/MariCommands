@@ -37,5 +37,13 @@ namespace MariCommands.Extensions
         /// <returns>The current command aplication builder.</returns>
         public static ICommandApplicationBuilder UseDefaultExceptionMiddleware(this ICommandApplicationBuilder app)
             => app.UseMiddleware<DefaultExceptionMiddleware>();
+
+        /// <summary>
+        /// Use the default command string matcher middleware.
+        /// </summary>
+        /// <param name="app">The current command aplication builder.</param>
+        /// <returns>The current command aplication builder.</returns>
+        public static ICommandApplicationBuilder UseStringMatcher(this ICommandApplicationBuilder app)
+            => app.UseMiddleware<CommandStringMatcherMiddleware>();
     }
 }
