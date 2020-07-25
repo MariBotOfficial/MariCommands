@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using MariCommands.Builder;
+using MariCommands.Extensions;
 using MariCommands.Factories;
+using MariCommands.Middlewares;
 using MariCommands.Utils;
 using MariGlobals.Extensions;
 using Microsoft.AspNetCore.Builder;
@@ -66,7 +68,7 @@ namespace MariCommands.Hosting
 
                 logger.LogDebug("No startup injected, the lib wll injecting the default middlewares.");
 
-                // TODO: inject default middlewares.
+                applicationBuilder.UseDefaultExceptionMiddleware();
 
                 logger.LogDebug("Successfully injected default middlewares.");
             }

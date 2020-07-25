@@ -29,5 +29,13 @@ namespace MariCommands.Extensions
 
             return app;
         }
+
+        /// <summary>
+        /// Use the default Exception middleware that will just log the exception.
+        /// </summary>
+        /// <param name="app">The current command aplication builder.</param>
+        /// <returns>The current command aplication builder.</returns>
+        public static ICommandApplicationBuilder UseDefaultExceptionMiddleware(this ICommandApplicationBuilder app)
+            => app.UseMiddleware<DefaultExceptionMiddleware>();
     }
 }
