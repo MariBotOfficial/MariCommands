@@ -53,5 +53,10 @@ namespace MariCommands
         /// Gets or sets if this lib will auto add the running assembly in modules.
         /// </summary>
         bool AutoAddRunningAssembly { get; set; }
+
+        /// <summary>
+        /// Gets or sets if this lib will continue to handle multi matches after parsing.
+        /// </summary>
+        bool ContinueMultiMatchAfterParser { get; set; }
     }
 }
