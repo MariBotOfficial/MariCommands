@@ -28,5 +28,8 @@ namespace MariCommands
 
         /// <inheritdoc />
         public bool AutoAddRunningAssembly { get; set; } = false;
+
+        /// <inheritdoc />
+        public bool ContinueMultiMatchAfterParser { get; set; } = false;
     }
 }
