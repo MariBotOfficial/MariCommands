@@ -80,10 +80,6 @@ namespace MariCommands.Middlewares
         {
             var commandMatches = context.Items[MiddlewareUtils.COMMAND_MATCHES] as IReadOnlyCollection<ICommandMatch>;
 
-            commandMatches = commandMatches
-                                .OrderByDescending(a => a.Command.Priority)
-                                .ToList();
-
             var bestMatches = new List<ICommandMatch>();
 
             var fails = new Dictionary<ICommand, IResult>();
