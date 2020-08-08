@@ -171,8 +171,10 @@ namespace MariCommands
         {
             if (ArgumentParserType.HasContent())
                 return ArgumentParserType;
-
-            return Parent?.GetArgumentParserType();
+            else if (Parent.HasContent())
+                return Parent.GetArgumentParserType();
+            else
+                return null;
         }
 
         /// <summary>

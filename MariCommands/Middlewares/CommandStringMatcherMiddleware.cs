@@ -8,8 +8,6 @@ namespace MariCommands.Middlewares
 {
     internal sealed class CommandStringMatcherMiddleware : ICommandMiddleware
     {
-
-
         private readonly IModuleCache _moduleCache;
         private readonly ILogger _logger;
 
@@ -48,13 +46,8 @@ namespace MariCommands.Middlewares
             {
                 var match = matches.FirstOrDefault();
 
-                if (!match.Command.IsEnabled)
-                {
-                    _logger.LogInformation("The matched command is disabled.");
-                    context.Result = CommandDisabledResult.FromCommand(match.Command);
-
+                if (!MiddlewareUtils.VerifyMatchDisabled(context, match, _logger))
                     return;
-                }
 
                 context.Command = match.Command;
                 context.Items.Add(MiddlewareUtils.COMMAND_MATCH, match);

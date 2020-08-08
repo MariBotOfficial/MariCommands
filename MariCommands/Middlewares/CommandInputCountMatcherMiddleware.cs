@@ -34,20 +34,16 @@ namespace MariCommands.Middlewares
 
             var matches = matchesObj as IReadOnlyCollection<ICommandMatch>;
 
-            var hasBestMatch = matches
-                                .Any(a =>
-                                    a.Command.Module.GetMatchHandling(_config) == MultiMatchHandling.Best);
+            matches = matches
+                        .Where(a => a.Command.Module.GetMatchHandling(_config) == MultiMatchHandling.Best)
+                        .ToList();
 
-            if (!hasBestMatch)
+            if (matches.HasNoContent())
             {
                 _logger.LogInformation($"This input has more than one match but none of then has {MultiMatchHandling.Best} as configuration.");
                 context.Result = MultiMatchErrorResult.FromMatches(matches);
                 return;
             }
-
-            matches = matches
-                        .OrderBy(a => a.Command.Priority)
-                        .ToList();
 
             var bestMatches = new List<ICommandMatch>();
 
@@ -95,11 +91,26 @@ namespace MariCommands.Middlewares
 
             if (bestMatches.HasNoContent())
             {
-                _logger.LogInformation("All commands matched returned fail for input count.");
+                _logger.LogInformation("All matched commands returned fail for input count.");
                 context.Result = MatchesFailedResult.FromFaileds(fails);
+
+                return;
+            }
+            else if (bestMatches.Count == 1)
+            {
+                var match = bestMatches.FirstOrDefault();
+
+                if (!MiddlewareUtils.VerifyMatchDisabled(context, match, _logger))
+                    return;
+
+                context.Items[MiddlewareUtils.COMMAND_MATCH] = match;
+                context.Command = match.Command;
+            }
+            else
+            {
+                context.Items[MiddlewareUtils.COMMAND_MATCHES] = bestMatches as IReadOnlyCollection<ICommandMatch>;
             }
 
-            context.Items[MiddlewareUtils.COMMAND_MATCHES] = bestMatches as IReadOnlyCollection<ICommandMatch>;
             await next(context);
         }
 
