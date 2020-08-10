@@ -9,12 +9,12 @@ namespace MariCommands
     public class TypeParserAttribute : Attribute
     {
         /// <summary>
-        /// The type of the <see cref="ITypeParser{T}" />.
+        /// The type of the <see cref="ITypeParser" />.
         /// </summary>
         public Type Value { get; }
 
         /// <summary>
-        /// Defines the <see cref="ITypeParser{T}" /> for this param.
+        /// Defines the <see cref="ITypeParser" /> for this param.
         /// </summary>
         /// <param name="typeParserType"></param>
         /// <exception cref="ArgumentNullException">
