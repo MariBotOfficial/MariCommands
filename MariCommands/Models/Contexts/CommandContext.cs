@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace MariCommands
@@ -11,9 +12,34 @@ namespace MariCommands
     /// </summary>
     public class CommandContext : IAsyncDisposable
     {
+        private readonly static Func<IFeatureCollection, IItemsFeature> _newItemsFeature = f => new ItemsFeature();
+
         private const string DISPOSABLES_KEY = "RegisteredForDispose";
 
         private const string DISPOSABLESASYNC_KEY = "RegisteredForDisposeAsync";
+
+        private FeatureReferences<FeatureInterfaces> _features;
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="CommandContext" />.
+        /// </summary>
+        public CommandContext()
+            : this(new FeatureCollection())
+        {
+        }
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="CommandContext" />.
+        /// </summary>
+        public CommandContext(IFeatureCollection features)
+        {
+            _features.Initalize(features);
+        }
+
+        /// <summary>
+        /// Get the current features 
+        /// </summary>
+        public IFeatureCollection Features => _features.Collection ?? ContextDisposed();
 
         /// <summary>
         /// The currently command of this context.
@@ -62,6 +88,8 @@ namespace MariCommands
 
             foreach (var asyncDisposable in asyncDisposables)
                 await asyncDisposable.DisposeAsync();
+
+            _features = default;
         }
 
         /// <summary>
@@ -104,6 +132,22 @@ namespace MariCommands
 
                 Items[DISPOSABLESASYNC_KEY] = disposables;
             }
+        }
+
+        private static IFeatureCollection ContextDisposed()
+        {
+            ThrowContextDisposed();
+            return null;
+        }
+
+        private static void ThrowContextDisposed()
+        {
+            throw new ObjectDisposedException(nameof(CommandContext), $"Command executio has finished and {nameof(CommandContext)} disposed.");
+        }
+
+        struct FeatureInterfaces
+        {
+            public IItemsFeature Items;
         }
     }
 }
