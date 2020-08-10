@@ -3,6 +3,7 @@ using MariCommands.Builder;
 using MariCommands.Factories;
 using MariCommands.Hosting;
 using MariCommands.Parsers;
+using MariCommands.Providers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -44,6 +45,7 @@ namespace MariCommands.Extensions
                 services.TryAddTransient<ICommandFactory, CommandFactory>();
                 services.TryAddTransient<IParameterFactory, ParameterFactory>();
                 services.TryAddTransient<IArgumentParser, ArgumentParser>();
+                services.TryAddTransient<ITypeParserProvider, TypeParserProvider>();
             });
 
             return webBuilder;
