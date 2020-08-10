@@ -1,10 +1,10 @@
 namespace MariCommands
 {
     /// <inheritdoc />
-    public class TypeParserSuccessResult<T> : TypeParserResult<T>
+    public class TypeParserSuccessResult : TypeParserResult
     {
         /// <inheritdoc />
-        public TypeParserSuccessResult(T value) : base(value)
+        public TypeParserSuccessResult(object value) : base(value)
         {
         }
 
@@ -13,7 +13,7 @@ namespace MariCommands
         /// </summary>
         /// <param name="value">The parsed value.</param>
         /// <returns>A success type parser result.</returns>
-        public static TypeParserSuccessResult<T> FromSuccess(T value)
-            => new TypeParserSuccessResult<T>(value);
+        public static TypeParserSuccessResult FromSuccess(object value)
+            => new TypeParserSuccessResult(value);
     }
 }

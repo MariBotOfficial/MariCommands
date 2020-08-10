@@ -1,26 +1,46 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace MariCommands
+namespace MariCommands.Parsers
 {
     /// <inheritdoc />
-    public class ArgumentParser : IArgumentParser
+    internal sealed class ArgumentParser : IArgumentParser
     {
-        private readonly IServiceProvider _provider;
-
-        /// <summary>
-        /// Creates a new instance of <see cref="ArgumentParser" />.
-        /// </summary>
-        /// <param name="provider">A dependency container.</param>
-        public ArgumentParser(IServiceProvider provider)
+        public ArgumentParser()
         {
-            _provider = provider ?? ServiceUtils.GetDefaultServiceProvider();
         }
 
-        /// <inheritdoc />
-        public Task<IArgumentParserResult> ParseAsync(CommandContext context)
+        public Task<IArgumentParserResult> ParseAsync(CommandContext context, ICommandMatch match)
         {
-            throw new System.NotImplementedException();
+            var provider = context.CommandServices;
+
+            var config = provider.GetRequiredService<ICommandServiceOptions>();
+
+            var rawArgs = match.RemainingInput.Split(config.Separator);
+
+            var willFaultParams = rawArgs.Length < match.Command.Parameters.Count;
+
+            for (var i = 0; i < rawArgs.Length; i++)
+            {
+                var arg = rawArgs[i];
+                var param = match.Command.Parameters.ElementAt(i);
+
+                var typeParser = GetTypeParser(context, param);
+            }
+
+
+            return Task.FromResult<IArgumentParserResult>(null);
         }
+
+        private ITypeParser GetTypeParser(CommandContext context, IParameter param)
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool IsLastParam(int position, IEnumerable<string> rawArgs)
+            => rawArgs.Count() - 1 == position;
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MariCommands.Features;
+using MariCommands.Parsers;
 using MariCommands.Utils;
 using MariGlobals.Extensions;
 using Microsoft.Extensions.DependencyInjection;
@@ -60,7 +61,8 @@ namespace MariCommands.Middlewares
             else
                 argumentParser = provider.GetRequiredService<IArgumentParser>();
 
-            return await argumentParser.ParseAsync(context);
+
+            return await argumentParser.ParseAsync(context, match);
         }
 
 

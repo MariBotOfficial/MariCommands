@@ -2,6 +2,7 @@ using System;
 using MariCommands.Builder;
 using MariCommands.Factories;
 using MariCommands.Hosting;
+using MariCommands.Parsers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;

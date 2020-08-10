@@ -4,7 +4,7 @@ using MariGlobals.Extensions;
 namespace MariCommands
 {
     /// <inheritdoc />
-    public class TypeParserResult<T> : ITypeParserResult<T>
+    public class TypeParserResult : ITypeParserResult
     {
         /// <inheritdoc />
         public bool Success
@@ -17,23 +17,23 @@ namespace MariCommands
         public bool HasValue { get; }
 
         /// <inheritdoc />
-        public T Value { get; }
+        public object Value { get; }
 
         /// <inheritdoc />
         public Exception Exception { get; }
 
         /// <summary>
-        /// Creates a new instance of <see cref="TypeParserResult{T}" />.
+        /// Creates a new instance of <see cref="TypeParserResult" />.
         /// </summary>
         /// <param name="value">The parsed value.</param>
-        public TypeParserResult(T value)
+        public TypeParserResult(object value)
         {
             HasValue = value.HasContent();
             Value = value;
         }
 
         /// <summary>
-        /// Creates a new instance of <see cref="TypeParserResult{T}" />.
+        /// Creates a new instance of <see cref="TypeParserResult" />.
         /// </summary>
         /// <param name="exception">The exception ocurried during the parsing.</param>
         /// <exception cref="ArgumentNullException"> 
@@ -48,7 +48,7 @@ namespace MariCommands
         }
 
         /// <summary>
-        /// Creates a new instance of <see cref="TypeParserResult{T}" />.
+        /// Creates a new instance of <see cref="TypeParserResult" />.
         /// </summary>
         /// <param name="reason">The reason of the error.</param>
         /// <exception cref="ArgumentNullException"> 
@@ -66,23 +66,23 @@ namespace MariCommands
         /// </summary>
         /// <param name="value">The parsed value.</param>
         /// <returns>A success type parser result.</returns>
-        static TypeParserResult<T> FromSuccess(T value)
-            => new TypeParserSuccessResult<T>(value);
+        static TypeParserResult FromSuccess(object value)
+            => new TypeParserSuccessResult(value);
 
         /// <summary>
         /// Build a failed type parser result.
         /// </summary>
         /// <param name="reason">The reason of the error.</param>
         /// <returns>A failed type parser result.</returns>
-        static TypeParserResult<T> FromError(string reason)
-            => new TypeParserFailResult<T>(reason);
+        static TypeParserResult FromError(string reason)
+            => new TypeParserFailResult(reason);
 
         /// <summary>
         /// Build a faile type parser result.
         /// </summary>
         /// <param name="exception">The exception ocurried during the parsing.</param>
         /// <returns>A failed type parser result.</returns>
-        static TypeParserResult<T> FromException(Exception exception)
-            => new TypeParserFailResult<T>(exception);
+        static TypeParserResult FromException(Exception exception)
+            => new TypeParserFailResult(exception);
     }
 }
