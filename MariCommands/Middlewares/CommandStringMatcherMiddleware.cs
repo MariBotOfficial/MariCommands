@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
+using MariCommands.Features;
 using MariCommands.Utils;
 using MariGlobals.Extensions;
 using Microsoft.Extensions.Logging;
@@ -42,21 +43,10 @@ namespace MariCommands.Middlewares
                 return;
             }
 
-            if (matches.Count == 1)
-            {
-                var match = matches.FirstOrDefault();
+            context.Features.Set<ICommandMatchesFeature>(new CommandMatchesFeature());
+            var matchesFeature = context.Features.Get<ICommandMatchesFeature>();
 
-                if (!MiddlewareUtils.VerifyMatchDisabled(context, match, _logger))
-                    return;
-
-                context.Command = match.Command;
-                context.Items.Add(MiddlewareUtils.COMMAND_MATCH, match);
-                await next(context);
-
-                return;
-            }
-
-            context.Items.Add(MiddlewareUtils.COMMAND_MATCHES, matches);
+            matchesFeature.CommandMatches = matches;
 
             await next(context);
 

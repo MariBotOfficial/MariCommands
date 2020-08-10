@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MariCommands.Features;
 using MariCommands.Utils;
 using MariGlobals.Extensions;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,12 +27,6 @@ namespace MariCommands.Middlewares
             {
                 await next(context);
             }
-            else if (context.Items.ContainsKey(MiddlewareUtils.COMMAND_MATCH))
-            {
-                var result = await ParseCommandFromMatchAsync(context);
-
-                await ValidateResultAsync(result, context, next);
-            }
             else if (context.Command.HasContent())
             {
                 await next(context);
@@ -53,13 +48,6 @@ namespace MariCommands.Middlewares
             context.Result = result;
         }
 
-        private Task<IResult> ParseCommandFromMatchAsync(CommandContext context)
-        {
-            var commandMatch = context.Items[MiddlewareUtils.COMMAND_MATCH] as ICommandMatch;
-
-            return ParseCommandFromMatchAsync(context, commandMatch);
-        }
-
         private async Task<IResult> ParseCommandFromMatchAsync(CommandContext context, ICommandMatch match)
         {
             var provider = context.CommandServices;
@@ -78,13 +66,13 @@ namespace MariCommands.Middlewares
 
         private async Task ParseCommandFromMatchesAsync(CommandContext context, CommandDelegate next)
         {
-            var commandMatches = context.Items[MiddlewareUtils.COMMAND_MATCHES] as IReadOnlyCollection<ICommandMatch>;
+            var matchesFeature = context.Features.Get<ICommandMatchesFeature>();
 
             var bestMatches = new List<ICommandMatch>();
 
             var fails = new Dictionary<ICommand, IResult>();
 
-            foreach (var match in commandMatches)
+            foreach (var match in matchesFeature.CommandMatches)
             {
                 var result = await ParseCommandFromMatchAsync(context, match);
 
@@ -106,20 +94,8 @@ namespace MariCommands.Middlewares
 
                 return;
             }
-            else if (bestMatches.Count == 1)
-            {
-                var match = bestMatches.FirstOrDefault();
 
-                if (!MiddlewareUtils.VerifyMatchDisabled(context, match, _logger))
-                    return;
-
-                context.Items[MiddlewareUtils.COMMAND_MATCH] = match;
-                context.Command = match.Command;
-            }
-            else
-            {
-                context.Items[MiddlewareUtils.COMMAND_MATCHES] = bestMatches as IReadOnlyCollection<ICommandMatch>;
-            }
+            matchesFeature.CommandMatches = bestMatches;
 
             await next(context);
         }

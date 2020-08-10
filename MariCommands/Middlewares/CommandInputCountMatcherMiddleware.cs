@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MariCommands.Features;
 using MariCommands.Utils;
 using MariGlobals.Extensions;
 using Microsoft.Extensions.Logging;
@@ -29,19 +30,19 @@ namespace MariCommands.Middlewares
                 return;
             }
 
-            if (!context.Items.TryGetValue(MiddlewareUtils.COMMAND_MATCHES, out var matchesObj))
-                throw new InvalidOperationException($"Can't get command matches from items key: {MiddlewareUtils.COMMAND_MATCHES}.");
+            var matchesFeature = context.Features.Get<ICommandMatchesFeature>();
 
-            var matches = matchesObj as IReadOnlyCollection<ICommandMatch>;
+            if (matchesFeature.HasNoContent() || matchesFeature.CommandMatches.HasNoContent())
+                throw new InvalidOperationException($"Can't get command matches from feature: {nameof(ICommandMatchesFeature)}.");
 
-            matches = matches
+            matchesFeature.CommandMatches = matchesFeature.CommandMatches
                         .Where(a => a.Command.Module.GetMatchHandling(_config) == MultiMatchHandling.Best)
                         .ToList();
 
-            if (matches.HasNoContent())
+            if (matchesFeature.CommandMatches.HasNoContent())
             {
                 _logger.LogInformation($"This input has more than one match but none of then has {MultiMatchHandling.Best} as configuration.");
-                context.Result = MultiMatchErrorResult.FromMatches(matches);
+                context.Result = MultiMatchErrorResult.FromMatches(matchesFeature.CommandMatches);
                 return;
             }
 
@@ -49,7 +50,7 @@ namespace MariCommands.Middlewares
 
             var fails = new Dictionary<ICommand, IResult>();
 
-            foreach (var match in matches)
+            foreach (var match in matchesFeature.CommandMatches)
             {
                 var inputCount = match.RemainingInput.Split(_config.Separator).Count();
 
@@ -96,20 +97,8 @@ namespace MariCommands.Middlewares
 
                 return;
             }
-            else if (bestMatches.Count == 1)
-            {
-                var match = bestMatches.FirstOrDefault();
 
-                if (!MiddlewareUtils.VerifyMatchDisabled(context, match, _logger))
-                    return;
-
-                context.Items[MiddlewareUtils.COMMAND_MATCH] = match;
-                context.Command = match.Command;
-            }
-            else
-            {
-                context.Items[MiddlewareUtils.COMMAND_MATCHES] = bestMatches as IReadOnlyCollection<ICommandMatch>;
-            }
+            matchesFeature.CommandMatches = bestMatches;
 
             await next(context);
         }
