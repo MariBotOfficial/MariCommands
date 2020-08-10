@@ -36,6 +36,9 @@ namespace MariCommands
             _features.Initalize(features);
         }
 
+        private IItemsFeature ItemsFeature =>
+            _features.Fetch(ref _features.Cache.Items, _newItemsFeature);
+
         /// <summary>
         /// Get the current features 
         /// </summary>
@@ -74,7 +77,11 @@ namespace MariCommands
         /// <summary>
         /// A key/value collection to share data within the execution.
         /// </summary>
-        public IDictionary<object, object> Items { get; set; } = new Dictionary<object, object>();
+        public IDictionary<object, object> Items
+        {
+            get => ItemsFeature.Items;
+            set => ItemsFeature.Items = value;
+        }
 
         /// <inheritdoc />
         public async ValueTask DisposeAsync()
