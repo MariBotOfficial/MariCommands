@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MariCommands.Providers;
+using MariCommands.Results;
+using MariGlobals.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace MariCommands.Parsers
@@ -22,23 +25,32 @@ namespace MariCommands.Parsers
             var rawArgs = match.RemainingInput.Split(config.Separator);
 
             var willFaultParams = rawArgs.Length < match.Command.Parameters.Count;
-            var typeParsers = provider.GetServices<ITypeParser>();
 
             for (var i = 0; i < rawArgs.Length; i++)
             {
                 var arg = rawArgs[i];
                 var param = match.Command.Parameters.ElementAt(i);
 
-                var typeParser = GetTypeParser(context, param);
+                var typeParser = GetTypeParser(provider, param);
+
+                if (typeParser.HasContent())
+                    return Task.FromResult<IArgumentParserResult>(MissingTypeParserResult.FromParam(param));
             }
 
 
             return Task.FromResult<IArgumentParserResult>(null);
         }
 
-        private ITypeParser GetTypeParser(CommandContext context, IParameter param)
+        private ITypeParser GetTypeParser(IServiceProvider provider, IParameter param)
         {
-            throw new NotImplementedException();
+            var typeParserType = param.TypeParserType;
+
+            if (typeParserType.HasContent())
+                return ActivatorUtilities.GetServiceOrCreateInstance(provider, typeParserType) as ITypeParser;
+
+            var typeParserProvider = provider.GetRequiredService<ITypeParserProvider>();
+
+            return typeParserProvider.GetTypeParser(param.ParameterInfo.ParameterType);
         }
 
         private bool IsLastParam(int position, IEnumerable<string> rawArgs)
