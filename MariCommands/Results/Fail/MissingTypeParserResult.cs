@@ -26,7 +26,7 @@ namespace MariCommands.Results
         /// <summary>
         /// The parameter that cannot be parsed.
         /// </summary>
-        public IParameter Parameter { get; set; }
+        public IParameter Parameter { get; }
 
         /// <inheritdoc />
         public string Reason => $"Cannot found a type parser for argument: {Parameter.Name}";
