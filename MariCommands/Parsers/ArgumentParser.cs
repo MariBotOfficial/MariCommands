@@ -22,6 +22,7 @@ namespace MariCommands.Parsers
             var rawArgs = match.RemainingInput.Split(config.Separator);
 
             var willFaultParams = rawArgs.Length < match.Command.Parameters.Count;
+            var typeParsers = provider.GetServices<ITypeParser>();
 
             for (var i = 0; i < rawArgs.Length; i++)
             {
