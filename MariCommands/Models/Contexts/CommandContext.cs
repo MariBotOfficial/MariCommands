@@ -15,10 +15,7 @@ namespace MariCommands
     {
         private readonly static Func<IFeatureCollection, IItemsFeature> _newItemsFeature = f => new ItemsFeature();
         private readonly static Func<CommandContext, ICommandServiceProvidersFeature> _newServiceProvidersFeature = context => new CommandServicesFeature(context, context.ServiceScopeFactory);
-
-        private const string DISPOSABLES_KEY = "RegisteredForDispose";
-
-        private const string DISPOSABLESASYNC_KEY = "RegisteredForDisposeAsync";
+        private readonly static Func<IFeatureCollection, IDisposablesFeature> _newDisposablesFeature = f => new DisposablesFeature();
 
         private FeatureReferences<FeatureInterfaces> _features;
 
@@ -43,6 +40,9 @@ namespace MariCommands
 
         private ICommandServiceProvidersFeature ServiceProvidersFeature
             => _features.Fetch(ref _features.Cache.ServiceProviders, this, _newServiceProvidersFeature);
+
+        private IDisposablesFeature DisposablesFeature
+            => _features.Fetch(ref _features.Cache.Disposables, _newDisposablesFeature);
 
         /// <summary>
         /// Get the current features 
@@ -100,60 +100,24 @@ namespace MariCommands
         /// <inheritdoc />
         public async ValueTask DisposeAsync()
         {
-            var disposables = (Items[DISPOSABLES_KEY] as ICollection<IDisposable>);
-
-            foreach (var disposable in disposables)
-                disposable.Dispose();
-
-            var asyncDisposables = (Items[DISPOSABLESASYNC_KEY] as ICollection<IAsyncDisposable>);
-
-            foreach (var asyncDisposable in asyncDisposables)
-                await asyncDisposable.DisposeAsync();
+            await DisposablesFeature.DisposeAsync();
 
             _features = default;
         }
 
         /// <summary>
-        /// Register a disposable object for dispose after the request.
+        /// Register a disposable object for dispose after the command execution.
         /// </summary>
-        /// <param name="disposable"></param>
+        /// <param name="disposable">The object to be disposed.</param>
         public void RegisterForDispose(IDisposable disposable)
-        {
-            if (Items.ContainsKey(DISPOSABLES_KEY))
-            {
-                var disposables = (Items[DISPOSABLES_KEY] as ICollection<IDisposable>);
-
-                disposables.Add(disposable);
-            }
-            else
-            {
-                ICollection<IDisposable> disposables = new List<IDisposable>();
-                disposables.Add(disposable);
-
-                Items[DISPOSABLES_KEY] = disposables;
-            }
-        }
+            => DisposablesFeature.RegisterForDispose(disposable);
 
         /// <summary>
-        /// Register a disposable object for dispose after the request.
+        /// Register a disposable object for dispose after the command execution.
         /// </summary>
-        /// <param name="disposable"></param>
-        public void RegisterForDisposeAsync(IAsyncDisposable disposable)
-        {
-            if (Items.ContainsKey(DISPOSABLES_KEY))
-            {
-                var disposables = (Items[DISPOSABLESASYNC_KEY] as ICollection<IAsyncDisposable>);
-
-                disposables.Add(disposable);
-            }
-            else
-            {
-                ICollection<IAsyncDisposable> disposables = new List<IAsyncDisposable>();
-                disposables.Add(disposable);
-
-                Items[DISPOSABLESASYNC_KEY] = disposables;
-            }
-        }
+        /// <param name="asyncDisposable">The object to be disposed.</param>
+        public void RegisterForDisposeAsync(IAsyncDisposable asyncDisposable)
+            => DisposablesFeature.RegisterForDisposeAsync(asyncDisposable);
 
         private static IFeatureCollection ContextDisposed()
         {
@@ -171,6 +135,8 @@ namespace MariCommands
             public IItemsFeature Items;
 
             public ICommandServiceProvidersFeature ServiceProviders;
+
+            public IDisposablesFeature Disposables;
         }
     }
 }
