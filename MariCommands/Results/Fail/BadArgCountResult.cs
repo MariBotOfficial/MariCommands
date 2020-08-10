@@ -1,6 +1,6 @@
 using System;
 
-namespace MariCommands
+namespace MariCommands.Results
 {
     /// <summary>
     /// Represents whens the input doesn't has necessary the params.

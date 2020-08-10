@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using MariCommands.Parsers;
 
-namespace MariCommands
+namespace MariCommands.Results
 {
     /// <summary>
     /// Represents an result for an <see cref="IArgumentParser" />.

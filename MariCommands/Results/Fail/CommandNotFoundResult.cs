@@ -1,6 +1,6 @@
 using System;
 
-namespace MariCommands
+namespace MariCommands.Results
 {
     /// <summary>
     /// Represents a command not found result.

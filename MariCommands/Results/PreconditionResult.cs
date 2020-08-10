@@ -1,6 +1,6 @@
 using System;
 
-namespace MariCommands
+namespace MariCommands.Results
 {
     /// <inheritdoc />
     public class PreconditionResult : IPreconditionResult

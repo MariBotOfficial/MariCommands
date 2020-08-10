@@ -1,6 +1,6 @@
 using System;
 
-namespace MariCommands
+namespace MariCommands.Results
 {
     /// <summary>
     /// Represents a result for a <see cref="PreconditionAttribute" />.

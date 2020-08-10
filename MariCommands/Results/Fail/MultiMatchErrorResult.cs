@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace MariCommands
+namespace MariCommands.Results
 {
     /// <summary>
     /// Represents a multi match handling error result.
