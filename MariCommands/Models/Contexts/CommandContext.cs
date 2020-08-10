@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
+using MariCommands.Features;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,6 +14,7 @@ namespace MariCommands
     public class CommandContext : IAsyncDisposable
     {
         private readonly static Func<IFeatureCollection, IItemsFeature> _newItemsFeature = f => new ItemsFeature();
+        private readonly static Func<CommandContext, ICommandServiceProvidersFeature> _newServiceProvidersFeature = context => new CommandServicesFeature(context, context.ServiceScopeFactory);
 
         private const string DISPOSABLES_KEY = "RegisteredForDispose";
 
@@ -36,8 +38,11 @@ namespace MariCommands
             _features.Initalize(features);
         }
 
-        private IItemsFeature ItemsFeature =>
-            _features.Fetch(ref _features.Cache.Items, _newItemsFeature);
+        private IItemsFeature ItemsFeature
+            => _features.Fetch(ref _features.Cache.Items, _newItemsFeature);
+
+        private ICommandServiceProvidersFeature ServiceProvidersFeature
+            => _features.Fetch(ref _features.Cache.ServiceProviders, this, _newServiceProvidersFeature);
 
         /// <summary>
         /// Get the current features 
@@ -67,7 +72,11 @@ namespace MariCommands
         /// <summary>
         /// The dependency container of this context.
         /// </summary>
-        public IServiceProvider ServiceProvider { get; set; }
+        public IServiceProvider CommandServices
+        {
+            get => ServiceProvidersFeature.CommandServices;
+            set => ServiceProvidersFeature.CommandServices = value;
+        }
 
         /// <summary>
         /// The result of this execution context.
@@ -82,6 +91,11 @@ namespace MariCommands
             get => ItemsFeature.Items;
             set => ItemsFeature.Items = value;
         }
+
+        /// <summary>
+        /// Get or sets the factory used to create services within a scope.
+        /// </summary>
+        public IServiceScopeFactory ServiceScopeFactory { get; set; }
 
         /// <inheritdoc />
         public async ValueTask DisposeAsync()
@@ -155,6 +169,8 @@ namespace MariCommands
         struct FeatureInterfaces
         {
             public IItemsFeature Items;
+
+            public ICommandServiceProvidersFeature ServiceProviders;
         }
     }
 }

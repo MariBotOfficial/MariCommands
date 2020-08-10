@@ -21,7 +21,7 @@ namespace MariCommands.Extensions
             {
                 return async context =>
                 {
-                    var middleware = ActivatorUtilities.GetServiceOrCreateInstance(context.ServiceProvider, typeof(TMiddleware)) as ICommandMiddleware;
+                    var middleware = ActivatorUtilities.GetServiceOrCreateInstance(context.CommandServices, typeof(TMiddleware)) as ICommandMiddleware;
 
                     await middleware.InvokeAsync(context, next);
                 };

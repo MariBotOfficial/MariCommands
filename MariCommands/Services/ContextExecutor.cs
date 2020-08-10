@@ -10,15 +10,15 @@ namespace MariCommands
     /// <inheritdoc />
     public class ContextExecutor : IContextExecutor
     {
-        private readonly IServiceProvider _provider;
+        private readonly IServiceScopeFactory _scopeFactory;
 
         /// <summary>
         /// Creates a new instance of <see cref="ContextExecutor" />
         /// </summary>
-        /// <param name="provider">A dependency container.</param>
-        public ContextExecutor(IServiceProvider provider)
+        /// <param name="scopeFactory">the factory used to create services within a scope.</param>
+        public ContextExecutor(IServiceScopeFactory scopeFactory)
         {
-            _provider = provider;
+            _scopeFactory = scopeFactory;
         }
 
         private CommandDelegate CommandDelegate { get; set; }
@@ -53,10 +53,7 @@ namespace MariCommands
         {
             CheckInitialized();
 
-            var scope = _provider.CreateScope();
-
-            context.ServiceProvider = scope.ServiceProvider;
-            context.RegisterForDispose(scope);
+            context.ServiceScopeFactory = _scopeFactory;
 
             await CommandDelegate(context);
 

@@ -62,7 +62,7 @@ namespace MariCommands.Middlewares
 
         private async Task<IResult> ParseCommandFromMatchAsync(CommandContext context, ICommandMatch match)
         {
-            var provider = context.ServiceProvider;
+            var provider = context.CommandServices;
 
             IArgumentParser argumentParser;
             var argumentParserType = match.Command.GetArgumentParserType();
