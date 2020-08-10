@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using MariGlobals.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace MariCommands
+namespace MariCommands.Providers
 {
     /// <inheritdoc />
     public class ModuleProvider : IModuleProvider

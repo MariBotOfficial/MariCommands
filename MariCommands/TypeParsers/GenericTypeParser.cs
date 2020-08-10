@@ -11,12 +11,12 @@ namespace MariCommands.TypeParsers
         /// <summary>
         /// Gets or sets if this type parser can parse inherited types.
         /// </summary>
-        protected abstract bool CanParserInheritedTypes { get; set; }
+        protected abstract bool CanParseInheritedTypes { get; set; }
 
         /// <inheritdoc />
         public bool CanParse(Type type)
         {
-            if (CanParserInheritedTypes)
+            if (CanParseInheritedTypes)
                 return typeof(T).IsAssignableFrom(type);
 
             return typeof(T) == type;

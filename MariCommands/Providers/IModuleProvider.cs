@@ -1,4 +1,4 @@
-namespace MariCommands
+namespace MariCommands.Providers
 {
     /// <summary>
     /// A service that can instantiate a module.
