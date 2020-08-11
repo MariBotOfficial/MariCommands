@@ -1,6 +1,6 @@
 using System.Reflection;
 
-namespace MariCommands
+namespace MariCommands.Factories
 {
     /// <summary>
     /// A service that can build and create commands.

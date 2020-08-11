@@ -6,7 +6,7 @@ using System.Reflection;
 using MariCommands.Extensions;
 using MariGlobals.Extensions;
 
-namespace MariCommands
+namespace MariCommands.Factories
 {
     /// <inheritdoc />
     internal sealed class ModuleFactory : IModuleFactory

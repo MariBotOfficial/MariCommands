@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using MariCommands.Extensions;
 using MariGlobals.Extensions;
 
-namespace MariCommands
+namespace MariCommands.Factories
 {
     /// <inheritdoc />
     internal sealed partial class CommandFactory : ICommandFactory
