@@ -74,7 +74,7 @@ namespace MariCommands.Middlewares
                 if (result.Success)
                 {
                     bestMatches.Add(match);
-                    argumentParserFeature.CommandArgs.Add(match, result.Args);
+                    argumentParserFeature.CommandArgs.Add(match, result.Args.Values.ToArray());
                 }
                 else
                 {

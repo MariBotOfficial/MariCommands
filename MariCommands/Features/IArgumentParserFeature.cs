@@ -10,6 +10,6 @@ namespace MariCommands.Features
         /// <summary>
         /// A collection of key value pair where the key is a command match and the value the parsed args.
         /// </summary>
-        IDictionary<ICommandMatch, IReadOnlyDictionary<IParameter, object>> CommandArgs { get; set; }
+        IDictionary<ICommandMatch, object[]> CommandArgs { get; set; }
     }
 }
