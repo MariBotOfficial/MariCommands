@@ -45,9 +45,9 @@ namespace MariCommands
         string Separator { get; set; }
 
         /// <summary>
-        /// Gets or sets if this lib will auto create a nullable for type readers.
+        /// Gets or sets if this lib will consider any type parser of class can parse null values.
         /// </summary>
-        bool AutoCreateNullables { get; set; }
+        bool TypeParserOfClassIsNullables { get; set; }
 
         /// <summary>
         /// Gets or sets if this lib will auto add the running assembly in modules.

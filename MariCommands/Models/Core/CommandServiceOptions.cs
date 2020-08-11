@@ -24,7 +24,7 @@ namespace MariCommands
         public string Separator { get; set; } = " ";
 
         /// <inheritdoc />
-        public bool AutoCreateNullables { get; set; } = false;
+        public bool TypeParserOfClassIsNullables { get; set; } = false;
 
         /// <inheritdoc />
         public bool AutoAddRunningAssembly { get; set; } = false;
