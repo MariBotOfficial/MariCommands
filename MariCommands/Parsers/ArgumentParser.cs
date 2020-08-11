@@ -50,7 +50,7 @@ namespace MariCommands.Parsers
                         var result = await typeParser.ParseAsync(arg, param, context);
 
                         if (!result.Success)
-                            return TypeParserFailResult.FromTypeParserResult(result);
+                            return TypeParserFailResult<object>.FromTypeParserResult(result);
 
                         multipleValues.Add(result.Value);
                     }
@@ -67,7 +67,7 @@ namespace MariCommands.Parsers
                     var result = await typeParser.ParseAsync(arg, param, context);
 
                     if (!result.Success)
-                        return TypeParserFailResult.FromTypeParserResult(result);
+                        return TypeParserFailResult<object>.FromTypeParserResult(result);
 
                     args.Add(param, result.Value);
                 }
@@ -93,7 +93,7 @@ namespace MariCommands.Parsers
                         var result = await typeParser.ParseAsync(null, param, context);
 
                         if (!result.Success)
-                            return TypeParserFailResult.FromTypeParserResult(result);
+                            return TypeParserFailResult<object>.FromTypeParserResult(result);
 
                         args.Add(param, null);
                     }
