@@ -39,18 +39,7 @@ namespace MariCommands.Middlewares
             }
         }
 
-        private async Task ValidateResultAsync(IResult result, CommandContext context, CommandDelegate next)
-        {
-            if (result.Success)
-            {
-                await next(context);
-                return;
-            }
-
-            context.Result = result;
-        }
-
-        private async Task<IResult> ParseCommandFromMatchAsync(CommandContext context, ICommandMatch match)
+        private async Task<IArgumentParserResult> ParseCommandFromMatchAsync(CommandContext context, ICommandMatch match)
         {
             var provider = context.CommandServices;
 
@@ -69,7 +58,10 @@ namespace MariCommands.Middlewares
 
         private async Task ParseCommandFromMatchesAsync(CommandContext context, CommandDelegate next)
         {
+            context.Features.Set<IArgumentParserFeature>(new ArgumentParserFeature());
+
             var matchesFeature = context.Features.Get<ICommandMatchesFeature>();
+            var argumentParserFeature = context.Features.Get<IArgumentParserFeature>();
 
             var bestMatches = new List<ICommandMatch>();
 
@@ -82,6 +74,7 @@ namespace MariCommands.Middlewares
                 if (result.Success)
                 {
                     bestMatches.Add(match);
+                    argumentParserFeature.CommandArgs.Add(match, result.Args);
                 }
                 else
                 {
