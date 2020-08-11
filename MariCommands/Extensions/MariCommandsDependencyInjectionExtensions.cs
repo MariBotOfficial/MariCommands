@@ -102,5 +102,31 @@ namespace MariCommands.Extensions
 
             return services.AddTypeParser<TParser, T>(createNullable);
         }
+
+        /// <summary>
+        /// Adds all primitive type parsers to the dependency.
+        /// </summary>
+        /// <param name="services">The current service collection.</param>
+        /// <param name="createNullables">If this lib will create nullable type parsers for these 
+        /// primitive type parsers.</param>
+        /// <returns>The current service collection.</returns>
+        public static IServiceCollection AddPrimitiveTypeParsers(this IServiceCollection services, bool createNullables)
+        {
+            services.TryAddTypeParser<PrimitiveTypeParser<char>, char>(createNullables);
+            services.TryAddTypeParser<PrimitiveTypeParser<bool>, bool>(createNullables);
+            services.TryAddTypeParser<PrimitiveTypeParser<byte>, byte>(createNullables);
+            services.TryAddTypeParser<PrimitiveTypeParser<sbyte>, sbyte>(createNullables);
+            services.TryAddTypeParser<PrimitiveTypeParser<short>, short>(createNullables);
+            services.TryAddTypeParser<PrimitiveTypeParser<ushort>, ushort>(createNullables);
+            services.TryAddTypeParser<PrimitiveTypeParser<int>, int>(createNullables);
+            services.TryAddTypeParser<PrimitiveTypeParser<uint>, uint>(createNullables);
+            services.TryAddTypeParser<PrimitiveTypeParser<long>, long>(createNullables);
+            services.TryAddTypeParser<PrimitiveTypeParser<ulong>, ulong>(createNullables);
+            services.TryAddTypeParser<PrimitiveTypeParser<float>, float>(createNullables);
+            services.TryAddTypeParser<PrimitiveTypeParser<double>, double>(createNullables);
+            services.TryAddTypeParser<PrimitiveTypeParser<decimal>, decimal>(createNullables);
+
+            return services;
+        }
     }
 }
