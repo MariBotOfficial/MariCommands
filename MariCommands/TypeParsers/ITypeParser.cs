@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using MariCommands.Results;
 
-namespace MariCommands
+namespace MariCommands.TypeParsers
 {
     /// <summary>
     /// Defines a type argument parser for the specified type.
@@ -24,7 +24,7 @@ namespace MariCommands
         /// <param name="context">The current command execution context.</param>
         /// <returns>A <see cref="Task" /> representing an asynchronous operation with an
         /// <see cref="ITypeParserResult{T}" />.</returns>
-        Task<ITypeParserResult<object>> ParseAsync(string value, IParameter parameter, CommandContext context);
+        Task<ITypeParserResult> ParseAsync(string value, IParameter parameter, CommandContext context);
     }
 
     /// <inheritdoc />
@@ -53,11 +53,7 @@ namespace MariCommands
             return typeof(T) == type;
         }
 
-        async Task<ITypeParserResult<object>> ITypeParser.ParseAsync(string value, IParameter parameter, CommandContext context)
-        {
-            var result = await ParseAsync(value, parameter, context);
-
-            return result.ConvertToObject();
-        }
+        async Task<ITypeParserResult> ITypeParser.ParseAsync(string value, IParameter parameter, CommandContext context)
+            => await ParseAsync(value, parameter, context);
     }
 }

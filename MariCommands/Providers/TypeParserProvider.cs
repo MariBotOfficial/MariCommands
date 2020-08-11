@@ -1,4 +1,5 @@
 using System;
+using MariCommands.TypeParsers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace MariCommands.Providers

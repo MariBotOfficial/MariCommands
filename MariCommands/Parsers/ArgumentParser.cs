@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MariCommands.Providers;
 using MariCommands.Results;
+using MariCommands.TypeParsers;
 using MariGlobals.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -50,7 +51,7 @@ namespace MariCommands.Parsers
                         var result = await typeParser.ParseAsync(arg, param, context);
 
                         if (!result.Success)
-                            return TypeParserFailResult<object>.FromTypeParserResult(result);
+                            return TypeParserFailResult.FromTypeParserResult(result);
 
                         multipleValues.Add(result.Value);
                     }
@@ -67,7 +68,7 @@ namespace MariCommands.Parsers
                     var result = await typeParser.ParseAsync(arg, param, context);
 
                     if (!result.Success)
-                        return TypeParserFailResult<object>.FromTypeParserResult(result);
+                        return TypeParserFailResult.FromTypeParserResult(result);
 
                     args.Add(param, result.Value);
                 }
@@ -93,7 +94,7 @@ namespace MariCommands.Parsers
                         var result = await typeParser.ParseAsync(null, param, context);
 
                         if (!result.Success)
-                            return TypeParserFailResult<object>.FromTypeParserResult(result);
+                            return TypeParserFailResult.FromTypeParserResult(result);
 
                         args.Add(param, null);
                     }
