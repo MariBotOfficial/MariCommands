@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
 
-namespace MariCommands
+namespace MariCommands.Extensions
 {
     internal static class MariCommandsReflectionExtensions
     {

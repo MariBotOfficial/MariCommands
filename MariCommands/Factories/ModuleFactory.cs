@@ -3,26 +3,21 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
+using MariCommands.Extensions;
 using MariGlobals.Extensions;
 
 namespace MariCommands
 {
     /// <inheritdoc />
-    public class ModuleFactory : IModuleFactory
+    internal sealed class ModuleFactory : IModuleFactory
     {
-        private readonly IServiceProvider _provider;
         private readonly ICommandServiceOptions _config;
         private readonly ICommandFactory _commandFactory;
 
-        /// <summary>
-        /// Creates a new instance of <see cref="ModuleFactory" />.
-        /// </summary>
-        /// <param name="provider">A dependency container.</param>
-        public ModuleFactory(IServiceProvider provider)
+        public ModuleFactory(ICommandServiceOptions config, ICommandFactory commandFactory)
         {
-            _provider = provider ?? ServiceUtils.GetDefaultServiceProvider();
-            _config = _provider.GetOrDefault<ICommandServiceOptions, CommandServiceOptions>();
-            _commandFactory = _provider.GetOrDefault<ICommandFactory>(new CommandFactory(_provider));
+            _config = config;
+            _commandFactory = commandFactory;
         }
 
         /// <inheritdoc />

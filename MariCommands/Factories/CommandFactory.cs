@@ -4,26 +4,21 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using MariCommands.Extensions;
 using MariGlobals.Extensions;
 
 namespace MariCommands
 {
     /// <inheritdoc />
-    public partial class CommandFactory : ICommandFactory
+    internal sealed partial class CommandFactory : ICommandFactory
     {
-        private readonly IServiceProvider _provider;
         private readonly ICommandServiceOptions _config;
         private readonly IParameterFactory _parameterFactory;
 
-        /// <summary>
-        /// Create a new instace of <see  cref="CommandFactory"/>.
-        /// </summary>
-        /// <param name="provider">A dependency container.</param>
-        public CommandFactory(IServiceProvider provider)
+        public CommandFactory(ICommandServiceOptions config, IParameterFactory parameterFactory)
         {
-            _provider = provider ?? ServiceUtils.GetDefaultServiceProvider();
-            _config = _provider.GetOrDefault<ICommandServiceOptions, CommandServiceOptions>();
-            _parameterFactory = _provider.GetOrDefault<IParameterFactory>(new ParameterFactory(_provider));
+            _config = config;
+            _parameterFactory = parameterFactory;
         }
 
         /// <inheritdoc />

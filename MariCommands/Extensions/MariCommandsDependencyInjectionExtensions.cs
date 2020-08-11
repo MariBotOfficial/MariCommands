@@ -5,7 +5,7 @@ using MariGlobals.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace MariCommands
+namespace MariCommands.Extensions
 {
     /// <summary>
     /// General extensions for dependency injection.
@@ -101,24 +101,6 @@ namespace MariCommands
                 return services;
 
             return services.AddTypeParser<TParser, T>(createNullable);
-        }
-
-
-        internal static T GetOrDefault<T, TDefault>(this IServiceProvider provider)
-            where TDefault : T, new()
-        {
-            if (provider.HasNoContent())
-                return new TDefault();
-
-            return provider.GetService<T>() ?? new TDefault();
-        }
-
-        internal static T GetOrDefault<T>(this IServiceProvider provider, T defaultValue)
-        {
-            if (provider.HasNoContent())
-                return defaultValue;
-
-            return provider.GetService<T>() ?? defaultValue;
         }
     }
 }
