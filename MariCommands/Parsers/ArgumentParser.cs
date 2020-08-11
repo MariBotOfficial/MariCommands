@@ -84,7 +84,7 @@ namespace MariCommands.Parsers
                     {
                         args.Add(param, param.DefaultValue);
                     }
-                    else if (IsNullable(param))
+                    else if (IsNullable(param) || IsNullableClass(param, config))
                     {
                         var typeParser = GetTypeParser(provider, param);
 
@@ -112,6 +112,14 @@ namespace MariCommands.Parsers
             =>
                 param.ParameterInfo.ParameterType.IsGenericType &&
                 param.ParameterInfo.ParameterType.GetGenericTypeDefinition() == typeof(Nullable<>);
+
+        private bool IsNullableClass(IParameter param, ICommandServiceOptions config)
+        {
+            if (!param.ParameterInfo.ParameterType.IsClass)
+                return false;
+
+            return config.TypeParserOfClassIsNullables;
+        }
 
         private IEnumerable<IParameter> GetMissingParams(int length, IReadOnlyCollection<IParameter> parameters)
         {
