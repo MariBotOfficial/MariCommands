@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Reflection;
+using MariCommands.Utils;
 using MariGlobals.Extensions;
 
 namespace MariCommands
@@ -113,7 +114,6 @@ namespace MariCommands
             alias.NotNullOrEmpty(nameof(alias));
 
             Aliases = alias.ToImmutableArray();
-
 
             return this;
         }

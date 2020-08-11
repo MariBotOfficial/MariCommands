@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using MariGlobals.Extensions;
 
-namespace MariCommands
+namespace MariCommands.Utils
 {
     internal static class CheckUtils
     {
