@@ -73,6 +73,7 @@ namespace MariCommands.Hosting
                 applicationBuilder.UseInputCountMatcher();
                 applicationBuilder.UseParser();
                 applicationBuilder.UseParamPreconditioner();
+                applicationBuilder.UsePreconditioner();
 
                 logger.LogDebug("Successfully injected default middlewares.");
             }
