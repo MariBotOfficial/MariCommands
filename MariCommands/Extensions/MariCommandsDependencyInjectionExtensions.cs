@@ -25,7 +25,7 @@ namespace MariCommands.Extensions
         public static IServiceCollection AddTypeParser<TParser>(this IServiceCollection services)
             where TParser : class, ITypeParser
         {
-            return services.AddTransient<ITypeParser, TParser>();
+            return services.AddSingleton<ITypeParser, TParser>();
         }
 
         /// <summary>
@@ -38,8 +38,8 @@ namespace MariCommands.Extensions
         public static IServiceCollection AddTypeParser<TParser, T>(this IServiceCollection services)
             where TParser : class, ITypeParser<T>
         {
-            services.AddTransient<ITypeParser<T>, TParser>();
-            services.AddTransient<ITypeParser>(sp =>
+            services.AddSingleton<ITypeParser<T>, TParser>();
+            services.AddSingleton<ITypeParser>(sp =>
             {
                 return sp.GetRequiredService<ITypeParser<T>>();
             });
