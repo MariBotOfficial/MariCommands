@@ -11,7 +11,7 @@ namespace MariCommands.Tests
     public class VoidTest
     {
         [Fact]
-        public async Task SampleTest1()
+        public async Task CanExecute()
         {
             var type = typeof(VoidCommand);
             var method = type.GetMethod(nameof(VoidCommand.Execute));
@@ -20,16 +20,7 @@ namespace MariCommands.Tests
             var argsParameter = Expression.Parameter(typeof(object[]), "args");
 
             var paramInfos = method.GetParameters();
-            var parameters = new List<Expression>();
-
-            for (var i = 0; i < paramInfos.Length; i++)
-            {
-                var param = paramInfos[i];
-                var valueParam = Expression.ArrayIndex(argsParameter, Expression.Constant(i));
-                var valueCast = Expression.Convert(valueParam, param.ParameterType);
-
-                parameters.Add(valueCast);
-            }
+            var parameters = ExpressionHelper.GetParameterExpressions(paramInfos, argsParameter);
 
             var instanceCast = Expression.Convert(instanceParameter, type);
             var methodCall = Expression.Call(instanceCast, method, parameters);
@@ -47,8 +38,10 @@ namespace MariCommands.Tests
                 return new ValueTask<IResult>(new SuccessResult() as IResult);
             };
 
-            var result = await callback1(new VoidCommand(), new object[0]);
+            var result1 = await callback1(new VoidCommand(), new object[0]);
             var result2 = await callback2(new VoidCommand(), new object[0]);
+
+            Assert.Equal(result1, result2);
         }
     }
 
