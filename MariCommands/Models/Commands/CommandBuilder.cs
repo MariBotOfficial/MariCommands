@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Reflection;
+using MariCommands.Executors;
 using MariCommands.Utils;
 using MariGlobals.Extensions;
 
@@ -46,15 +47,20 @@ namespace MariCommands
         /// <inheritdoc />
         public bool IsEnabled { get; private set; }
 
+        /// <inheritdoc />
+        public bool IsAsync { get; private set; }
+
+        /// <inheritdoc />
+        public Type AsyncResultType { get; private set; }
+
+        /// <inheritdoc />
+        public ICommandExecutor Executor { get; private set; }
+
         /// <inheritdoc />    
         public MethodInfo MethodInfo { get; private set; }
 
         /// <inheritdoc />
         public IModuleBuilder Module { get; private set; }
-
-        ///// <inheritdoc />
-        //public CommandExecuteDelegate CommandDelegate { get; private set; }
-
 
         /// <summary>
         /// Sets the parent module for this command.

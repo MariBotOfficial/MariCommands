@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Reflection;
 using System.Threading;
+using MariCommands.Executors;
 using MariCommands.Utils;
 
 namespace MariCommands
@@ -98,8 +99,14 @@ namespace MariCommands
         /// <inheritdoc />
         public MethodInfo MethodInfo { get; }
 
-        ///// <inheritdoc />        
-        //public CommandExecuteDelegate CommandDelegate { get; }
+        /// <inheritdoc />
+        public bool IsAsync { get; }
+
+        /// <inheritdoc />
+        public Type AsyncResultType { get; }
+
+        /// <inheritdoc />
+        public ICommandExecutor Executor { get; }
 
         /// <inheritdoc />
         public void Disable()
