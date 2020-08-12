@@ -25,13 +25,27 @@ namespace MariCommands.Middlewares
         {
             context.NotNull(nameof(context));
 
-            if (context.Result.HasContent())
+            if (context.Result.HasContent() || (context.Command.HasContent() && context.Args.HasContent()))
             {
                 await next(context);
             }
-            else if (context.Command.HasContent())
+            else if (context.Command.HasContent() && !string.IsNullOrWhiteSpace(context.RawArgs))
             {
-                await next(context);
+                var result = await ParseCommandAsync(context, context.Command, context.RawArgs);
+
+                if (result.Success)
+                {
+                    context.Args = result.Args
+                                        .Select(a => a.Value)
+                                        .ToList();
+
+                    await next(context);
+                }
+                else
+                {
+                    context.Result = result;
+                    return;
+                }
             }
             else
             {
@@ -39,12 +53,12 @@ namespace MariCommands.Middlewares
             }
         }
 
-        private async Task<IArgumentParserResult> ParseCommandFromMatchAsync(CommandContext context, ICommandMatch match)
+        private async Task<IArgumentParserResult> ParseCommandAsync(CommandContext context, ICommand command, string rawArgs)
         {
             var provider = context.CommandServices;
 
             IArgumentParser argumentParser;
-            var argumentParserType = match.Command.GetArgumentParserType();
+            var argumentParserType = command.GetArgumentParserType();
 
             if (argumentParserType.HasContent())
                 argumentParser = ActivatorUtilities.GetServiceOrCreateInstance(provider, argumentParserType) as IArgumentParser;
@@ -52,7 +66,7 @@ namespace MariCommands.Middlewares
                 argumentParser = provider.GetRequiredService<IArgumentParser>();
 
 
-            return await argumentParser.ParseAsync(context, match);
+            return await argumentParser.ParseAsync(context, command, rawArgs);
         }
 
 
@@ -69,7 +83,7 @@ namespace MariCommands.Middlewares
 
             foreach (var match in matchesFeature.CommandMatches)
             {
-                var result = await ParseCommandFromMatchAsync(context, match);
+                var result = await ParseCommandAsync(context, match.Command, match.RemainingInput);
 
                 if (result.Success)
                 {

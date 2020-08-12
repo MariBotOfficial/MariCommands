@@ -17,28 +17,28 @@ namespace MariCommands.Parsers
         {
         }
 
-        public async Task<IArgumentParserResult> ParseAsync(CommandContext context, ICommandMatch match)
+        public async Task<IArgumentParserResult> ParseAsync(CommandContext context, ICommand command, string remainingInput)
         {
             var provider = context.CommandServices;
 
             var config = provider.GetRequiredService<ICommandServiceOptions>();
 
-            var rawArgs = match.RemainingInput.Split(config.Separator);
+            var rawArgs = remainingInput.Split(config.Separator);
 
-            var willFaultParams = rawArgs.Length < match.Command.Parameters.Count;
+            var willFaultParams = rawArgs.Length < command.Parameters.Count;
 
             var args = new Dictionary<IParameter, object>();
 
             for (var i = 0; i < rawArgs.Length; i++)
             {
                 var arg = rawArgs[i];
-                var param = match.Command.Parameters.ElementAt(i);
+                var param = command.Parameters.ElementAt(i);
                 var typeParser = GetTypeParser(provider, param);
 
                 if (typeParser.HasContent())
                     return MissingTypeParserResult.FromParam(param);
 
-                var isLastParam = i + 1 == match.Command.Parameters.Count;
+                var isLastParam = i + 1 == command.Parameters.Count;
 
                 if (isLastParam && param.IsParams)
                 {
@@ -76,7 +76,7 @@ namespace MariCommands.Parsers
 
             if (willFaultParams)
             {
-                var missingParams = GetMissingParams(rawArgs.Length, match.Command.Parameters);
+                var missingParams = GetMissingParams(rawArgs.Length, command.Parameters);
 
                 foreach (var param in missingParams)
                 {
@@ -100,7 +100,7 @@ namespace MariCommands.Parsers
                     }
                     else
                     {
-                        return BadArgCountParseResult.FromCommand(match.Command);
+                        return BadArgCountParseResult.FromCommand(command);
                     }
                 }
             }
