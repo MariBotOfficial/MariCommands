@@ -77,6 +77,9 @@ namespace MariCommands.Middlewares
             var matchesFeature = context.Features.Get<ICommandMatchesFeature>();
             var argumentParserFeature = context.Features.Get<IArgumentParserFeature>();
 
+            if (matchesFeature.HasNoContent() || matchesFeature.CommandMatches.HasNoContent())
+                throw new InvalidOperationException($"Can't get command matches from feature: {nameof(ICommandMatchesFeature)}.");
+
             var bestMatches = new List<ICommandMatch>();
 
             var fails = new Dictionary<ICommand, IResult>();
