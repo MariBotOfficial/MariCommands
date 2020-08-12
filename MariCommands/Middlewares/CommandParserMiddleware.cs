@@ -91,6 +91,16 @@ namespace MariCommands.Middlewares
                 return;
             }
 
+            var config = context.CommandServices.GetRequiredService<ICommandServiceOptions>();
+
+            if (!config.ContinueMultiMatchAfterParser)
+            {
+                bestMatches = bestMatches
+                                .OrderByDescending(a => a.Command.Priority)
+                                .Take(1)
+                                .ToList();
+            }
+
             matchesFeature.CommandMatches = bestMatches;
 
             await next(context);
