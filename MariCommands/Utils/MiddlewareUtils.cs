@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using MariCommands.Results;
 using Microsoft.Extensions.Logging;
 
@@ -16,6 +18,15 @@ namespace MariCommands.Utils
             }
 
             return true;
+        }
+
+
+        public static IResult GetErrorResult(this Dictionary<ICommand, IResult> failedMatches)
+        {
+            if (failedMatches.Count == 1)
+                return failedMatches.FirstOrDefault().Value;
+
+            return MatchesFailedResult.FromFaileds(failedMatches);
         }
     }
 }

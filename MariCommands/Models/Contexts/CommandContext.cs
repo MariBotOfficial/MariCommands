@@ -14,9 +14,9 @@ namespace MariCommands
     /// </summary>
     public class CommandContext : IAsyncDisposable
     {
-        private readonly static Func<IFeatureCollection, IItemsFeature> _newItemsFeature = f => new ItemsFeature();
-        private readonly static Func<CommandContext, ICommandServiceProvidersFeature> _newServiceProvidersFeature = context => new CommandServicesFeature(context, context.ServiceScopeFactory);
-        private readonly static Func<IFeatureCollection, IDisposablesFeature> _newDisposablesFeature = f => new DisposablesFeature();
+        private static readonly Func<IFeatureCollection, IItemsFeature> _newItemsFeature = f => new ItemsFeature();
+        private static readonly Func<CommandContext, ICommandServiceProvidersFeature> _newServiceProvidersFeature = context => new CommandServicesFeature(context, context.ServiceScopeFactory);
+        private static readonly Func<IFeatureCollection, IDisposablesFeature> _newDisposablesFeature = f => new DisposablesFeature();
 
         private FeatureReferences<FeatureInterfaces> _features;
 
@@ -128,7 +128,7 @@ namespace MariCommands
 
         private static void ThrowContextDisposed()
         {
-            throw new ObjectDisposedException(nameof(CommandContext), $"Command executio has finished and {nameof(CommandContext)} disposed.");
+            throw new ObjectDisposedException(nameof(CommandContext), $"Command execution has finished and {nameof(CommandContext)} disposed.");
         }
 
         struct FeatureInterfaces

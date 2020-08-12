@@ -94,7 +94,7 @@ namespace MariCommands.Middlewares
             if (bestMatches.HasNoContent())
             {
                 _logger.LogInformation("All matched commands returned fail for input count.");
-                context.Result = MatchesFailedResult.FromFaileds(fails);
+                context.Result = fails.GetErrorResult();
 
                 return;
             }
