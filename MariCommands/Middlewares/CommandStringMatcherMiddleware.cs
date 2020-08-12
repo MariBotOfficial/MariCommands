@@ -34,6 +34,10 @@ namespace MariCommands.Middlewares
 
             var matches = await _moduleCache.SearchCommandsAsync(input);
 
+            matches = matches
+                        .Where(a => a.Command.IsEnabled)
+                        .ToList();
+
             _logger.LogDebug($"Total matches: {matches.Count}.");
 
             if (matches.HasNoContent())
