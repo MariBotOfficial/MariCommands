@@ -80,6 +80,10 @@ namespace MariCommands
         /// </summary>
         IModule Module { get; }
 
+        bool IsAsync { get; }
+
+        Type AsyncResultType { get; }
+
         /// <summary>
         /// The real <see cref="MethodInfo" /> of this command.
         /// </summary>
