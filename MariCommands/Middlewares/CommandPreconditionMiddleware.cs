@@ -10,11 +10,11 @@ using Microsoft.Extensions.Logging;
 
 namespace MariCommands.Middlewares
 {
-    internal sealed class CommandParamPreconditionMiddleware : ICommandMiddleware
+    internal sealed class CommandPreconditionMiddleware : ICommandMiddleware
     {
         private readonly ILogger _logger;
 
-        public CommandParamPreconditionMiddleware(ILogger<CommandParamPreconditionMiddleware> logger)
+        public CommandPreconditionMiddleware(ILogger<CommandPreconditionMiddleware> logger)
         {
             _logger = logger;
         }
@@ -29,11 +29,7 @@ namespace MariCommands.Middlewares
                 return;
             }
 
-            var isUniqueCommand =
-                context.Command.HasContent() &&
-                context.Args != null;
-
-            if (isUniqueCommand)
+            if (context.Command.HasContent())
             {
                 var result = await ExecutePreconditionsForContextAsync(context);
 
@@ -50,13 +46,7 @@ namespace MariCommands.Middlewares
             if (matchesFeature.HasNoContent() || matchesFeature.CommandMatches.HasNoContent())
                 throw new InvalidOperationException($"Can't get command matches from feature: {nameof(ICommandMatchesFeature)}.");
 
-            var argumentParserFeature = context.Features.Get<IArgumentParserFeature>();
-
-            if (argumentParserFeature.HasNoContent() || argumentParserFeature.CommandArgs.HasNoContent())
-                throw new InvalidOperationException($"Can't get command matches parsed param values from feature: {nameof(IArgumentParserFeature)}.");
-
             var matches = matchesFeature.CommandMatches;
-            var parsedArgs = argumentParserFeature.CommandArgs;
 
             var fails = new Dictionary<ICommand, IResult>();
             var bestMatches = new List<ICommandMatch>();
@@ -64,9 +54,8 @@ namespace MariCommands.Middlewares
             foreach (var match in matches)
             {
                 var command = match.Command;
-                var args = parsedArgs[match];
 
-                var result = await ExecutePreconditionsAsync(command, args, context);
+                var result = await ExecutePreconditionsAsync(command, context);
 
                 if (result.Success)
                     bestMatches.Add(match);
@@ -88,37 +77,14 @@ namespace MariCommands.Middlewares
         }
 
         private Task<IResult> ExecutePreconditionsForContextAsync(CommandContext context)
-            => ExecutePreconditionsAsync(context.Command, context.Args, context);
+             => ExecutePreconditionsAsync(context.Command, context);
 
-        public async Task<IResult> ExecutePreconditionsAsync(ICommand command, IReadOnlyCollection<object> args, CommandContext context)
+        private async Task<IResult> ExecutePreconditionsAsync(ICommand command, CommandContext context)
         {
-            var count = command.Parameters.Count == args.Count
-                ? command.Parameters.Count
-                : args.Count;
-
-            if (count == 0)
-                return new SuccessResult();
-
-            for (var i = 0; i < count; i++)
-            {
-                var param = command.Parameters.ElementAt(i);
-                var parsedArg = args.ElementAt(i);
-
-                var result = await ExecutePreconditionsAsync(param, parsedArg, context);
-
-                if (!result.Success)
-                    return result;
-            }
-
-            return new SuccessResult();
-        }
-
-        private async Task<IResult> ExecutePreconditionsAsync(IParameter param, object value, CommandContext context)
-        {
-            var preconditions = param.Preconditions;
+            var preconditions = command.GetAllPreconditions();
 
             var tasks = preconditions
-                            .Select(a => ExecutePreconditionAsync(a, value, param, context));
+                            .Select(a => ExecutePreconditionAsync(a, command, context));
 
             var results = await Task.WhenAll(tasks);
 
@@ -131,16 +97,15 @@ namespace MariCommands.Middlewares
                             .Where(a => !a.Result.Success)
                             .ToList();
 
-            return ParamPreconditionsFailResult.FromFaileds(param, value, fails);
+            return PreconditionsFailResult.FromFaileds(command, fails);
         }
 
-        private async Task<(ParamPreconditionAttribute Attribute, IPreconditionResult Result)> ExecutePreconditionAsync(
-            ParamPreconditionAttribute attribute,
-            object value,
-            IParameter parameter,
+        private async Task<(PreconditionAttribute, IPreconditionResult Result)> ExecutePreconditionAsync(
+            PreconditionAttribute attribute,
+            ICommand command,
             CommandContext context)
         {
-            var result = await attribute.ExecuteAsync(value, parameter, context);
+            var result = await attribute.ExecuteAsync(command, context);
 
             return (attribute, result);
         }

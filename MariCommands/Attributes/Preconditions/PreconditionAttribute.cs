@@ -13,9 +13,10 @@ namespace MariCommands
         /// <summary>
         /// Asynchronously execute this precondition.
         /// </summary>
+        /// <param name="command">The command that is linked to this attribute.</param>
         /// <param name="context">The current command execution context.</param>
         /// <returns>A <see cref="Task" /> representing an asynchronous operation
         /// with an <see cref="IPreconditionResult" />.</returns>
-        public abstract Task<IPreconditionResult> ExecuteAsync(CommandContext context);
+        public abstract Task<IPreconditionResult> ExecuteAsync(ICommand command, CommandContext context);
     }
 }
