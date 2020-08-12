@@ -6,9 +6,6 @@ namespace MariCommands
     public class CommandServiceOptions : ICommandServiceOptions
     {
         /// <inheritdoc />
-        public ModuleLifetime ModuleLifetime { get; set; } = ModuleLifetime.Transient;
-
-        /// <inheritdoc />
         public RunMode RunMode { get; set; } = RunMode.Sequential;
 
         /// <inheritdoc />

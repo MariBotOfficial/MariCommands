@@ -15,11 +15,6 @@ namespace MariCommands
             => new CommandServiceOptions();
 
         /// <summary>
-        /// Gets or sets the default lifetime for modules.
-        /// </summary>
-        ModuleLifetime ModuleLifetime { get; set; }
-
-        /// <summary>
         /// Gets or sets the default runmode for commands.
         /// </summary>
         RunMode RunMode { get; set; }

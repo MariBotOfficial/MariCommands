@@ -34,7 +34,6 @@ namespace MariCommands.Factories
             var remarks = GetRemarks(type);
             var runMode = GetRunMode(type);
             var ignoreExtraArgs = GetIgnoreExtraArgs(type);
-            var lifeTime = GetLifeTime(type);
             var argumentParserType = GetArgumentParserType(type);
             var multiMatchHandling = GetMultiMatch(type);
             var alias = GetAlias(type);
@@ -49,7 +48,6 @@ namespace MariCommands.Factories
                                 .WithRemarks(remarks)
                                 .WithRunMode(runMode)
                                 .WithIgnoreExtraArgs(ignoreExtraArgs)
-                                .WithLifeTime(lifeTime)
                                 .WithArgumentParserType(argumentParserType)
                                 .WithMultiMatch(multiMatchHandling)
                                 .WithAlias(alias)
@@ -152,16 +150,6 @@ namespace MariCommands.Factories
 
             // Can be null, if null we just will use the default or the injected in dependency.
             return argumentParserAttr?.Value;
-        }
-
-        private ModuleLifetime GetLifeTime(Type type)
-        {
-            var lifeTimeAttr = type.GetAttribute<LifetimeAttribute>();
-
-            if (lifeTimeAttr.HasContent())
-                return lifeTimeAttr.Value;
-
-            return _config.ModuleLifetime;
         }
 
         private bool GetIgnoreExtraArgs(Type type)

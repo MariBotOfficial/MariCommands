@@ -26,9 +26,6 @@ namespace MariCommands
         public bool? IgnoreExtraArgs { get; }
 
         /// <inheritdoc />
-        public ModuleLifetime? ModuleLifetime { get; }
-
-        /// <inheritdoc />
         public Type ArgumentParserType { get; }
 
         /// <inheritdoc />
@@ -83,7 +80,6 @@ namespace MariCommands
             Remarks = builder.Remarks;
             RunMode = builder.RunMode;
             IgnoreExtraArgs = builder.IgnoreExtraArgs;
-            ModuleLifetime = builder.ModuleLifetime;
             ArgumentParserType = builder.ArgumentParserType;
             MultiMatchHandling = builder.MultiMatchHandling;
             Aliases = builder.Aliases.ToImmutableArray();

@@ -34,11 +34,6 @@ namespace MariCommands
         bool? IgnoreExtraArgs { get; }
 
         /// <summary>
-        /// The lifetime for this module.
-        /// </summary>
-        ModuleLifetime? ModuleLifetime { get; }
-
-        /// <summary>
         /// The default argument parser type for this module.
         /// </summary>
         Type ArgumentParserType { get; }
