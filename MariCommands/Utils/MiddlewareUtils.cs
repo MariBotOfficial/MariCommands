@@ -21,7 +21,7 @@ namespace MariCommands.Utils
         }
 
 
-        public static IResult GetErrorResult(this Dictionary<ICommand, IResult> failedMatches)
+        public static IResult GetErrorResult(Dictionary<ICommand, IResult> failedMatches)
         {
             if (failedMatches.Count == 1)
                 return failedMatches.FirstOrDefault().Value;

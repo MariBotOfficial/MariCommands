@@ -142,7 +142,7 @@ namespace MariCommands
 
             var matches = new List<CommandMatch>();
 
-            for (var i = 0; i < paths.Count(); i++)
+            for (var i = 0; i < paths.Length; i++)
             {
                 if (i == 0)
                 {

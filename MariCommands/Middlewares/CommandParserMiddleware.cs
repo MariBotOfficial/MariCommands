@@ -100,7 +100,7 @@ namespace MariCommands.Middlewares
             if (bestMatches.HasNoContent())
             {
                 _logger.LogInformation("All matched commands returned fail for command parsing.");
-                context.Result = fails.GetErrorResult();
+                context.Result = MiddlewareUtils.GetErrorResult(fails);
 
                 return;
             }
@@ -113,6 +113,12 @@ namespace MariCommands.Middlewares
                                 .OrderByDescending(a => a.Command.Priority)
                                 .Take(1)
                                 .ToList();
+
+                var bestMatch = bestMatches.FirstOrDefault();
+
+                context.Command = bestMatch.Command;
+                context.RawArgs = bestMatch.RemainingInput;
+                context.Args = argumentParserFeature.CommandArgs[bestMatch].ToList();
             }
 
             matchesFeature.CommandMatches = bestMatches;

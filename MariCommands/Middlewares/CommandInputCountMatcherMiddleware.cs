@@ -25,10 +25,25 @@ namespace MariCommands.Middlewares
         {
             context.NotNull(nameof(context));
 
-            if (context.Command.HasContent() || context.Result.HasContent())
+            if (context.Result.HasContent() || context.Args != null)
             {
                 await next(context);
                 return;
+            }
+
+            var verifyCommandInputCount =
+                context.Command.HasContent() &&
+                !string.IsNullOrWhiteSpace(context.RawArgs);
+
+            if (verifyCommandInputCount)
+            {
+                context.Features.Set<ICommandMatchesFeature>(new CommandMatchesFeature
+                {
+                    CommandMatches = new List<ICommandMatch>
+                    {
+                        new CommandMatch(context.Command, null, null, context.RawArgs)
+                    }
+                });
             }
 
             var matchesFeature = context.Features.Get<ICommandMatchesFeature>();
@@ -94,7 +109,7 @@ namespace MariCommands.Middlewares
             if (bestMatches.HasNoContent())
             {
                 _logger.LogInformation("All matched commands returned fail for input count.");
-                context.Result = fails.GetErrorResult();
+                context.Result = MiddlewareUtils.GetErrorResult(fails);
 
                 return;
             }
