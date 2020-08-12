@@ -9,13 +9,6 @@ namespace MariCommands.Executors
     public interface ICommandExecutor
     {
         /// <summary>
-        /// Verify if this executor can execute this command.
-        /// </summary>
-        /// <param name="command">The commmand definition.</param>
-        /// <returns><see langword="true" /> if this executor can execute this command.</returns>
-        bool CanExecute(ICommand command);
-
-        /// <summary>
         /// Execute the command with the specified arguments.
         /// </summary>
         /// <param name="module">The module instance.</param>
