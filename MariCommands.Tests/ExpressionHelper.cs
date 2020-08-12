@@ -1,6 +1,10 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Threading.Tasks;
+using MariCommands.Results;
 
 namespace MariCommands.Tests
 {
@@ -21,5 +25,15 @@ namespace MariCommands.Tests
 
             return parameters;
         }
+
+        public static ConstructorInfo GetValueTaskCtor()
+        {
+            return typeof(ValueTask<IResult>)
+                                    .GetConstructors()
+                                    .FirstOrDefault(a => a.GetParameters().FirstOrDefault().ParameterType == typeof(IResult));
+        }
+
+        public static ConstructorInfo GetFirstCtor(this Type type)
+            => type.GetConstructors().FirstOrDefault();
     }
 }

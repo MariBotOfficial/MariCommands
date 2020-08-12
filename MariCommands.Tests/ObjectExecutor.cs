@@ -16,11 +16,8 @@ namespace MariCommands.Tests
             var type = typeof(ObjectCommand);
             var method = type.GetMethod(nameof(ObjectCommand.Execute));
 
-            var valueTaskCtor = typeof(ValueTask<IResult>)
-                                    .GetConstructors()
-                                    .FirstOrDefault(a => a.GetParameters().FirstOrDefault().ParameterType == typeof(IResult));
-
-            var objectResultCtor = typeof(SuccessObjectResult).GetConstructors().FirstOrDefault();
+            var valueTaskCtor = ExpressionHelper.GetValueTaskCtor();
+            var objectResultCtor = typeof(SuccessObjectResult).GetFirstCtor();
 
             var instanceParameter = Expression.Parameter(typeof(object), "instance");
             var argsParameter = Expression.Parameter(typeof(object[]), "args");
