@@ -120,7 +120,7 @@ namespace MariCommands.Middlewares
                 var bestMatch = bestMatches.FirstOrDefault();
 
                 context.Command = bestMatch.Command;
-                context.RawArgs = bestMatch.RemainingInput;
+                context.Alias = bestMatch.Alias;
                 context.Args = argumentParserFeature.CommandArgs[bestMatch].ToList();
             }
 
