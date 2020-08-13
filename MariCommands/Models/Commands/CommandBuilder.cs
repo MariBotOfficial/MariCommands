@@ -227,22 +227,17 @@ namespace MariCommands
             return this;
         }
 
-        // /// <summary>
-        // /// Sets the CommandDelegate for this command.
-        // /// </summary>
-        // /// <param name="commandDelegate">The CommandDelegate to be setted.</param>
-        // /// <returns>The current builder.</returns>
-        // /// <exception cref="ArgumentNullException">
-        // /// <param ref="commandDelegate" /> must not be null.
-        // /// </exception>
-        // public CommandBuilder WithCommandDelegate(CommandExecuteDelegate commandDelegate)
-        // {
-        //     commandDelegate.NotNull(nameof(commandDelegate));
+        /// <summary>
+        /// Sets the real <see cref="MethodInfo" /> of this command.
+        /// </summary>
+        public CommandBuilder WithMethodInfo(MethodInfo methodInfo)
+        {
+            methodInfo.NotNull(nameof(methodInfo));
 
-        //     CommandDelegate = commandDelegate;
+            MethodInfo = methodInfo;
 
-        //     return this;
-        // }
+            return this;
+        }
 
         /// <inheritdoc />
         public ICommand Build(IModule module)

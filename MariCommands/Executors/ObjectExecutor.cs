@@ -24,7 +24,6 @@ namespace MariCommands.Executors
             var objectResultCtor = ExecutorUtils.GetObjectResultCtor();
 
             body = Expression.New(objectResultCtor, body);
-            body = Expression.Convert(body, typeof(IResult));
 
             var callback = ExecutorUtils.CreateCallbackForTaskResult(body, instanceParameter, argsParameter);
 

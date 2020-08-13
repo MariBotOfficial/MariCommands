@@ -120,6 +120,8 @@ namespace MariCommands.Utils
         {
             var taskMethod = GetTaskResultMethod();
 
+            body = Expression.Convert(body, typeof(IResult));
+
             body = Expression.Call(taskMethod, new Expression[] { body });
 
             return CreateCallback(body, instanceParameter, argsParameter);
