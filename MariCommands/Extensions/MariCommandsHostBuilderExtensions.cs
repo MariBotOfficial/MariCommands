@@ -13,7 +13,7 @@ namespace MariCommands.Extensions
     /// <summary>
     /// A class to add MariCommands in your ASP.NET Core project
     /// </summary>
-    public static class MariCommandsWebHostBuilderExtensions
+    public static class MariCommandsHostBuilderExtensions
     {
         private static bool HasStartup { get; set; }
 
@@ -46,6 +46,7 @@ namespace MariCommands.Extensions
                 services.TryAddTransient<IParameterFactory, ParameterFactory>();
                 services.TryAddTransient<IArgumentParser, ArgumentParser>();
                 services.TryAddTransient<ITypeParserProvider, TypeParserProvider>();
+                services.TryAddTransient<ICommandExecutorProvider, CommandExecutorProvider>();
             });
 
             return webBuilder;
