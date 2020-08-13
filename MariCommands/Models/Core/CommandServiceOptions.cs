@@ -6,9 +6,6 @@ namespace MariCommands
     public class CommandServiceOptions : ICommandServiceOptions
     {
         /// <inheritdoc />
-        public ModuleLifetime ModuleLifetime { get; set; } = ModuleLifetime.Transient;
-
-        /// <inheritdoc />
         public RunMode RunMode { get; set; } = RunMode.Sequential;
 
         /// <inheritdoc />
@@ -24,6 +21,12 @@ namespace MariCommands
         public string Separator { get; set; } = " ";
 
         /// <inheritdoc />
-        public bool AutoCreateNullables { get; set; } = false;
+        public bool TypeParserOfClassIsNullables { get; set; } = false;
+
+        /// <inheritdoc />
+        public bool AutoAddRunningAssembly { get; set; } = false;
+
+        /// <inheritdoc />
+        public bool ContinueMultiMatchAfterParser { get; set; } = false;
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using MariCommands.Results;
 
 namespace MariCommands
 {
@@ -12,31 +13,46 @@ namespace MariCommands
     public interface ICommandService
     {
         /// <summary>
-        /// Search all modules in your project and add them to modules dependency.
+        /// Search all modules in your project and add them to the module cache.
         /// </summary>
         /// <param name="assembly">The assembly.</param>
         IReadOnlyCollection<IModule> AddModules(Assembly assembly);
 
         /// <summary>
-        /// Add this module to dependency.
+        /// Add this module to the module cache.
         /// </summary>
-        /// <param name="type">Any module type.</param>
-        /// <typeparam name="T">Any module type.</typeparam>
-        IModule AddModule<T>(T type)
-            where T : IModule;
+        /// <param name="module">Any module.</param>
+        IModule AddModule(IModule module);
 
         /// <summary>
-        /// Add this module type to dependency.
+        /// Add this module to the module cache.
         /// </summary>
-        /// <typeparam name="T">Any module type.</typeparam>
+        /// <param name="builder">Any module builder.</param>
+        IModule AddModule(IModuleBuilder builder)
+            => AddModule(builder.Build(null));
+
+        /// <summary>
+        /// Add this module type to the module cache.
+        /// </summary>
+        /// <typeparam ref="T">Any module type.</typeparam>
         IModule AddModule<T>()
-            where T : IModule;
+            where T : class
+        {
+            return AddModule(typeof(T));
+        }
+
 
         /// <summary>
-        /// Add this module type to dependency.
+        /// Add this module type to the module cache.
         /// </summary>
         /// <param name="type">Any module type.</param>
         IModule AddModule(Type type);
+
+        /// <summary>
+        /// Remove this module from the module cache.
+        /// </summary>
+        /// <param name="module">The module to be removed.</param>
+        void RemoveModule(IModule module);
 
         /// <summary>
         /// Execute a command with the specified text input and returns the result.
@@ -90,5 +106,11 @@ namespace MariCommands
         ///     <param ref="commandContext" /> must not be null.
         /// </exception>
         Task<IResult> ExecuteAsync(ICommand command, IEnumerable<object> args, CommandContext commandContext);
+
+        /// <summary>
+        /// Initialize the current command service with the specified command middleware pipeline.
+        /// </summary>
+        /// <param name="commandDelegate">The command middleware for proccess command requests.</param>
+        void Initialize(CommandDelegate commandDelegate);
     }
 }

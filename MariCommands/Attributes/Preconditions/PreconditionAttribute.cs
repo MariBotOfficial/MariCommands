@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using MariCommands.Results;
 
 namespace MariCommands
 {
@@ -12,10 +13,10 @@ namespace MariCommands
         /// <summary>
         /// Asynchronously execute this precondition.
         /// </summary>
+        /// <param name="command">The command that is linked to this attribute.</param>
         /// <param name="context">The current command execution context.</param>
-        /// <param name="provider">The current dependencies container.</param>
         /// <returns>A <see cref="Task" /> representing an asynchronous operation
         /// with an <see cref="IPreconditionResult" />.</returns>
-        public abstract Task<IPreconditionResult> ExecuteAsync(CommandContext context, IServiceProvider provider);
+        public abstract Task<IPreconditionResult> ExecuteAsync(ICommand command, CommandContext context);
     }
 }

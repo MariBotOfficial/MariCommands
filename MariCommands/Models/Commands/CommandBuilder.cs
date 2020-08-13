@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Reflection;
+using MariCommands.Executors;
+using MariCommands.Utils;
 using MariGlobals.Extensions;
 
 namespace MariCommands
@@ -45,15 +47,20 @@ namespace MariCommands
         /// <inheritdoc />
         public bool IsEnabled { get; private set; }
 
+        /// <inheritdoc />
+        public bool IsAsync { get; private set; }
+
+        /// <inheritdoc />
+        public Type AsyncResultType { get; private set; }
+
+        /// <inheritdoc />
+        public ICommandExecutor Executor { get; private set; }
+
         /// <inheritdoc />    
         public MethodInfo MethodInfo { get; private set; }
 
         /// <inheritdoc />
         public IModuleBuilder Module { get; private set; }
-
-        /// <inheritdoc />
-        public CommandExecuteDelegate CommandDelegate { get; private set; }
-
 
         /// <summary>
         /// Sets the parent module for this command.
@@ -75,6 +82,44 @@ namespace MariCommands
         public CommandBuilder WithPreconditions(IEnumerable<PreconditionAttribute> preconditions)
         {
             Preconditions = preconditions.ToImmutableArray();
+
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the async result type of this command.
+        /// </summary>
+        /// <param name="asyncResultType">The async result type to be setted.</param>
+        /// <returns>The current builder.</returns>
+        public CommandBuilder WithAsyncResultType(Type asyncResultType)
+        {
+            AsyncResultType = asyncResultType;
+
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the command executor for this command.
+        /// </summary>
+        /// <param name="executor">The executor to be setted.</param>
+        /// <returns>The current builder.</returns>
+        public CommandBuilder WithExecutor(ICommandExecutor executor)
+        {
+            executor.NotNull(nameof(executor));
+
+            Executor = executor;
+
+            return this;
+        }
+
+        /// <summary>
+        /// Sets if the command is async.
+        /// </summary>
+        /// <param name="isAsync">The value to be setted.</param>
+        /// <returns>The current builder.</returns>
+        public CommandBuilder WithIsAsync(bool isAsync)
+        {
+            IsAsync = isAsync;
 
             return this;
         }
@@ -113,7 +158,6 @@ namespace MariCommands
             alias.NotNullOrEmpty(nameof(alias));
 
             Aliases = alias.ToImmutableArray();
-
 
             return this;
         }
@@ -222,18 +266,13 @@ namespace MariCommands
         }
 
         /// <summary>
-        /// Sets the CommandDelegate for this command.
+        /// Sets the real <see cref="MethodInfo" /> of this command.
         /// </summary>
-        /// <param name="commandDelegate">The CommandDelegate to be setted.</param>
-        /// <returns>The current builder.</returns>
-        /// <exception cref="ArgumentNullException">
-        /// <param ref="commandDelegate" /> must not be null.
-        /// </exception>
-        public CommandBuilder WithCommandDelegate(CommandExecuteDelegate commandDelegate)
+        public CommandBuilder WithMethodInfo(MethodInfo methodInfo)
         {
-            commandDelegate.NotNull(nameof(commandDelegate));
+            methodInfo.NotNull(nameof(methodInfo));
 
-            CommandDelegate = commandDelegate;
+            MethodInfo = methodInfo;
 
             return this;
         }

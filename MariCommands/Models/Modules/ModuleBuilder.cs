@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using MariCommands.Utils;
 
 namespace MariCommands
 {
@@ -21,9 +22,6 @@ namespace MariCommands
 
         /// <inheritdoc />
         public bool? IgnoreExtraArgs { get; private set; }
-
-        /// <inheritdoc />
-        public ModuleLifetime? ModuleLifetime { get; private set; }
 
         /// <inheritdoc />
         public Type ArgumentParserType { get; private set; }
@@ -158,18 +156,6 @@ namespace MariCommands
         {
             // Can be null without problem.
             ArgumentParserType = argumentParserType;
-
-            return this;
-        }
-
-        /// <summary>
-        /// Sets the life time for this module.
-        /// </summary>
-        /// <param name="lifeTime">The life time to be setted.</param>
-        /// <returns>The current builder.</returns>
-        public ModuleBuilder WithLifeTime(ModuleLifetime? lifeTime)
-        {
-            ModuleLifetime = lifeTime;
 
             return this;
         }

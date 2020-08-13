@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading;
+using MariCommands.Utils;
 using MariGlobals.Extensions;
 
 namespace MariCommands
@@ -23,9 +24,6 @@ namespace MariCommands
 
         /// <inheritdoc />
         public bool? IgnoreExtraArgs { get; }
-
-        /// <inheritdoc />
-        public ModuleLifetime? ModuleLifetime { get; }
 
         /// <inheritdoc />
         public Type ArgumentParserType { get; }
@@ -82,7 +80,6 @@ namespace MariCommands
             Remarks = builder.Remarks;
             RunMode = builder.RunMode;
             IgnoreExtraArgs = builder.IgnoreExtraArgs;
-            ModuleLifetime = builder.ModuleLifetime;
             ArgumentParserType = builder.ArgumentParserType;
             MultiMatchHandling = builder.MultiMatchHandling;
             Aliases = builder.Aliases.ToImmutableArray();

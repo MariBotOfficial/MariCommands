@@ -1,6 +1,6 @@
 using System;
 
-namespace MariCommands
+namespace MariCommands.Results
 {
     /// <summary>
     /// Represents a result for any execution proccess.

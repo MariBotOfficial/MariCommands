@@ -2,24 +2,20 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using MariCommands.Extensions;
+using MariCommands.Utils;
 using MariGlobals.Extensions;
 
-namespace MariCommands
+namespace MariCommands.Factories
 {
     /// <inheritdoc />
-    public class ParameterFactory : IParameterFactory
+    internal sealed class ParameterFactory : IParameterFactory
     {
-        private readonly IServiceProvider _provider;
         private readonly ICommandServiceOptions _config;
 
-        /// <summary>
-        /// Creates a new instance of <see cref="ParameterFactory" />.
-        /// </summary>
-        /// <param name="provider">A dependency container.</param>
-        public ParameterFactory(IServiceProvider provider)
+        public ParameterFactory(ICommandServiceOptions config)
         {
-            _provider = provider ?? ServiceUtils.GetDefaultServiceProvider();
-            _config = _provider.GetOrDefault<ICommandServiceOptions, CommandServiceOptions>();
+            _config = config;
         }
 
         /// <inheritdoc />

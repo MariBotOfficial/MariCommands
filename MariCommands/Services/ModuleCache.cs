@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
+using MariCommands.Utils;
 using MariGlobals.Extensions;
 
 namespace MariCommands
@@ -11,17 +12,15 @@ namespace MariCommands
     /// <inheritdoc />
     public class ModuleCache : IModuleCache
     {
-        private readonly IServiceProvider _provider;
         private readonly ConcurrentDictionary<string, List<ICommand>> _commands;
         private readonly ICommandServiceOptions _config;
 
         /// <summary>
         /// Creates a new instance of <see cref="ModuleCache" />
         /// </summary>
-        public ModuleCache(IServiceProvider provider)
+        public ModuleCache(ICommandServiceOptions config)
         {
-            _provider = provider ?? ServiceUtils.GetDefaultServiceProvider();
-            _config = _provider.GetOrDefault<ICommandServiceOptions, CommandServiceOptions>();
+            _config = config;
             _commands = new ConcurrentDictionary<string, List<ICommand>>(StringComparer.FromComparison(_config.Comparison));
         }
 
@@ -143,7 +142,7 @@ namespace MariCommands
 
             var matches = new List<CommandMatch>();
 
-            for (var i = 0; i < paths.Count(); i++)
+            for (var i = 0; i < paths.Length; i++)
             {
                 if (i == 0)
                 {

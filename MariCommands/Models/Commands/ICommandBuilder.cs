@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading.Tasks;
+using MariCommands.Executors;
 
 namespace MariCommands
 {
@@ -70,6 +72,25 @@ namespace MariCommands
         bool IsEnabled { get; }
 
         /// <summary>
+        /// Indicates if this command is async 
+        /// (is a <see cref="Task" /> or a <see cref="ValueTask" />).
+        /// </summary>
+        bool IsAsync { get; }
+
+        /// <summary>
+        /// The generic return type of this command.
+        /// </summary>
+        /// <remarks>
+        /// May be null if <see cref="IsAsync"/> is <see langword="false"/>.
+        /// </remarks>
+        Type AsyncResultType { get; }
+
+        /// <summary>
+        /// The executor for this command.
+        /// </summary>
+        ICommandExecutor Executor { get; }
+
+        /// <summary>
         /// The real <see cref="MethodInfo" /> of this command.
         /// </summary>
         MethodInfo MethodInfo { get; }
@@ -78,11 +99,6 @@ namespace MariCommands
         /// The module of this command.
         /// </summary>
         IModuleBuilder Module { get; }
-
-        /// <summary>
-        /// A function that can process a request for this command.
-        /// </summary>
-        CommandExecuteDelegate CommandDelegate { get; }
 
         /// <summary>
         /// Finishes the building of this command.

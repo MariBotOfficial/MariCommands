@@ -1,6 +1,7 @@
 using System;
+using MariCommands.Utils;
 
-namespace MariCommands
+namespace MariCommands.Results
 {
     /// <inheritdoc />
     public class PreconditionResult : IPreconditionResult
@@ -50,28 +51,5 @@ namespace MariCommands
             Exception = exception;
             Reason = exception.Message;
         }
-
-        /// <summary>
-        /// Build a success precondition result.
-        /// </summary>
-        /// <returns>A success precondition result.</returns>
-        public static PreconditionResult FromSuccess()
-            => new PreconditionSuccessResult();
-
-        /// <summary>
-        /// Build a failed precondition result.
-        /// </summary>
-        /// <param name="reason">The reason of the error.</param>
-        /// <returns>A failed precondition result.</returns>
-        static PreconditionResult FromError(string reason)
-            => new PreconditionFailResult(reason);
-
-        /// <summary>
-        /// Build a failed precondition result.
-        /// </summary>
-        /// <param name="exception">The exception ocurried during the precondition check.</param>
-        /// <returns>A failed precondition result.</returns>
-        static PreconditionResult FromException(Exception exception)
-            => new PreconditionFailResult(exception);
     }
 }

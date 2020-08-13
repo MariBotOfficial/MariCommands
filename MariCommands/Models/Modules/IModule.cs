@@ -35,11 +35,6 @@ namespace MariCommands
         bool? IgnoreExtraArgs { get; }
 
         /// <summary>
-        /// The lifetime for this module.
-        /// </summary>
-        ModuleLifetime? ModuleLifetime { get; }
-
-        /// <summary>
         /// The default argument parser type for this module.
         /// </summary>
         Type ArgumentParserType { get; }
@@ -132,22 +127,6 @@ namespace MariCommands
         }
 
         /// <summary>
-        /// Gets the <see cref="ModuleLifetime" /> for this module.
-        /// </summary>
-        /// <param name="options">The options with default <see cref="ModuleLifetime" /> value.</param>
-        /// <returns>The <see cref="ModuleLifetime" /> for this module.</returns>
-        ModuleLifetime GetModuleLifetime(ICommandServiceOptions options)
-        {
-            if (ModuleLifetime.HasValue)
-                return ModuleLifetime.Value;
-
-            if (Parent.HasContent())
-                return Parent.GetModuleLifetime(options);
-
-            return options?.ModuleLifetime ?? new CommandServiceOptions().ModuleLifetime;
-        }
-
-        /// <summary>
         /// Gets the <see cref="MultiMatchHandling" /> for this module.
         /// </summary>
         /// <param name="options">The options with default <see cref="MultiMatchHandling" /> value.</param>
@@ -171,8 +150,10 @@ namespace MariCommands
         {
             if (ArgumentParserType.HasContent())
                 return ArgumentParserType;
-
-            return Parent?.GetArgumentParserType();
+            else if (Parent.HasContent())
+                return Parent.GetArgumentParserType();
+            else
+                return null;
         }
 
         /// <summary>

@@ -15,11 +15,6 @@ namespace MariCommands
             => new CommandServiceOptions();
 
         /// <summary>
-        /// Gets or sets the default lifetime for modules.
-        /// </summary>
-        ModuleLifetime ModuleLifetime { get; set; }
-
-        /// <summary>
         /// Gets or sets the default runmode for commands.
         /// </summary>
         RunMode RunMode { get; set; }
@@ -45,8 +40,18 @@ namespace MariCommands
         string Separator { get; set; }
 
         /// <summary>
-        /// Gets or sets if this lib will auto create a nullable for type readers.
+        /// Gets or sets if this lib will consider any type parser of class can parse null values.
         /// </summary>
-        bool AutoCreateNullables { get; set; }
+        bool TypeParserOfClassIsNullables { get; set; }
+
+        /// <summary>
+        /// Gets or sets if this lib will auto add the running assembly in modules.
+        /// </summary>
+        bool AutoAddRunningAssembly { get; set; }
+
+        /// <summary>
+        /// Gets or sets if this lib will continue to handle multi matches after parsing.
+        /// </summary>
+        bool ContinueMultiMatchAfterParser { get; set; }
     }
 }
