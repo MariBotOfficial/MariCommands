@@ -77,5 +77,13 @@ namespace MariCommands.Extensions
         /// <returns>The current command aplication builder.</returns>
         public static ICommandApplicationBuilder UsePreconditioner(this ICommandApplicationBuilder app)
             => app.UseMiddleware<CommandPreconditionMiddleware>();
+
+        /// <summary>
+        /// Use the default command executor middleware.
+        /// </summary>
+        /// <param name="app">The current command aplication builder.</param>
+        /// <returns>The current command aplication builder.</returns>
+        public static ICommandApplicationBuilder UseCommandExecutor(this ICommandApplicationBuilder app)
+            => app.UseMiddleware<CommandExecutorMiddleware>();
     }
 }
