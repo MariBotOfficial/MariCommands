@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using MariCommands.Results;
 
-namespace MariCommands.Models.Commands
+namespace MariCommands
 {
     /// <summary>
     /// A builder callback to executors use to execute a command.
