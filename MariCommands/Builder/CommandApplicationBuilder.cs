@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using MariCommands.Extensions;
+using MariCommands.Middlewares;
 using MariCommands.Utils;
 using MariGlobals.Extensions;
 
@@ -52,22 +54,20 @@ namespace MariCommands.Builder
             {
                 context.NotNull(nameof(context));
 
-                var command = context.Command;
-
-                if (command.HasNoContent())
+                if (context.Command.HasNoContent())
                 {
-                    // TODO: Put the parser middleware here.
                     var message =
-                        $"The request reached the end of the pipeline without a command defined";
+                        $"The request reached the end of the pipeline without a command defined." +
+                        $"Please register the {nameof(CommandParserMiddleware)} using '{nameof(ICommandApplicationBuilder)}'.{nameof(MariCommandsApplicationBuilderExtensions.UseParser)}().";
 
                     throw new InvalidOperationException(message);
                 }
 
                 if (context.Result.HasNoContent())
                 {
-                    // TODO: Put the executor middleware here.
                     var message =
-                        $"The request reached the end of the pipeline without executing the command: '{command.Name}'.";
+                        $"The request reached the end of the pipeline without executing the command: '{context.Command.Name}'." +
+                        $"Please register the {nameof(CommandExecutorMiddleware)} using '{nameof(ICommandApplicationBuilder)}.{nameof(MariCommandsApplicationBuilderExtensions.UseCommandExecutor)}().'";
 
                     throw new InvalidOperationException(message);
                 }
