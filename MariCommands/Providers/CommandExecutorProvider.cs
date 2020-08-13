@@ -2,6 +2,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MariCommands.Executors;
 using MariCommands.Results;
+using MariGlobals.Extensions;
 
 namespace MariCommands.Providers
 {
@@ -10,22 +11,22 @@ namespace MariCommands.Providers
         public ICommandExecutor GetCommandExecutor(IModuleBuilder moduleBuilder, ICommandBuilder commandBuilder)
         {
             var type = commandBuilder.MethodInfo.ReturnType;
+            var asyncResultType = commandBuilder.AsyncResultType;
 
             if (commandBuilder.IsAsync)
             {
-                if (type == typeof(Task) && !type.IsGenericType)
+                if (type == typeof(Task) && commandBuilder.AsyncResultType.HasNoContent())
                     return VoidTaskExecutor.Create(moduleBuilder, commandBuilder);
 
-                if (type == typeof(ValueTask) && !type.IsGenericType)
+                if (type == typeof(ValueTask) && commandBuilder.AsyncResultType.HasNoContent())
                     return VoidValueTaskExecutor.Create(moduleBuilder, commandBuilder);
 
-                var genericType = type.GetGenericArguments().FirstOrDefault();
                 var genericDefinition = type.GetGenericTypeDefinition();
 
-                if (genericDefinition == typeof(Task<>) && typeof(IResult).IsAssignableFrom(genericType))
+                if (genericDefinition == typeof(Task<>) && typeof(IResult).IsAssignableFrom(asyncResultType))
                     return ResultTaskExecutor.Create(moduleBuilder, commandBuilder);
 
-                if (genericDefinition == typeof(ValueTask<>) && typeof(IResult).IsAssignableFrom(genericType))
+                if (genericDefinition == typeof(ValueTask<>) && typeof(IResult).IsAssignableFrom(asyncResultType))
                     return ResultValueTaskExecutor.Create(moduleBuilder, commandBuilder);
 
                 if (genericDefinition == typeof(ValueTask<>))
