@@ -24,6 +24,10 @@ namespace MariCommands
         }
 
         /// <inheritdoc />
+        public void RemoveModule(IModule module)
+            => _moduleConfigurer.RemoveModule(module);
+
+        /// <inheritdoc />
         public IModule AddModule(IModule module)
             => _moduleConfigurer.AddModule(module);
 
@@ -50,5 +54,6 @@ namespace MariCommands
         /// <inheritdoc />
         public void Initialize(CommandDelegate commandDelegate)
             => _contextExecutor.Initialize(commandDelegate);
+
     }
 }

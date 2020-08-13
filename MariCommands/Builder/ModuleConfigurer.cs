@@ -73,5 +73,9 @@ namespace MariCommands.Builder
 
             return modules.MoveToImmutable();
         }
+
+        /// <inheritdoc />
+        public void RemoveModule(IModule module)
+            => _moduleCache.RemoveModule(module);
     }
 }
