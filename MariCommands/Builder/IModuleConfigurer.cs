@@ -23,17 +23,26 @@ namespace MariCommands.Builder
         /// <summary>
         /// Add this module to dependency.
         /// </summary>
-        /// <param name="type">Any module type.</param>
-        /// <typeparam name="T">Any module type.</typeparam>
-        IModule AddModule<T>(T type)
-            where T : IModule;
+        /// <param name="module">Any module.</param>
+        IModule AddModule(IModule module);
+
+        /// <summary>
+        /// Add this module to dependency.
+        /// </summary>
+        /// <param name="builder">Any module builder.</param>
+        IModule AddModule(IModuleBuilder builder)
+            => AddModule(builder.Build(null));
 
         /// <summary>
         /// Add this module type to dependency.
         /// </summary>
-        /// <typeparam name="T">Any module type.</typeparam>
+        /// <typeparam ref="T">Any module type.</typeparam>
         IModule AddModule<T>()
-            where T : IModule;
+            where T : class
+        {
+            return AddModule(typeof(T));
+        }
+
 
         /// <summary>
         /// Add this module type to dependency.

@@ -1,40 +1,53 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using MariCommands.Factories;
 
 namespace MariCommands.Builder
 {
     /// <inheritdoc />
     public class ModuleConfigurer : IModuleConfigurer
     {
+        private readonly IModuleCache _moduleCache;
+        private readonly IModuleFactory _moduleFactory;
+
         /// <summary>
         /// Creates a new instance of <see cref="ModuleConfigurer" />
         /// </summary>
         /// <param name="options">The current command app options.</param>
-        public ModuleConfigurer(ICommandServiceOptions options)
+        /// <param name="moduleCache">The module cache to save the added modules.</param>
+        /// <param name="moduleFactory">The factory to create modules.</param>
+        public ModuleConfigurer(ICommandServiceOptions options, IModuleCache moduleCache, IModuleFactory moduleFactory)
         {
             Options = options;
+            _moduleCache = moduleCache;
+            _moduleFactory = moduleFactory;
         }
 
         /// <inheritdoc />
         public ICommandServiceOptions Options { get; }
 
         /// <inheritdoc />
-        public IModule AddModule<T>(T type) where T : IModule
+        public IModule AddModule(IModule module)
         {
-            throw new NotImplementedException();
-        }
+            _moduleCache.AddModule(module);
 
-        /// <inheritdoc />
-        public IModule AddModule<T>() where T : IModule
-        {
-            throw new NotImplementedException();
+            return module;
         }
 
         /// <inheritdoc />
         public IModule AddModule(Type type)
         {
-            throw new NotImplementedException();
+            if (!_moduleFactory.IsModule(type))
+                throw new InvalidOperationException($"Cannot add this module because it is not a valid module definition.");
+
+            var moduleBuilder = _moduleFactory.BuildModule(null, type);
+
+            var module = moduleBuilder.Build(null);
+
+            _moduleCache.AddModule(module);
+
+            return module;
         }
 
         /// <inheritdoc />

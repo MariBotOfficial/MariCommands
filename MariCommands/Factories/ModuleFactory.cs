@@ -207,8 +207,12 @@ namespace MariCommands.Factories
         {
             var isValid =
                 type.HasContent() &&
+                type.IsClass &&
+                !type.IsAbstract &&
+                IsNotStatic(type) &&
                 !type.IsNested &&
                 type.IsPublic &&
+                !type.IsGenericType &&
                 typeof(IModuleBase).IsAssignableFrom(type) &&
                 !type.CustomAttributes
                         .Any(a => typeof(DontLoadAttribute).IsAssignableFrom(a.AttributeType));
@@ -221,8 +225,12 @@ namespace MariCommands.Factories
         {
             var isValid =
                 type.HasContent() &&
+                type.IsClass &&
+                IsNotStatic(type) &&
                 type.IsNested &&
                 type.IsPublic &&
+                !type.IsGenericType &&
+                typeof(IModuleBase).IsAssignableFrom(type) &&
                 type.CustomAttributes
                     .Any(a => typeof(GroupAttribute).IsAssignableFrom(a.AttributeType)) &&
                 !type.CustomAttributes
@@ -230,5 +238,8 @@ namespace MariCommands.Factories
 
             return isValid;
         }
+
+        private bool IsNotStatic(Type type)
+            => !(type.IsAbstract && type.IsSealed);
     }
 }

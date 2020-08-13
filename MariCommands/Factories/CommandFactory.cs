@@ -234,6 +234,8 @@ namespace MariCommands.Factories
             var isValid = module.HasContent() &&
                           methodInfo.HasContent() &&
                           methodInfo.IsPublic &&
+                          !methodInfo.IsStatic &&
+                          !methodInfo.IsGenericMethod &&
                           methodInfo.CustomAttributes.Any(a => typeof(CommandAttribute).IsAssignableFrom(a.AttributeType));
 
             return isValid;

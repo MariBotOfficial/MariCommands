@@ -23,14 +23,9 @@ namespace MariCommands
             _moduleConfigurer = moduleConfigurer;
         }
 
-
         /// <inheritdoc />
-        public IModule AddModule<T>(T type) where T : IModule
-            => _moduleConfigurer.AddModule(type);
-
-        /// <inheritdoc />
-        public IModule AddModule<T>() where T : IModule
-            => _moduleConfigurer.AddModule<T>();
+        public IModule AddModule(IModule module)
+            => _moduleConfigurer.AddModule(module);
 
         /// <inheritdoc />
         public IModule AddModule(Type type)
