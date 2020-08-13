@@ -18,6 +18,7 @@ namespace MariCommands.Builder
         /// <param name="applicationServices">The service container for this application.</param>
         public CommandApplicationBuilder(IDictionary<string, object> properties, IServiceProvider applicationServices)
         {
+            _components = new List<Func<CommandDelegate, CommandDelegate>>();
             Properties = properties;
             ApplicationServices = applicationServices;
         }
