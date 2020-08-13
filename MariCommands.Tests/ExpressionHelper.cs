@@ -53,6 +53,13 @@ namespace MariCommands.Tests
             return await task;
         }
 
+        public static async Task<IResult> ChangeObjectResultAsync<TResult>(this Task<TResult> task)
+        {
+            var result = await task;
+
+            return new SuccessObjectResult(result);
+        }
+
         public static ConstructorInfo GetFirstCtor(this Type type)
             => type.GetConstructors().FirstOrDefault();
     }
