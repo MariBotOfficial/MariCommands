@@ -4,7 +4,9 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using MariCommands.Executors;
 using MariCommands.Extensions;
+using MariCommands.Providers;
 using MariCommands.Utils;
 using MariGlobals.Extensions;
 
@@ -15,11 +17,13 @@ namespace MariCommands.Factories
     {
         private readonly ICommandServiceOptions _config;
         private readonly IParameterFactory _parameterFactory;
+        private readonly ICommandExecutorProvider _executorProvider;
 
-        public CommandFactory(ICommandServiceOptions config, IParameterFactory parameterFactory)
+        public CommandFactory(ICommandServiceOptions config, IParameterFactory parameterFactory, ICommandExecutorProvider executorProvider)
         {
             _config = config;
             _parameterFactory = parameterFactory;
+            _executorProvider = executorProvider;
         }
 
         /// <inheritdoc />
@@ -42,9 +46,11 @@ namespace MariCommands.Factories
             var attributes = GetAttributes(methodInfo);
             var preconditions = GetPreconditions(attributes);
             var enabled = GetEnabled(methodInfo);
-            //var commandDelegate = GetCommandDelegate(methodInfo);
+            var isAsync = GetIsAsync(methodInfo);
+            var asyncResultType = GetAsyncResultType(methodInfo, isAsync);
 
             var builder = new CommandBuilder()
+                                .WithMethodInfo(methodInfo)
                                 .WithName(name)
                                 .WithDescription(description)
                                 .WithRemarks(remarks)
@@ -56,13 +62,50 @@ namespace MariCommands.Factories
                                 .WithEnabled(enabled)
                                 .WithAttributes(attributes)
                                 .WithPreconditions(preconditions)
-                                .WithModule(module);
-            // .WithCommandDelegate(commandDelegate);
+                                .WithModule(module)
+                                .WithIsAsync(isAsync)
+                                .WithAsyncResultType(asyncResultType);
+
+            var executor = GetExecutor(module, builder);
+
+            builder.WithExecutor(executor);
 
             var parameters = GetParameters(builder);
             builder.WithParameters(parameters);
 
             return builder;
+        }
+
+        private ICommandExecutor GetExecutor(IModuleBuilder module, CommandBuilder builder)
+            => _executorProvider.GetCommandExecutor(module, builder);
+
+        private Type GetAsyncResultType(MethodInfo methodInfo, bool isAsync)
+        {
+            if (!isAsync || !methodInfo.ReturnType.IsGenericType)
+                return null;
+
+            return methodInfo.ReturnType.GetGenericArguments().FirstOrDefault();
+        }
+
+        private bool GetIsAsync(MethodInfo methodInfo)
+        {
+            var type = methodInfo.ReturnType;
+
+            if (type == typeof(Task) && !type.IsGenericType)
+                return true;
+
+            if (type == typeof(ValueTask) && !type.IsGenericType)
+                return true;
+
+            var genericDefinition = type.GetGenericTypeDefinition();
+
+            if (genericDefinition == typeof(Task<>))
+                return true;
+
+            if (genericDefinition == typeof(ValueTask<>))
+                return true;
+
+            return false;
         }
 
         private IEnumerable<IParameterBuilder> GetParameters(ICommandBuilder builder)

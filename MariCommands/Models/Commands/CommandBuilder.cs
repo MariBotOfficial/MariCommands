@@ -87,6 +87,44 @@ namespace MariCommands
         }
 
         /// <summary>
+        /// Sets the async result type of this command.
+        /// </summary>
+        /// <param name="asyncResultType">The async result type to be setted.</param>
+        /// <returns>The current builder.</returns>
+        public CommandBuilder WithAsyncResultType(Type asyncResultType)
+        {
+            AsyncResultType = asyncResultType;
+
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the command executor for this command.
+        /// </summary>
+        /// <param name="executor">The executor to be setted.</param>
+        /// <returns>The current builder.</returns>
+        public CommandBuilder WithExecutor(ICommandExecutor executor)
+        {
+            executor.NotNull(nameof(executor));
+
+            Executor = executor;
+
+            return this;
+        }
+
+        /// <summary>
+        /// Sets if the command is async.
+        /// </summary>
+        /// <param name="isAsync">The value to be setted.</param>
+        /// <returns>The current builder.</returns>
+        public CommandBuilder WithIsAsync(bool isAsync)
+        {
+            IsAsync = isAsync;
+
+            return this;
+        }
+
+        /// <summary>
         /// Sets the attributes for this command.
         /// </summary>
         /// <param name="attributes">The attributes to be setted.</param>
