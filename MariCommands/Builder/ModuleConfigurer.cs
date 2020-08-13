@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
 using System.Reflection;
 using MariCommands.Factories;
 
@@ -53,7 +55,23 @@ namespace MariCommands.Builder
         /// <inheritdoc />
         public IReadOnlyCollection<IModule> AddModules(Assembly assembly)
         {
-            throw new NotImplementedException();
+            var types = assembly.GetExportedTypes();
+            var validTypes = types
+                                .Where(a => _moduleFactory.IsModule(a))
+                                .ToList();
+
+            var modules = ImmutableArray.CreateBuilder<IModule>(validTypes.Count);
+
+            foreach (var type in validTypes)
+            {
+                var builder = _moduleFactory.BuildModule(null, type);
+
+                var module = builder.Build(null);
+
+                modules.Add(module);
+            }
+
+            return modules.MoveToImmutable();
         }
     }
 }
