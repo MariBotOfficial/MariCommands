@@ -26,6 +26,17 @@ namespace MariCommands.Tests
             return parameters;
         }
 
+        public static MethodInfo GetContinueWithMethod(this Type type)
+        {
+            return type
+                .GetMethods()
+                .Where(a => a.IsPublic)
+                .Where(a => a.Name.Equals(nameof(Task.ContinueWith)))
+                .Where(a => a.ContainsGenericParameters)
+                .Where(a => a.GetParameters().Count() == 1)
+                .FirstOrDefault().MakeGenericMethod(typeof(IResult));
+        }
+
         public static MethodInfo GetTaskResultMethod()
         {
             return typeof(Task)
