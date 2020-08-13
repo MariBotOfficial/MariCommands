@@ -5,6 +5,7 @@ using MariCommands.Factories;
 using MariCommands.Parsers;
 using MariCommands.Providers;
 using MariCommands.TypeParsers;
+using MariCommands.Utils;
 using MariGlobals.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -193,5 +194,16 @@ namespace MariCommands.Extensions
 
             return services;
         }
+
+        /// <summary>
+        /// Initialize the MariCommands lib with the specified service provider.
+        /// Obs: don't use this method for host builders.
+        /// </summary>
+        /// <remarks>
+        /// Don't use this method for host builders
+        /// </remarks>
+        /// <param name="provider">The current container service provider.</param>
+        public static void InitializeCommandApp(this IServiceProvider provider)
+            => ApplicationBuilderUtils.InitializeCommandApp(provider);
     }
 }

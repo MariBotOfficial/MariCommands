@@ -17,7 +17,7 @@ namespace MariCommands.Services
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _appProvider.InitializeCommandApp();
+            ApplicationBuilderUtils.InitializeCommandApp(_appProvider);
 
             return Task.CompletedTask;
         }

@@ -13,8 +13,13 @@ namespace MariCommands.Utils
 {
     internal static class ApplicationBuilderUtils
     {
-        internal static void InitializeCommandApp(this IServiceProvider appProvider)
+        private static bool AlreadyStarted { get; set; }
+
+        internal static void InitializeCommandApp(IServiceProvider appProvider)
         {
+            if (AlreadyStarted)
+                throw new InvalidOperationException("The command application has already been started.");
+
             var applicationBuilderFactory = appProvider.GetRequiredService<ICommandApplicationBuilderFactory>();
 
             var applicationBuilder = applicationBuilderFactory.Create(new Dictionary<string, object>(), appProvider);
