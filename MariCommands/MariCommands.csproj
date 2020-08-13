@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <PackageId>MariCommands</PackageId>
-    <Version>0.0.1-alpha</Version>
+    <Version>1.0.0-alpha</Version>
     <Authors>renanrcp</Authors>
     <Company>MariBot</Company>
     <Description>A .NET Core generic command lib</Description>
@@ -13,7 +13,6 @@
     <PackageProjectUrl>https://github.com/MariBotOfficial/MariCommands</PackageProjectUrl>
     <PackageIcon>MariDiscordRestIcon.png</PackageIcon>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-
   </PropertyGroup>
   
   <ItemGroup>
