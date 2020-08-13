@@ -21,29 +21,19 @@ namespace MariCommands.Tests
             var paramInfos = method.GetParameters();
             var parameters = ExpressionHelper.GetParameterExpressions(paramInfos, argsParameter);
 
-            var resultVarExp = Expression.Variable(typeof(IResult), "result");
-
             var instanceCast = Expression.Convert(instanceParameter, type);
             var methodCall = Expression.Call(instanceCast, method, parameters);
-            var methodAssign = Expression.Assign(resultVarExp, methodCall);
 
             var taskMethod = ExpressionHelper.GetTaskResultMethod();
 
-            var taskResultExpression = Expression.Call(taskMethod, new Expression[] { methodAssign, });
+            var taskResultExpression = Expression.Call(taskMethod, new Expression[] { methodCall, });
 
-            var body = Expression.Block(
-                new ParameterExpression[] { resultVarExp },
-                taskResultExpression
-            );
-
-            var lambda = Expression.Lambda<Callback>(body, instanceParameter, argsParameter);
+            var lambda = Expression.Lambda<Callback>(taskResultExpression, instanceParameter, argsParameter);
             var callback2 = lambda.Compile();
 
             Callback callback1 = (instance, args) =>
             {
-                IResult result = (instance as ResultCommand).Execute();
-
-                return Task.FromResult(result);
+                return Task.FromResult((instance as ResultCommand).Execute());
             };
 
             var result1 = await callback1(new ResultCommand(), new object[0]);

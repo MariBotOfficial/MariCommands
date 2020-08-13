@@ -20,42 +20,30 @@ namespace MariCommands.Tests
             var paramInfos = method.GetParameters();
             var parameters = ExpressionHelper.GetParameterExpressions(paramInfos, argsParameter);
 
-            var valueTask1Exp = Expression.Variable(method.ReturnType, "valueTask1");
-
             var instanceCast = Expression.Convert(instanceParameter, type);
             var methodCall = Expression.Call(instanceCast, method, parameters);
-            var methodAssign = Expression.Assign(valueTask1Exp, methodCall);
 
             var asTaskMethod = method.ReturnType.GetMethod(nameof(ValueTask.AsTask));
-            var task1Exp = Expression.Variable(asTaskMethod.ReturnType, "task1");
 
-            var asTaskExp = Expression.Call(methodAssign, asTaskMethod);
-            var asTaskAssign = Expression.Assign(task1Exp, asTaskExp);
+            var asTaskExp = Expression.Call(methodCall, asTaskMethod);
 
             var continueWithMethod = asTaskMethod.ReturnType.GetContinueWithMethod();
 
             Expression<Func<Task, IResult>> continueWithBody = (task) => new SuccessResult();
 
-            var continueWithExpression = Expression.Call(asTaskAssign, continueWithMethod, continueWithBody);
+            var continueWithExpression = Expression.Call(asTaskExp, continueWithMethod, continueWithBody);
 
-            var body = Expression.Block(
-                new ParameterExpression[] { valueTask1Exp, task1Exp },
-                continueWithExpression
-            );
-
-            var lambda = Expression.Lambda<Callback>(body, instanceParameter, argsParameter);
+            var lambda = Expression.Lambda<Callback>(continueWithExpression, instanceParameter, argsParameter);
             var callback2 = lambda.Compile();
 
             Callback callback1 = (instance, args) =>
             {
-                var valueTask1 = (instance as VoidValueTaskCommand).ExecuteAsync();
-
-                var task1 = valueTask1.AsTask();
-
-                return task1.ContinueWith<IResult>((task) =>
-                {
-                    return new SuccessResult();
-                });
+                return (instance as VoidValueTaskCommand).ExecuteAsync()
+                        .AsTask()
+                        .ContinueWith<IResult>((task) =>
+                        {
+                            return new SuccessResult();
+                        });
             };
 
             var result1 = await callback1(new VoidValueTaskCommand(), new object[0]);

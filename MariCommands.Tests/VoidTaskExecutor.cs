@@ -21,36 +21,25 @@ namespace MariCommands.Tests
             var paramInfos = method.GetParameters();
             var parameters = ExpressionHelper.GetParameterExpressions(paramInfos, argsParameter);
 
-            var task1Exp = Expression.Variable(typeof(Task), "task1");
-
             var instanceCast = Expression.Convert(instanceParameter, type);
             var methodCall = Expression.Call(instanceCast, method, parameters);
-            var methodAssign = Expression.Assign(task1Exp, methodCall);
 
             var continueWithMethod = methodCall.Type.GetContinueWithMethod();
 
             Expression<Func<Task, IResult>> continueWithBody = (task) => new SuccessResult();
 
-            var continueWithExpression = Expression.Call(methodAssign, continueWithMethod, continueWithBody);
+            var continueWithExpression = Expression.Call(methodCall, continueWithMethod, continueWithBody);
 
-            var body = Expression.Block(
-                new ParameterExpression[] { task1Exp },
-                continueWithExpression
-            );
-
-            var lambda = Expression.Lambda<Callback>(body, instanceParameter, argsParameter);
+            var lambda = Expression.Lambda<Callback>(continueWithExpression, instanceParameter, argsParameter);
             var callback2 = lambda.Compile();
 
             Callback callback1 = (instance, args) =>
             {
-                var task1 = (instance as VoidTaskCommand).ExecuteAsync();
-
-                var task2 = task1.ContinueWith<IResult>((task) =>
-                {
-                    return new SuccessResult();
-                });
-
-                return task2;
+                return (instance as VoidTaskCommand).ExecuteAsync()
+                    .ContinueWith<IResult>((task) =>
+                    {
+                        return new SuccessResult();
+                    });
             };
 
             var result1 = await callback1(new VoidTaskCommand(), new object[0]);
