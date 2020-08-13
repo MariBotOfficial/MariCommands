@@ -6,7 +6,7 @@
     <Version>1.0.0-alpha</Version>
     <Authors>renanrcp</Authors>
     <Company>MariBot</Company>
-    <Description>A .NET Core generic command lib</Description>
+    <Description>A .NET Core full modular and generic command lib inspired in ASP.NET Core</Description>
     <Copyright>2019 - 2020 renanrcp. All rights reserved.</Copyright>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
