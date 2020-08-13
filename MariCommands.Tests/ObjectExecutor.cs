@@ -16,7 +16,6 @@ namespace MariCommands.Tests
             var type = typeof(ObjectCommand);
             var method = type.GetMethod(nameof(ObjectCommand.Execute));
 
-            var valueTaskCtor = ExpressionHelper.GetValueTaskCtor();
             var objectResultCtor = typeof(SuccessObjectResult).GetFirstCtor();
 
             var instanceParameter = Expression.Parameter(typeof(object), "instance");
@@ -33,11 +32,13 @@ namespace MariCommands.Tests
             var objectResultExpression = Expression.New(objectResultCtor, methodAssign);
             var convertExpression = Expression.Convert(objectResultExpression, typeof(IResult));
 
-            var resultExpression = Expression.New(valueTaskCtor, convertExpression);
+            var taskMethod = ExpressionHelper.GetTaskResultMethod();
+
+            var taskResultExpression = Expression.Call(taskMethod, new Expression[] { convertExpression });
 
             var body = Expression.Block(
                 new ParameterExpression[] { resultVarExp },
-                resultExpression
+                taskResultExpression
             );
 
             var lambda = Expression.Lambda<Callback>(body, instanceParameter, argsParameter);
@@ -47,7 +48,7 @@ namespace MariCommands.Tests
             {
                 var result = (instance as ObjectCommand).Execute();
 
-                return new ValueTask<IResult>(new SuccessObjectResult(result) as IResult);
+                return Task.FromResult(new SuccessObjectResult(result) as IResult);
             };
 
             var result1 = await callback1(new ObjectCommand(), new object[0]);

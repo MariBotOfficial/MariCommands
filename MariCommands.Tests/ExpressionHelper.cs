@@ -26,11 +26,20 @@ namespace MariCommands.Tests
             return parameters;
         }
 
-        public static ConstructorInfo GetValueTaskCtor()
+        public static MethodInfo GetTaskResultMethod()
         {
-            return typeof(ValueTask<IResult>)
-                                    .GetConstructors()
-                                    .FirstOrDefault(a => a.GetParameters().FirstOrDefault().ParameterType == typeof(IResult));
+            return typeof(Task)
+                    .GetMethods()
+                    .Where(a => a.Name.Equals(nameof(Task.FromResult)))
+                    .Where(a => a.IsStatic && a.IsPublic)
+                    .Where(a => a.ContainsGenericParameters)
+                    .FirstOrDefault().MakeGenericMethod(typeof(IResult));
+        }
+
+        public static async Task<IResult> ChangeResultAsync<TResult>(this Task<TResult> task)
+            where TResult : IResult
+        {
+            return await task;
         }
 
         public static ConstructorInfo GetFirstCtor(this Type type)

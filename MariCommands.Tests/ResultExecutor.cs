@@ -1,4 +1,6 @@
+using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Threading.Tasks;
 using MariCommands.Results;
 using Xunit;
@@ -13,8 +15,6 @@ namespace MariCommands.Tests
             var type = typeof(ResultCommand);
             var method = type.GetMethod(nameof(ResultCommand.Execute));
 
-            var valueTaskCtor = ExpressionHelper.GetValueTaskCtor();
-
             var instanceParameter = Expression.Parameter(typeof(object), "instance");
             var argsParameter = Expression.Parameter(typeof(object[]), "args");
 
@@ -26,11 +26,14 @@ namespace MariCommands.Tests
             var instanceCast = Expression.Convert(instanceParameter, type);
             var methodCall = Expression.Call(instanceCast, method, parameters);
             var methodAssign = Expression.Assign(resultVarExp, methodCall);
-            var resultExpression = Expression.New(valueTaskCtor, methodAssign);
+
+            var taskMethod = ExpressionHelper.GetTaskResultMethod();
+
+            var taskResultExpression = Expression.Call(taskMethod, new Expression[] { methodAssign, });
 
             var body = Expression.Block(
                 new ParameterExpression[] { resultVarExp },
-                resultExpression
+                taskResultExpression
             );
 
             var lambda = Expression.Lambda<Callback>(body, instanceParameter, argsParameter);
@@ -40,7 +43,7 @@ namespace MariCommands.Tests
             {
                 IResult result = (instance as ResultCommand).Execute();
 
-                return new ValueTask<IResult>(result);
+                return Task.FromResult(result);
             };
 
             var result1 = await callback1(new ResultCommand(), new object[0]);

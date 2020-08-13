@@ -6,7 +6,7 @@ using Xunit;
 
 namespace MariCommands.Tests
 {
-    public delegate ValueTask<IResult> Callback(object instance, object[] args);
+    public delegate Task<IResult> Callback(object instance, object[] args);
 
     public class VoidTest
     {
@@ -24,7 +24,7 @@ namespace MariCommands.Tests
 
             var instanceCast = Expression.Convert(instanceParameter, type);
             var methodCall = Expression.Call(instanceCast, method, parameters);
-            var resultExpression = Expression.Constant(new ValueTask<IResult>(new SuccessResult() as IResult));
+            var resultExpression = Expression.Constant(Task.FromResult(new SuccessResult() as IResult));
 
             var body = Expression.Block(methodCall, resultExpression);
 
@@ -35,7 +35,7 @@ namespace MariCommands.Tests
             {
                 (instance as VoidCommand).Execute();
 
-                return new ValueTask<IResult>(new SuccessResult() as IResult);
+                return Task.FromResult(new SuccessResult() as IResult);
             };
 
             var result1 = await callback1(new VoidCommand(), new object[0]);
