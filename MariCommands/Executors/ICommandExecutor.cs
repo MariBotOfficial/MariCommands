@@ -13,8 +13,8 @@ namespace MariCommands.Executors
         /// </summary>
         /// <param name="module">The module instance.</param>
         /// <param name="args">The arguments for the command.</param>
-        /// <returns>A <see cref="ValueTask" /> representing an asynchronous operation
+        /// <returns>A <see cref="Task" /> representing an asynchronous operation
         /// with an <see cref="IResult" />.</returns>
-        ValueTask<IResult> ExecuteAsync(object module, object[] args);
+        Task<IResult> ExecuteAsync(object module, object[] args);
     }
 }

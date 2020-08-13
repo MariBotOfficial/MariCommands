@@ -8,7 +8,7 @@ namespace MariCommands.Models.Commands
     /// </summary>
     /// <param name="module">The module instance.</param>
     /// <param name="args">The arguments of this command.</param>
-    /// <returns>A <see cref="ValueTask" /> representing an asynchronous operation
+    /// <returns>A <see cref="Task" /> representing an asynchronous operation
     /// with an <see cref="IResult" />.</returns>
-    public delegate ValueTask<IResult> CommandCallback(object module, object[] args);
+    public delegate Task<IResult> CommandCallback(object module, object[] args);
 }
