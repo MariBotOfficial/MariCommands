@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using MariCommands.Utils;
 using Microsoft.Extensions.Hosting;
 
-namespace MariCommands.Services
+namespace MariCommands
 {
     internal sealed class BackgroundStartupService : BackgroundService
     {
