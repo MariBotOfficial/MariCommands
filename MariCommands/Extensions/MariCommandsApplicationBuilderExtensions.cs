@@ -19,11 +19,11 @@ namespace MariCommands.Extensions
         {
             app.Use((next) =>
             {
-                return async context =>
+                return context =>
                 {
                     var middleware = ActivatorUtilities.GetServiceOrCreateInstance(context.CommandServices, typeof(TMiddleware)) as ICommandMiddleware;
 
-                    await middleware.InvokeAsync(context, next);
+                    return middleware.InvokeAsync(context, next);
                 };
             });
 
