@@ -5,6 +5,7 @@ using MariCommands.Extensions;
 using MariCommands.Middlewares;
 using MariCommands.Utils;
 using MariGlobals.Extensions;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace MariCommands.Builder
 {
@@ -80,7 +81,22 @@ namespace MariCommands.Builder
             foreach (var component in _components)
                 app = component(app);
 
+            app = UseCommandContextInitializer(app);
+
             return app;
+        }
+
+        private CommandDelegate UseCommandContextInitializer(CommandDelegate next)
+        {
+            return context =>
+            {
+                var accessor = context.CommandServices.GetService<ICommandContextAccessor>();
+
+                if (accessor.HasContent())
+                    accessor.CommandContext = context;
+
+                return next(context);
+            };
         }
     }
 }

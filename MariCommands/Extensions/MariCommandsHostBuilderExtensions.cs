@@ -4,7 +4,6 @@ using MariCommands.Factories;
 using MariCommands.Hosting;
 using MariCommands.Parsers;
 using MariCommands.Providers;
-using MariCommands.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

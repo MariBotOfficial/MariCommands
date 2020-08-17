@@ -189,6 +189,8 @@ namespace MariCommands.Extensions
             services.TryAddTransient<ITypeParserProvider, TypeParserProvider>();
             services.TryAddTransient<ICommandExecutorProvider, CommandExecutorProvider>();
 
+            services.TryAddScoped<ICommandContextAccessor, ScopedCommandContextAccessor>();
+
             if (addAllDefaultTypeParsers)
                 services.AddAllDefaultTypeParsers();
 
@@ -197,7 +199,7 @@ namespace MariCommands.Extensions
 
         /// <summary>
         /// Initialize the MariCommands lib with the specified service provider.
-        /// Obs: don't use this method for host builders.
+        /// Obs: Don't use this method for host builders.
         /// </summary>
         /// <remarks>
         /// Don't use this method for host builders
