@@ -11,6 +11,15 @@ namespace MariCommands.Middlewares
 {
     internal sealed class DefaultExceptionMiddleware : ICommandMiddleware
     {
+        private static readonly Action<ILogger, Exception> _unhandledException =
+            LoggerMessage.Define(LogLevel.Error, new EventId(1, "UnhandledException"), "An unhandled exception has occurred while executing the request.");
+
+        private static readonly Action<ILogger, Exception> _errorHandlerException =
+            LoggerMessage.Define(LogLevel.Error, new EventId(3, "Exception"), "An exception was thrown attempting to execute the error handler.");
+
+        private static readonly Action<ILogger, Exception> _resultSettedErrorHandler =
+        LoggerMessage.Define(LogLevel.Warning, new EventId(2, "ResultSetted"), "The result has already setted, the error handler will not be executed.");
+
         private readonly ILogger _logger;
 
         public DefaultExceptionMiddleware(ILogger<DefaultExceptionMiddleware> logger)
@@ -38,7 +47,13 @@ namespace MariCommands.Middlewares
 
         private void HandleException(CommandContext context, ExceptionDispatchInfo edi)
         {
-            //_logger.UnhandledException(edi.SourceException);
+            _unhandledException(_logger, edi.SourceException);
+
+            if (context.Result.HasContent())
+            {
+                _resultSettedErrorHandler(_logger, null);
+                edi.Throw();
+            }
 
             try
             {
@@ -52,7 +67,7 @@ namespace MariCommands.Middlewares
             }
             catch (Exception ex2)
             {
-                //_logger.ErrorHandlerException(ex2);
+                _errorHandlerException(_logger, ex2);
             }
             finally
             {
