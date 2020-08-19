@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using MariCommands.Features;
+using MariCommands.Results;
 using MariCommands.Utils;
 using MariGlobals.Extensions;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,19 +21,50 @@ namespace MariCommands.Middlewares
                 return;
             }
 
+            var options = context.CommandServices.GetRequiredService<ICommandServiceOptions>();
+
             var (command, args) = GetCommandAndArgs(context);
 
             var module = GetModule(context, command) as IModuleBase;
 
             module.SetContext(context);
 
+            var runMode = command.GetRunMode(options);
+
+            IResult result;
+
+            if (runMode == RunMode.Sequential)
+            {
+                result = await ExecuteSequentialAsync(command, module, args);
+            }
+            else
+            {
+                result = await ExecuteConcurrentAsync(command, module, args);
+            }
+
+
+            context.Result = result;
+        }
+
+        private async Task<IResult> ExecuteSequentialAsync(ICommand command, IModuleBase module, object[] args)
+        {
             await module.OnCommandExecutingAsync();
 
             var result = await command.Executor.ExecuteAsync(module, args);
 
             await module.OnCommandExecutedAsync();
 
-            context.Result = result;
+            return result;
+        }
+
+        private Task<IResult> ExecuteConcurrentAsync(ICommand command, IModuleBase module, object[] args)
+        {
+            var task = Task.Run(() =>
+            {
+                return ExecuteSequentialAsync(command, module, args);
+            });
+
+            return Task.FromException<IResult>(new NotImplementedException());
         }
 
         private object GetModule(CommandContext context, ICommand command)
