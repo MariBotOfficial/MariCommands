@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 using MariCommands.Features;
 using MariCommands.Results;
+using MariGlobals.Extensions;
 using Microsoft.Extensions.Logging;
 
 namespace MariCommands.Middlewares
@@ -56,11 +58,21 @@ namespace MariCommands.Middlewares
             {
                 context.Result = ExceptionResult.FromException(edi.SourceException);
             }
+
+            edi.Throw();
         }
 
         private void ClearCommandContext(CommandContext context)
         {
-            throw new NotImplementedException();
+            var argumentParserFeature = context.Features.Get<IArgumentParserFeature>();
+            var commandMatchesFeature = context.Features.Get<ICommandMatchesFeature>();
+
+            argumentParserFeature?.CommandArgs?.Clear();
+
+            if (commandMatchesFeature.HasContent())
+            {
+                commandMatchesFeature.CommandMatches = new List<ICommandMatch>(0);
+            }
         }
     }
 }
