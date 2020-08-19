@@ -2,6 +2,7 @@ using System;
 using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 using MariCommands.Features;
+using MariCommands.Results;
 using Microsoft.Extensions.Logging;
 
 namespace MariCommands.Middlewares
@@ -53,7 +54,7 @@ namespace MariCommands.Middlewares
             }
             finally
             {
-
+                context.Result = ExceptionResult.FromException(edi.SourceException);
             }
         }
 
