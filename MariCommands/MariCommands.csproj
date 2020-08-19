@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <PackageId>MariCommands</PackageId>
-    <Version>1.0.0.1-alpha</Version>
+    <Version>1.0.0.2-alpha</Version>
     <Authors>renanrcp</Authors>
     <Company>MariBot</Company>
     <Description>A .NET Core full modular and generic command lib inspired in ASP.NET Core</Description>
