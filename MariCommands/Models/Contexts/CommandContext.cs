@@ -18,6 +18,9 @@ namespace MariCommands
         private static readonly Func<CommandContext, ICommandServiceProvidersFeature> _newServiceProvidersFeature = context => new CommandServicesFeature(context, context.ServiceScopeFactory);
         private static readonly Func<IFeatureCollection, IDisposablesFeature> _newDisposablesFeature = f => new DisposablesFeature();
 
+        // We can use the default http request identifier feature.
+        private static readonly Func<IFeatureCollection, IHttpRequestIdentifierFeature> _newHttpRequestIdentifierFeature = f => new HttpRequestIdentifierFeature();
+
         private FeatureReferences<FeatureInterfaces> _features;
 
         /// <summary>
@@ -44,6 +47,9 @@ namespace MariCommands
 
         private IDisposablesFeature DisposablesFeature
             => _features.Fetch(ref _features.Cache.Disposables, _newDisposablesFeature);
+
+        private IHttpRequestIdentifierFeature RequestIdentifierFeature =>
+            _features.Fetch(ref _features.Cache.RequestIdentifier, _newHttpRequestIdentifierFeature);
 
         /// <summary>
         /// Get the current features 
@@ -77,6 +83,15 @@ namespace MariCommands
         {
             get => ServiceProvidersFeature.CommandServices;
             set => ServiceProvidersFeature.CommandServices = value;
+        }
+
+        /// <summary>
+        /// Gets or sets a unique identifier to represent this command request in trace logs.
+        /// </summary>
+        public string TraceIdentifier
+        {
+            get { return RequestIdentifierFeature.TraceIdentifier; }
+            set { RequestIdentifierFeature.TraceIdentifier = value; }
         }
 
         /// <summary>
@@ -138,6 +153,8 @@ namespace MariCommands
             public ICommandServiceProvidersFeature ServiceProviders;
 
             public IDisposablesFeature Disposables;
+
+            public IHttpRequestIdentifierFeature RequestIdentifier;
         }
     }
 }
