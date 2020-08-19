@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace MariCommands.Results.Success
+namespace MariCommands.Results
 {
     /// <summary>
     /// Represents when a task is executing and the result is not returned yet.
@@ -27,6 +27,14 @@ namespace MariCommands.Results.Success
 
         /// <inheritdoc />
         public Exception Exception => null;
+
+        /// <summary>
+        /// Gets the original result of the task that was executing.
+        /// </summary>
+        /// <returns>A <see cref="Task" /> representing an asynchronous operation within the result of the
+        /// original executing task.</returns>
+        public Task<IResult> GetResultAsync()
+            => _tsc.Task;
 
         /// <summary>
         /// Creates a new instance of <see cref="AsyncResult" /> with the specified task completion source.

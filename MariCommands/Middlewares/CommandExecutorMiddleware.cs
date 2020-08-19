@@ -39,9 +39,8 @@ namespace MariCommands.Middlewares
             }
             else
             {
-                result = await ExecuteConcurrentAsync(command, module, args);
+                result = ExecuteConcurrent(command, module, args);
             }
-
 
             context.Result = result;
         }
@@ -57,14 +56,32 @@ namespace MariCommands.Middlewares
             return result;
         }
 
-        private Task<IResult> ExecuteConcurrentAsync(ICommand command, IModuleBase module, object[] args)
+        private IResult ExecuteConcurrent(ICommand command, IModuleBase module, object[] args)
         {
-            var task = Task.Run(() =>
+            var tsc = new TaskCompletionSource<IResult>();
+
+            _ = Task.Run(() =>
             {
                 return ExecuteSequentialAsync(command, module, args);
+            }).ContinueWith(async task =>
+            {
+                IResult result = null;
+
+                try
+                {
+                    result = await task;
+                }
+                catch (Exception ex)
+                {
+                    result = ExceptionResult.FromException(ex);
+                }
+                finally
+                {
+                    tsc.SetResult(result);
+                }
             });
 
-            return Task.FromException<IResult>(new NotImplementedException());
+            return AsyncResult.FromTsc(tsc);
         }
 
         private object GetModule(CommandContext context, ICommand command)
