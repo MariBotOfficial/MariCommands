@@ -153,6 +153,8 @@ namespace MariCommands.Extensions
         {
             if (HasStartup)
                 throw new InvalidOperationException("A startup has already been added to this project.");
+
+            HasStartup = true;
         }
     }
 }
