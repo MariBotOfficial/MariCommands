@@ -156,5 +156,11 @@ namespace MariCommands.Extensions
 
             HasStartup = true;
         }
+
+        // Clear this class for unit tests.
+        internal static void Clear()
+        {
+            HasStartup = false;
+        }
     }
 }
