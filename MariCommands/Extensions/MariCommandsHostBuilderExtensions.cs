@@ -84,9 +84,9 @@ namespace MariCommands.Extensions
 
             hostBuilder.ConfigureServices(services =>
             {
-                services.AddCommandStartup<TStartup>(addAllDefaultTypeParsers, createNullables);
-
                 services.AddHostedService<BackgroundStartupService>();
+
+                services.AddCommandStartup<TStartup>(addAllDefaultTypeParsers, createNullables);
             });
 
             return hostBuilder;
@@ -113,6 +113,8 @@ namespace MariCommands.Extensions
 
             hostBuilder.ConfigureServices((context, services) =>
             {
+                services.AddHostedService<BackgroundStartupService>();
+
                 services.AddCommandServiceStartup<TStartup>(context.Configuration, context.HostingEnvironment, addAllDefaultTypeParsers, createNullables);
             });
 
