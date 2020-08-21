@@ -123,6 +123,7 @@ namespace MariCommands.Tests.WebHostBuilder
             Host.CreateDefaultBuilder()
                     .ConfigureWebHostDefaults(webBuilder =>
                     {
+                        MariCommandsHostBuilderExtensions.Clear();
                         webBuilder.UseCommandServiceStartup<TestCommandStartup>();
                     })
                     .Build();
