@@ -24,6 +24,16 @@ namespace MariCommands
         void RemoveModule(IModule module);
 
         /// <summary>
+        /// Get all cached modules.
+        /// </summary>
+        IReadOnlyCollection<IModule> GetAllModules();
+
+        /// <summary>
+        /// Get all cached commands.
+        /// </summary>
+        IReadOnlyCollection<ICommand> GetAllCommands();
+
+        /// <summary>
         /// Asynchronously search for commands with the specified input.
         /// </summary>
         /// <param name="input">The input to search commands.</param>

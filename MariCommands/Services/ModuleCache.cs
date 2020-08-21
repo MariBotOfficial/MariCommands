@@ -165,5 +165,24 @@ namespace MariCommands
 
             return new ValueTask<IReadOnlyCollection<ICommandMatch>>(matches);
         }
+
+        /// <inheritdoc />
+        public IReadOnlyCollection<IModule> GetAllModules()
+        {
+            return _commands
+                    .Select(a => a.Value)
+                    .SelectMany(a => a)
+                    .Select(a => a.Module)
+                    .ToList();
+        }
+
+        /// <inheritdoc />
+        public IReadOnlyCollection<ICommand> GetAllCommands()
+        {
+            return _commands
+                    .Select(a => a.Value)
+                    .SelectMany(a => a)
+                    .ToList();
+        }
     }
 }
