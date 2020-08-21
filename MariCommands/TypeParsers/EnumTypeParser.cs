@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using MariCommands.Models;
 using MariCommands.Results;
@@ -9,6 +10,26 @@ namespace MariCommands.TypeParsers
 {
     internal sealed class EnumTypeParser : ITypeParser<Enum>
     {
+        private readonly ICommandServiceOptions _config;
+
+        public EnumTypeParser(ICommandServiceOptions config)
+        {
+            _config = config;
+        }
+
+        public bool CanParse(Type type)
+        {
+            if (!ParsingUtils.IsNullable(type))
+                return typeof(Enum).IsAssignableFrom(type);
+
+            if (!_config.TypeParserOfClassIsNullables)
+                return false;
+
+            var enumType = type.GetGenericArguments().FirstOrDefault();
+
+            return typeof(Enum).IsAssignableFrom(enumType);
+        }
+
         public bool CanParseInheritedTypes()
             => true;
 

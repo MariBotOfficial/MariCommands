@@ -192,7 +192,7 @@ namespace MariCommands.Extensions
             services.TryAddScoped<ICommandContextAccessor, ScopedCommandContextAccessor>();
 
             if (addAllDefaultTypeParsers)
-                services.AddAllDefaultTypeParsers();
+                services.AddAllDefaultTypeParsers(createNullables);
 
             return services;
         }

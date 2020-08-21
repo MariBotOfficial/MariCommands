@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using MariCommands.Providers;
 using MariCommands.Results;
 using MariCommands.TypeParsers;
+using MariCommands.Utils;
 using MariGlobals.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -84,7 +85,7 @@ namespace MariCommands.Parsers
                     {
                         args.Add(param, param.DefaultValue);
                     }
-                    else if (IsNullable(param) || IsNullableClass(param, config))
+                    else if (ParsingUtils.IsNullable(param) || IsNullableClass(param, config))
                     {
                         var typeParser = GetTypeParser(provider, param);
 
@@ -107,11 +108,6 @@ namespace MariCommands.Parsers
 
             return ArgumentParseSuccessResult.FromArgs(args);
         }
-
-        private bool IsNullable(IParameter param)
-            =>
-                param.ParameterInfo.ParameterType.IsGenericType &&
-                param.ParameterInfo.ParameterType.GetGenericTypeDefinition() == typeof(Nullable<>);
 
         private bool IsNullableClass(IParameter param, ICommandServiceOptions config)
         {
