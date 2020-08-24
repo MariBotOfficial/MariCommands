@@ -19,8 +19,6 @@ namespace MariCommands.Features
 
         private IServiceProvider _commandServices;
 
-        private bool _commandServicesSet;
-
         private IServiceScope _scope;
 
         /// <inheritdoc />
@@ -28,12 +26,16 @@ namespace MariCommands.Features
         {
             get
             {
-                if (!_commandServicesSet && _scopeFactory.HasContent())
+                if (_commandServices.HasNoContent())
                 {
+                    if (_scopeFactory.HasNoContent())
+                        throw new InvalidOperationException(
+                            $"Can't create a scoped service provider without a scope factory." +
+                            $"Please set one in {nameof(CommandContext.ServiceScopeFactory)}.");
+
                     _context.RegisterForDisposeAsync(this);
                     _scope = _scopeFactory.CreateScope();
                     _commandServices = _scope.ServiceProvider;
-                    _commandServicesSet = true;
                 }
 
                 return _commandServices;
@@ -41,7 +43,6 @@ namespace MariCommands.Features
             set
             {
                 _commandServices = value;
-                _commandServicesSet = true;
             }
         }
 
