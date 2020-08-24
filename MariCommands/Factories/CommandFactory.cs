@@ -157,10 +157,7 @@ namespace MariCommands.Factories
         {
             var aliasAttr = methodInfo.GetAttribute<CommandAttribute>();
 
-            if (aliasAttr.HasContent())
-                return aliasAttr.Aliases;
-
-            return null;
+            return aliasAttr.Aliases;
         }
 
         private bool GetIgnoreExtraArgs(MethodInfo methodInfo)

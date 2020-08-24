@@ -26,8 +26,11 @@ namespace MariCommands.Factories
         {
             type.NotNull(nameof(type));
 
-            if (!IsModule(type))
+            if (parent.HasNoContent() && !IsModule(type))
                 throw new ArgumentException(nameof(type), $"{type.FullName} is not a valid module.");
+
+            if (parent.HasContent() && !IsSubModule(type))
+                throw new ArgumentException(nameof(type), $"{type.FullName} is not a valid submodule.");
 
             var name = GetName(type);
             var description = GetDescription(type);
@@ -86,14 +89,14 @@ namespace MariCommands.Factories
         private IEnumerable<IModuleBuilder> GetSubModules(IModuleBuilder parent, Type type)
         {
             var subModuleTypes = type.GetNestedTypes()
-                                        .Where(a => IsSubModule(type))
+                                        .Where(a => IsSubModule(a))
                                         .ToList();
 
             var subModules = ImmutableArray.CreateBuilder<IModuleBuilder>(subModuleTypes.Count);
 
             foreach (var subModuleType in subModuleTypes)
             {
-                var subModuleBuilder = BuildModule(parent, type);
+                var subModuleBuilder = BuildModule(parent, subModuleType);
 
                 subModules.Add(subModuleBuilder);
             }
@@ -226,9 +229,10 @@ namespace MariCommands.Factories
             var isValid =
                 type.HasContent() &&
                 type.IsClass &&
+                !type.IsAbstract &&
                 IsNotStatic(type) &&
                 type.IsNested &&
-                type.IsPublic &&
+                type.IsNestedPublic &&
                 !type.IsGenericType &&
                 typeof(IModuleBase).IsAssignableFrom(type) &&
                 type.CustomAttributes
