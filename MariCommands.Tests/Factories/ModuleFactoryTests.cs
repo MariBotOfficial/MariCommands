@@ -399,7 +399,6 @@ namespace MariCommands.Tests.Factories
 
             Assert.NotNull(builder);
             Assert.Null(builder.Aliases);
-            Assert.Equal(0, builder.Aliases.Count);
         }
 
         [Fact]
