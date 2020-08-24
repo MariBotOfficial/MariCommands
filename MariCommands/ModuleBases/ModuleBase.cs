@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using MariGlobals.Extensions;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace MariCommands
 {
@@ -27,8 +28,15 @@ namespace MariCommands
         /// An asynchronous operation that will be executed after the command execution.
         /// </summary>
         /// <returns>A <see cref="Task" /> representing an asynchronous operation.</returns>
-        public virtual Task OnCommandExecutedAsync()
-            => Task.CompletedTask;
+        public virtual async Task OnCommandExecutedAsync()
+        {
+            var options = Context?.CommandServices?.GetService<ICommandServiceOptions>();
+
+            if (options.HasNoContent() || !options.AutoDisposeContext)
+                return;
+
+            await Context.DisposeAsync();
+        }
 
         void IModuleBase.SetContext(CommandContext context)
         {
