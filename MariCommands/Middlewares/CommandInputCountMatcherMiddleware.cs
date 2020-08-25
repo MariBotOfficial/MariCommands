@@ -51,16 +51,18 @@ namespace MariCommands.Middlewares
             if (matchesFeature.HasNoContent() || matchesFeature.CommandMatches.HasNoContent())
                 throw new InvalidOperationException($"Can't get command matches from feature: {nameof(ICommandMatchesFeature)}.");
 
-            matchesFeature.CommandMatches = matchesFeature.CommandMatches
+            var multiMatches = matchesFeature.CommandMatches
                         .Where(a => a.Command.Module.GetMatchHandling(_config) == MultiMatchHandling.Best)
                         .ToList();
 
-            if (matchesFeature.CommandMatches.HasNoContent())
+            if (multiMatches.HasNoContent())
             {
                 _logger.LogInformation($"This input has more than one match but none of then has {MultiMatchHandling.Best} as configuration.");
                 context.Result = MultiMatchErrorResult.FromMatches(matchesFeature.CommandMatches);
                 return;
             }
+
+            matchesFeature.CommandMatches = multiMatches;
 
             var bestMatches = new List<ICommandMatch>();
 

@@ -67,6 +67,8 @@ namespace MariCommands.Tests.WebHostBuilder
                                         .ConfigureServices(services => { })
                                         .Configure(app => { });
 
+                        MariCommandsHostBuilderExtensions.Clear();
+
                         webBuilder.UseCommandStartup<TestCommandStartup>();
                         webBuilder.ConfigureServices(services =>
                         {

@@ -243,8 +243,8 @@ namespace MariCommands.Tests.ApplicationBuilder
 
             var logs = context.Items[logKey] as List<string>;
 
-            Assert.True(context.Result != null);
-            Assert.True(context.Command != null);
+            Assert.NotNull(context.Result);
+            Assert.NotNull(context.Command);
             Assert.Equal(logs[0], log1);
             Assert.Equal(logs[1], log3);
             Assert.Equal(logs[2], log5);
