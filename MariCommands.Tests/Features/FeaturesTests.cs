@@ -10,7 +10,7 @@ namespace MariCommands.Tests.Features
     {
 
         [Fact]
-        public async ValueTask DisposablesWillDisposeIDisposable()
+        public async Task DisposablesWillDisposeIDisposable()
         {
             var disposed = false;
             var disposables = new DisposablesFeature();
@@ -27,7 +27,7 @@ namespace MariCommands.Tests.Features
         }
 
         [Fact]
-        public async ValueTask DisposablesWillDisposeIAsyncDisposable()
+        public async Task DisposablesWillDisposeIAsyncDisposable()
         {
             var disposed = false;
             var disposables = new DisposablesFeature();
@@ -44,7 +44,7 @@ namespace MariCommands.Tests.Features
         }
 
         [Fact]
-        public async ValueTask DisposeDisposablesWillClearRegisteredDisposables()
+        public async Task DisposeDisposablesWillClearRegisteredDisposables()
         {
             var disposedCount = 0;
             var disposables = new DisposablesFeature();
@@ -64,7 +64,7 @@ namespace MariCommands.Tests.Features
         }
 
         [Fact]
-        public async ValueTask DisposeDisposablesWillClearRegisteredAsyncDisposables()
+        public async Task DisposeDisposablesWillClearRegisteredAsyncDisposables()
         {
             var disposedCount = 0;
             var disposables = new DisposablesFeature();
@@ -113,23 +113,28 @@ namespace MariCommands.Tests.Features
         }
 
         [Fact]
-        public async ValueTask DisposeCommandServicesDisposeDisposableDependencies()
+        public async Task DisposeCommandServicesDisposeDisposableDependencies()
         {
             var disposed = false;
 
-            var disposable = new TestDisposableClass(() =>
-            {
-                disposed = true;
-            });
+
 
             var provider = new ServiceCollection()
-                                .AddSingleton(disposable)
+                                .AddScoped<TestDisposableClass>((sp) =>
+                                {
+                                    return new TestDisposableClass(() =>
+                                    {
+                                        disposed = true;
+                                    });
+                                })
                                 .BuildServiceProvider(true);
 
             var scopeFactory = provider.GetRequiredService<IServiceScopeFactory>();
 
             var context = new CommandContext();
             var commandsServices = new CommandServicesFeature(context, scopeFactory);
+
+            var disposable = commandsServices.CommandServices.GetRequiredService<TestDisposableClass>();
 
             await commandsServices.DisposeAsync();
 
@@ -137,23 +142,26 @@ namespace MariCommands.Tests.Features
         }
 
         [Fact]
-        public async ValueTask DisposeCommandServicesDisposeAsyncDisposableDependencies()
+        public async Task DisposeCommandServicesDisposeAsyncDisposableDependencies()
         {
             var disposed = false;
 
-            var disposable = new TestAsyncDisposableClass(() =>
-            {
-                disposed = true;
-            });
-
             var provider = new ServiceCollection()
-                                .AddSingleton(disposable)
+                                .AddScoped<TestAsyncDisposableClass>((sp) =>
+                                {
+                                    return new TestAsyncDisposableClass(() =>
+                                    {
+                                        disposed = true;
+                                    });
+                                })
                                 .BuildServiceProvider(true);
 
             var scopeFactory = provider.GetRequiredService<IServiceScopeFactory>();
 
             var context = new CommandContext();
             var commandsServices = new CommandServicesFeature(context, scopeFactory);
+
+            var asyncDisposable = commandsServices.CommandServices.GetRequiredService<TestAsyncDisposableClass>();
 
             await commandsServices.DisposeAsync();
 

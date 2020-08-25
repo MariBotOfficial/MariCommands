@@ -15,7 +15,7 @@ namespace MariCommands.Tests.Middlewares
 {
     public class DefaultExceptionMiddlewareTests
     {
-        private async ValueTask ExecuteMiddlewareAsync(CommandContext context, OnLog onLog = null)
+        private async Task ExecuteMiddlewareAsync(CommandContext context, OnLog onLog = null)
         {
             var provider = new ServiceCollection()
                                 .AddLogging(logging =>
@@ -37,7 +37,7 @@ namespace MariCommands.Tests.Middlewares
         }
 
         [Fact]
-        public async ValueTask RethrowsIfResultIsSetted()
+        public async Task RethrowsIfResultIsSetted()
         {
             var context = new CommandContext();
 
@@ -50,7 +50,7 @@ namespace MariCommands.Tests.Middlewares
         }
 
         [Fact]
-        public async ValueTask ClearCommandContextOnHandle()
+        public async Task ClearCommandContextOnHandle()
         {
             var context = new CommandContext();
 
@@ -89,7 +89,7 @@ namespace MariCommands.Tests.Middlewares
         }
 
         [Fact]
-        public async ValueTask SetExceptionHandlerFeatureOnHandled()
+        public async Task SetExceptionHandlerFeatureOnHandled()
         {
             var context = new CommandContext();
 
@@ -102,7 +102,7 @@ namespace MariCommands.Tests.Middlewares
         }
 
         [Fact]
-        public async ValueTask SetExceptionResultOnHandled()
+        public async Task SetExceptionResultOnHandled()
         {
             var context = new CommandContext();
 
@@ -116,7 +116,7 @@ namespace MariCommands.Tests.Middlewares
         }
 
         [Fact]
-        public async ValueTask RethrowsIfCantHandleException()
+        public async Task RethrowsIfCantHandleException()
         {
             var context = new CommandContext();
 
@@ -140,7 +140,7 @@ namespace MariCommands.Tests.Middlewares
         }
 
         [Fact]
-        public async ValueTask WriteUnhandledExceptionOnExceptionCaptured()
+        public async Task WriteUnhandledExceptionOnExceptionCaptured()
         {
             var unhandledException = false;
 
@@ -165,7 +165,7 @@ namespace MariCommands.Tests.Middlewares
         }
 
         [Fact]
-        public async ValueTask WriteResultSettedErrorHandlerOnContextWithResult()
+        public async Task WriteResultSettedErrorHandlerOnContextWithResult()
         {
             var resultSetted = false;
 
@@ -186,13 +186,17 @@ namespace MariCommands.Tests.Middlewares
 
             context.Result = new SuccessResult();
 
-            await ExecuteMiddlewareAsync(context, onLog);
+            try
+            {
+                await ExecuteMiddlewareAsync(context, onLog);
+            }
+            catch { }
 
             Assert.True(resultSetted);
         }
 
         [Fact]
-        public async ValueTask WriteErrorHandlerExceptionOnFailure()
+        public async Task WriteErrorHandlerExceptionOnFailure()
         {
             var failed = false;
 

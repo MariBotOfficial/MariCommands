@@ -41,8 +41,10 @@ namespace MariCommands.Tests.HostBuilder
         }
 
         [Fact]
-        public async ValueTask CanExecuteAnyWorkerCommandAfterAddCommandStartup()
+        public async Task CanExecuteAnyWorkerCommandAfterAddCommandStartup()
         {
+            MariCommandsHostBuilderExtensions.Clear();
+
             var host = Host.CreateDefaultBuilder()
                     .UseCommandStartup<TestCommandStartup>()
                     .ConfigureServices(services =>
@@ -55,7 +57,7 @@ namespace MariCommands.Tests.HostBuilder
         }
 
         [Fact]
-        public async ValueTask CantExecuteAnyWorkerCommandBeforeAddCommandStartup()
+        public async Task CantExecuteAnyWorkerCommandBeforeAddCommandStartup()
         {
             await Assert.ThrowsAnyAsync<InvalidOperationException>(async () =>
             {
@@ -73,7 +75,7 @@ namespace MariCommands.Tests.HostBuilder
 
 
         [Fact]
-        public async ValueTask CanExecuteAnyCommandAfterAddCommandStartup()
+        public async Task CanExecuteAnyCommandAfterAddCommandStartup()
         {
             var host = Host.CreateDefaultBuilder()
                     .UseCommandStartup<TestCommandStartup>()
@@ -110,7 +112,7 @@ namespace MariCommands.Tests.HostBuilder
         }
 
         [Fact]
-        public async ValueTask CanExecuteAnyCommandAfterAddCommandServiceStartup()
+        public async Task CanExecuteAnyCommandAfterAddCommandServiceStartup()
         {
             var host = Host.CreateDefaultBuilder()
                     .UseCommandServiceStartup<TestCommandStartup>()
@@ -124,7 +126,7 @@ namespace MariCommands.Tests.HostBuilder
         }
 
         [Fact]
-        public async ValueTask CanExecuteAnyWorkerCommandAfterAddCommandServiceStartup()
+        public async Task CanExecuteAnyWorkerCommandAfterAddCommandServiceStartup()
         {
             var host = Host.CreateDefaultBuilder()
                     .UseCommandServiceStartup<TestCommandStartup>()
@@ -138,7 +140,7 @@ namespace MariCommands.Tests.HostBuilder
         }
 
         [Fact]
-        public async ValueTask CantExecuteAnyWorkerCommandBeforeAddCommandServiceStartup()
+        public async Task CantExecuteAnyWorkerCommandBeforeAddCommandServiceStartup()
         {
             await Assert.ThrowsAnyAsync<InvalidOperationException>(async () =>
             {

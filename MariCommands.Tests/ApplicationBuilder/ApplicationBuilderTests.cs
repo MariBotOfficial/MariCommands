@@ -28,7 +28,7 @@ namespace MariCommands.Tests.ApplicationBuilder
         }
 
         [Fact]
-        public async ValueTask CanExecuteBuildedApplication()
+        public async Task CanExecuteBuildedApplication()
         {
             var provider = new ServiceCollection()
                                 .AddLogging()
@@ -55,7 +55,7 @@ namespace MariCommands.Tests.ApplicationBuilder
         }
 
         [Fact]
-        public async ValueTask ThrowsExceptionForNoResultAndNoCommand()
+        public async Task ThrowsExceptionForNoResultAndNoCommand()
         {
             var provider = new ServiceCollection()
                                 .BuildServiceProvider(true);
@@ -76,7 +76,7 @@ namespace MariCommands.Tests.ApplicationBuilder
         }
 
         [Fact]
-        public async ValueTask ThrowsExceptionForNoResult()
+        public async Task ThrowsExceptionForNoResult()
         {
             var provider = new ServiceCollection()
                                 .BuildServiceProvider(true);
@@ -98,7 +98,7 @@ namespace MariCommands.Tests.ApplicationBuilder
         }
 
         [Fact]
-        public async ValueTask ThrowsExceptionForNoCommand()
+        public async Task ThrowsExceptionForNoCommand()
         {
             var provider = new ServiceCollection()
                                 .BuildServiceProvider(true);
@@ -120,7 +120,7 @@ namespace MariCommands.Tests.ApplicationBuilder
         }
 
         [Fact]
-        public async ValueTask NotThrowExceptionForCommandAndResult()
+        public async Task NotThrowExceptionForCommandAndResult()
         {
             var provider = new ServiceCollection()
                                 .BuildServiceProvider(true);
@@ -140,7 +140,7 @@ namespace MariCommands.Tests.ApplicationBuilder
         }
 
         [Fact]
-        public async ValueTask MiddlewareCanShortCircuit()
+        public async Task MiddlewareCanShortCircuit()
         {
             var provider = new ServiceCollection()
                                 .BuildServiceProvider(true);
@@ -169,7 +169,7 @@ namespace MariCommands.Tests.ApplicationBuilder
         }
 
         [Fact]
-        public async ValueTask MiddlewaresWillBeBuildedInCorrectOrder()
+        public async Task MiddlewaresWillBeBuildedInCorrectOrder()
         {
             var provider = new ServiceCollection()
                                 .BuildServiceProvider(true);
@@ -243,8 +243,8 @@ namespace MariCommands.Tests.ApplicationBuilder
 
             var logs = context.Items[logKey] as List<string>;
 
-            Assert.Null(context.Result);
-            Assert.Null(context.Command);
+            Assert.True(context.Result != null);
+            Assert.True(context.Command != null);
             Assert.Equal(logs[0], log1);
             Assert.Equal(logs[1], log3);
             Assert.Equal(logs[2], log5);
@@ -254,7 +254,7 @@ namespace MariCommands.Tests.ApplicationBuilder
         }
 
         [Fact]
-        public async ValueTask CanAddAnICommandMiddleware()
+        public async Task CanAddAnICommandMiddleware()
         {
             var provider = new ServiceCollection()
                                 .BuildServiceProvider(true);

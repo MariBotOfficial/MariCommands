@@ -5,6 +5,8 @@ using MariCommands.Tests.HostBuilder;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.TestHost;
 
 namespace MariCommands.Tests.WebHostBuilder
 {
@@ -27,6 +29,10 @@ namespace MariCommands.Tests.WebHostBuilder
                 builder
                     .ConfigureWebHostDefaults(webBuilder =>
                     {
+                        webBuilder.UseTestServer()
+                                        .Configure(app => { })
+                                        .ConfigureServices(services => { });
+
                         webBuilder.UseCommandStartup<TestCommandStartup>();
                         webBuilder.UseCommandStartup<TestCommandStartup>();
                     })
@@ -40,6 +46,10 @@ namespace MariCommands.Tests.WebHostBuilder
             Host.CreateDefaultBuilder()
                     .ConfigureWebHostDefaults(webBuilder =>
                     {
+                        webBuilder.UseTestServer()
+                                        .ConfigureServices(services => { })
+                                        .Configure(app => { });
+
                         // A lol bug with statics in xUnit.
                         MariCommandsHostBuilderExtensions.Clear();
                         webBuilder.UseCommandStartup<TestCommandStartup>();
@@ -48,11 +58,15 @@ namespace MariCommands.Tests.WebHostBuilder
         }
 
         [Fact]
-        public async ValueTask CanExecuteAnyWorkerCommandAfterAddCommandStartup()
+        public async Task CanExecuteAnyWorkerCommandAfterAddCommandStartup()
         {
             var host = Host.CreateDefaultBuilder()
                     .ConfigureWebHostDefaults(webBuilder =>
                     {
+                        webBuilder.UseTestServer()
+                                        .ConfigureServices(services => { })
+                                        .Configure(app => { });
+
                         webBuilder.UseCommandStartup<TestCommandStartup>();
                         webBuilder.ConfigureServices(services =>
                         {
@@ -65,13 +79,17 @@ namespace MariCommands.Tests.WebHostBuilder
         }
 
         [Fact]
-        public async ValueTask CantExecuteAnyWorkerCommandBeforeAddCommandStartup()
+        public async Task CantExecuteAnyWorkerCommandBeforeAddCommandStartup()
         {
             await Assert.ThrowsAnyAsync<InvalidOperationException>(async () =>
             {
                 var host = Host.CreateDefaultBuilder()
                         .ConfigureWebHostDefaults(webBuilder =>
                         {
+                            webBuilder.UseTestServer()
+                                        .ConfigureServices(services => { })
+                                        .Configure(app => { });
+
                             webBuilder.ConfigureServices(services =>
                             {
                                 services.AddHostedService<TestWorkerService>();
@@ -84,11 +102,15 @@ namespace MariCommands.Tests.WebHostBuilder
             });
         }
         [Fact]
-        public async ValueTask CanExecuteAnyCommandAfterAddCommandStartup()
+        public async Task CanExecuteAnyCommandAfterAddCommandStartup()
         {
             var host = Host.CreateDefaultBuilder()
                     .ConfigureWebHostDefaults(webBuilder =>
                     {
+                        webBuilder.UseTestServer()
+                                        .ConfigureServices(services => { })
+                                        .Configure(app => { });
+
                         webBuilder.UseCommandStartup<TestCommandStartup>();
                     })
                     .Build();
@@ -110,6 +132,10 @@ namespace MariCommands.Tests.WebHostBuilder
             {
                 builder.ConfigureWebHostDefaults(webBuilder =>
                 {
+                    webBuilder.UseTestServer()
+                                        .ConfigureServices(services => { })
+                                        .Configure(app => { });
+
                     webBuilder.UseCommandServiceStartup<TestCommandStartup>();
                     webBuilder.UseCommandServiceStartup<TestCommandStartup>();
                 })
@@ -123,6 +149,10 @@ namespace MariCommands.Tests.WebHostBuilder
             Host.CreateDefaultBuilder()
                     .ConfigureWebHostDefaults(webBuilder =>
                     {
+                        webBuilder.UseTestServer()
+                                        .ConfigureServices(services => { })
+                                        .Configure(app => { });
+
                         MariCommandsHostBuilderExtensions.Clear();
                         webBuilder.UseCommandServiceStartup<TestCommandStartup>();
                     })
@@ -130,11 +160,15 @@ namespace MariCommands.Tests.WebHostBuilder
         }
 
         [Fact]
-        public async ValueTask CanExecuteAnyCommandAfterAddCommandServiceStartup()
+        public async Task CanExecuteAnyCommandAfterAddCommandServiceStartup()
         {
             var host = Host.CreateDefaultBuilder()
                     .ConfigureWebHostDefaults(webBuilder =>
                     {
+                        webBuilder.UseTestServer()
+                                        .ConfigureServices(services => { })
+                                        .Configure(app => { });
+
                         webBuilder.UseCommandServiceStartup<TestCommandStartup>();
                     })
                     .Build();
@@ -147,11 +181,15 @@ namespace MariCommands.Tests.WebHostBuilder
         }
 
         [Fact]
-        public async ValueTask CanExecuteAnyWorkerCommandAfterAddCommandServiceStartup()
+        public async Task CanExecuteAnyWorkerCommandAfterAddCommandServiceStartup()
         {
             var host = Host.CreateDefaultBuilder()
                     .ConfigureWebHostDefaults(webBuilder =>
                     {
+                        webBuilder.UseTestServer()
+                                        .ConfigureServices(services => { })
+                                        .Configure(app => { });
+
                         webBuilder.UseCommandServiceStartup<TestCommandStartup>();
                         webBuilder.ConfigureServices(services =>
                         {
@@ -164,13 +202,17 @@ namespace MariCommands.Tests.WebHostBuilder
         }
 
         [Fact]
-        public async ValueTask CantExecuteAnyWorkerCommandBeforeAddCommandServiceStartup()
+        public async Task CantExecuteAnyWorkerCommandBeforeAddCommandServiceStartup()
         {
             await Assert.ThrowsAnyAsync<InvalidOperationException>(async () =>
             {
                 var host = Host.CreateDefaultBuilder()
                         .ConfigureWebHostDefaults(webBuilder =>
                         {
+                            webBuilder.UseTestServer()
+                                        .ConfigureServices(services => { })
+                                        .Configure(app => { });
+
                             webBuilder.ConfigureServices(services =>
                             {
                                 services.AddHostedService<TestWorkerService>();

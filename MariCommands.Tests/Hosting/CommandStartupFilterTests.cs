@@ -1,8 +1,12 @@
+using System;
 using System.Threading.Tasks;
 using MariCommands.Builder;
 using MariCommands.Extensions;
 using MariCommands.Hosting;
 using MariCommands.Results;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Moq;
@@ -12,13 +16,24 @@ namespace MariCommands.Tests.Hosting
 {
     public class CommandStartupFilterTests
     {
+        public CommandStartupFilterTests()
+        {
+            MariCommandsHostBuilderExtensions.Clear();
+        }
+
         [Fact]
-        public async ValueTask WillStartAppInWebHosts()
+        public async Task WillStartAppInWebHosts()
         {
             var host = Host.CreateDefaultBuilder()
                         .ConfigureWebHostDefaults(webBuilder =>
                         {
+                            webBuilder.UseTestServer()
+                                        .ConfigureServices(services => { })
+                                        .Configure(app => { });
+
+                            MariCommandsHostBuilderExtensions.Clear();
                             webBuilder.UseCommandServiceStartup<TestCommandStartup>();
+                            webBuilder.UseStartup<TestCommandStartup>();
                         })
                         .Build();
 
@@ -38,6 +53,10 @@ namespace MariCommands.Tests.Hosting
 
     public class TestCommandStartup : ICommandServiceStartup
     {
+        public void Configure(IApplicationBuilder app)
+        {
+        }
+
         public void ConfigureApp(ICommandApplicationBuilder app)
         {
         }
