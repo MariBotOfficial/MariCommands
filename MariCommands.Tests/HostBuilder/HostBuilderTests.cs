@@ -128,6 +128,8 @@ namespace MariCommands.Tests.HostBuilder
         [Fact]
         public async Task CanExecuteAnyWorkerCommandAfterAddCommandServiceStartup()
         {
+            MariCommandsHostBuilderExtensions.Clear();
+
             var host = Host.CreateDefaultBuilder()
                     .UseCommandServiceStartup<TestCommandStartup>()
                     .ConfigureServices(services =>
