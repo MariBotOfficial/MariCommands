@@ -29,7 +29,7 @@ namespace MariCommands.Results
         public IParameter Parameter { get; }
 
         /// <inheritdoc />
-        public string Reason => $"Cannot found a type parser for argument: {Parameter.Name}";
+        public string Reason => $"Cannot find a type parser for argument: '{Parameter.Name}' of type '{Parameter.ParameterInfo.ParameterType.Name}'.";
 
         /// <inheritdoc />
         public Exception Exception => null;

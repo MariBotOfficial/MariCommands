@@ -24,7 +24,9 @@ namespace MariCommands.Parsers
 
             var config = provider.GetRequiredService<ICommandServiceOptions>();
 
-            var rawArgs = remainingInput.Split(config.Separator);
+            var rawArgs = string.IsNullOrWhiteSpace(remainingInput)
+                ? new string[0]
+                : remainingInput.Split(config.Separator);
 
             var willFaultParams = rawArgs.Length < command.Parameters.Count;
 
@@ -33,17 +35,21 @@ namespace MariCommands.Parsers
             for (var i = 0; i < rawArgs.Length; i++)
             {
                 var arg = rawArgs[i];
-                var param = command.Parameters.ElementAt(i);
+                var param = command.Parameters.ElementAtOrDefault(i);
+
+                if (param.HasNoContent())
+                    break;
+
                 var typeParser = GetTypeParser(provider, param);
 
-                if (typeParser.HasContent())
+                if (typeParser.HasNoContent())
                     return MissingTypeParserResult.FromParam(param);
 
-                var isLastParam = i + 1 == command.Parameters.Count;
+                var isLastParam = IsLastParam(i, command.Parameters);
 
                 if (isLastParam && param.IsParams)
                 {
-                    var multipleArgs = args.Skip(i).ToList();
+                    var multipleArgs = rawArgs.Skip(i).ToList();
 
                     var multipleValues = new List<object>();
 
@@ -63,7 +69,7 @@ namespace MariCommands.Parsers
                 {
                     if (isLastParam && param.IsRemainder)
                     {
-                        arg = string.Join(config.Separator, args.Skip(i).ToList());
+                        arg = string.Join(config.Separator, rawArgs.Skip(i).ToList());
                     }
 
                     var result = await typeParser.ParseAsync(arg, param, context);
@@ -85,11 +91,11 @@ namespace MariCommands.Parsers
                     {
                         args.Add(param, param.DefaultValue);
                     }
-                    else if (ParsingUtils.IsNullable(param) || IsNullableClass(param, config))
+                    else if (ParsingUtils.IsNullable(param))
                     {
                         var typeParser = GetTypeParser(provider, param);
 
-                        if (typeParser.HasContent())
+                        if (typeParser.HasNoContent())
                             return MissingTypeParserResult.FromParam(param);
 
                         var result = await typeParser.ParseAsync(null, param, context);
@@ -97,6 +103,10 @@ namespace MariCommands.Parsers
                         if (!result.Success)
                             return ArgumentTypeParserFailResult.FromTypeParserResult(result);
 
+                        args.Add(param, result.Value);
+                    }
+                    else if (IsNullableClass(param, config))
+                    {
                         args.Add(param, null);
                     }
                     else
@@ -133,10 +143,14 @@ namespace MariCommands.Parsers
 
             var typeParserProvider = provider.GetRequiredService<ITypeParserProvider>();
 
-            return typeParserProvider.GetTypeParser(param.ParameterInfo.ParameterType);
+            var parameterType = param.IsParams
+                ? param.ParameterInfo.ParameterType.GetElementType()
+                : param.ParameterInfo.ParameterType;
+
+            return typeParserProvider.GetTypeParser(parameterType);
         }
 
-        private bool IsLastParam(int position, IEnumerable<string> rawArgs)
-            => rawArgs.Count() - 1 == position;
+        private bool IsLastParam(int position, IEnumerable<IParameter> parameters)
+            => parameters.Count() - 1 == position;
     }
 }
