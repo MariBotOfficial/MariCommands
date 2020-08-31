@@ -77,7 +77,10 @@ namespace MariCommands.Factories
 
         private object GetDefaultValue(ParameterInfo parameterInfo)
         {
-            return parameterInfo.DefaultValue;
+            if (parameterInfo.HasDefaultValue)
+                return parameterInfo.DefaultValue;
+
+            return null;
         }
 
         private bool GetOptional(ParameterInfo parameterInfo)

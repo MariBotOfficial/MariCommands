@@ -97,6 +97,9 @@ namespace MariCommands.Factories
             if (type == typeof(ValueTask) && !type.IsGenericType)
                 return true;
 
+            if (!type.IsGenericType)
+                return false;
+
             var genericDefinition = type.GetGenericTypeDefinition();
 
             if (genericDefinition == typeof(Task<>))
@@ -152,12 +155,9 @@ namespace MariCommands.Factories
 
         private IEnumerable<string> GetAlias(MethodInfo methodInfo)
         {
-            var aliasAttr = methodInfo.GetAttribute<GroupAttribute>();
+            var aliasAttr = methodInfo.GetAttribute<CommandAttribute>();
 
-            if (aliasAttr.HasContent())
-                return aliasAttr.Aliases;
-
-            return null;
+            return aliasAttr.Aliases;
         }
 
         private bool GetIgnoreExtraArgs(MethodInfo methodInfo)

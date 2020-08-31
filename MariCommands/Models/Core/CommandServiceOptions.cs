@@ -28,5 +28,8 @@ namespace MariCommands
 
         /// <inheritdoc />
         public bool ContinueMultiMatchAfterParser { get; set; } = false;
+
+        /// <inheritdoc />
+        public bool AutoDisposeContext { get; set; } = true;
     }
 }

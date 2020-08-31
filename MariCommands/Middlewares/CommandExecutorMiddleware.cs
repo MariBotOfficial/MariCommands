@@ -16,10 +16,7 @@ namespace MariCommands.Middlewares
             context.NotNull(nameof(context));
 
             if (context.Result.HasContent())
-            {
-                await next(context);
                 return;
-            }
 
             var options = context.CommandServices.GetRequiredService<ICommandServiceOptions>();
 
@@ -103,7 +100,7 @@ namespace MariCommands.Middlewares
 
         private (ICommand, object[]) GetCommandAndArgs(CommandContext context)
         {
-            if (context.Command.HasContent())
+            if (context.Command.HasContent() && context.Args != null)
                 return (context.Command, context.Args.ToArray());
 
             var matchesFeature = context.Features.Get<ICommandMatchesFeature>();

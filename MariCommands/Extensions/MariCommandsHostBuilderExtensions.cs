@@ -34,9 +34,9 @@ namespace MariCommands.Extensions
 
             webBuilder.ConfigureServices(services =>
             {
-                services.AddCommandStartup<TStartup>(addAllDefaultTypeParsers, createNullables);
+                services.AddHostedService<BackgroundStartupService>();
 
-                services.AddTransient<IStartupFilter, CommandStartupFilter>();
+                services.AddCommandStartup<TStartup>(addAllDefaultTypeParsers, createNullables);
             });
 
             return webBuilder;
@@ -57,6 +57,8 @@ namespace MariCommands.Extensions
 
             webBuilder.ConfigureServices((context, services) =>
             {
+                services.AddHostedService<BackgroundStartupService>();
+
                 services.AddCommandServiceStartup<TStartup>(context.Configuration, context.HostingEnvironment, addAllDefaultTypeParsers, createNullables);
             });
 
@@ -155,6 +157,12 @@ namespace MariCommands.Extensions
                 throw new InvalidOperationException("A startup has already been added to this project.");
 
             HasStartup = true;
+        }
+
+        // Clear this class for unit tests.
+        internal static void Clear()
+        {
+            HasStartup = false;
         }
     }
 }

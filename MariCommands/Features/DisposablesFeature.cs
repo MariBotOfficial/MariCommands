@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using MariGlobals.Extensions;
 
 namespace MariCommands.Features
 {
@@ -27,11 +28,24 @@ namespace MariCommands.Features
 
         public async ValueTask DisposeAsync()
         {
-            foreach (var disposable in _disposables)
-                disposable.Dispose();
+            if (_disposables.HasContent())
+            {
+                foreach (var disposable in _disposables)
+                {
+                    disposable.Dispose();
+                }
+            }
 
-            foreach (var asyncDisposable in _asyncDisposables)
-                await asyncDisposable.DisposeAsync();
+            if (_asyncDisposables.HasContent())
+            {
+                foreach (var asyncDisposable in _asyncDisposables)
+                {
+                    await asyncDisposable.DisposeAsync();
+                }
+            }
+
+            _disposables?.Clear();
+            _asyncDisposables?.Clear();
         }
     }
 }

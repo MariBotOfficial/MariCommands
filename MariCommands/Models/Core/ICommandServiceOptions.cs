@@ -53,5 +53,11 @@ namespace MariCommands
         /// Gets or sets if this lib will continue to handle multi matches after parsing.
         /// </summary>
         bool ContinueMultiMatchAfterParser { get; set; }
+
+        /// <summary>
+        /// Gets or sets if this lib will auto dispose the <see cref="CommandContext" /> after 
+        /// execute a command, the default is <c>true</c>.
+        /// </summary>
+        bool AutoDisposeContext { get; set; }
     }
 }

@@ -92,8 +92,8 @@ namespace MariCommands.Middlewares
 
         public async Task<IResult> ExecutePreconditionsAsync(ICommand command, IReadOnlyCollection<object> args, CommandContext context)
         {
-            var count = command.Parameters.Count == args.Count
-                ? command.Parameters.Count
+            var count = command.Parameters?.Count == args.Count
+                ? command.Parameters?.Count
                 : args.Count;
 
             if (count == 0)

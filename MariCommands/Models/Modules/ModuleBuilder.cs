@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using MariCommands.Utils;
+using MariGlobals.Extensions;
 
 namespace MariCommands
 {
@@ -142,7 +143,8 @@ namespace MariCommands
         /// <returns>The current builder.</returns>
         public ModuleBuilder WithAlias(IEnumerable<string> alias)
         {
-            Aliases = alias.ToImmutableArray();
+            if (alias.HasContent())
+                Aliases = alias.ToImmutableArray();
 
             return this;
         }

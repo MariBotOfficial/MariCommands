@@ -25,11 +25,11 @@ namespace MariCommands.Middlewares
         {
             context.NotNull(nameof(context));
 
-            if (context.Result.HasContent() || (context.Command.HasContent() && context.Args.HasContent()))
+            if (context.Result.HasContent() || (context.Command.HasContent() && context.Args != null))
             {
                 await next(context);
             }
-            else if (context.Command.HasContent() && !string.IsNullOrWhiteSpace(context.RawArgs))
+            else if (context.Command.HasContent() && context.RawArgs != null)
             {
                 var result = await ParseCommandAsync(context, context.Command, context.RawArgs);
 

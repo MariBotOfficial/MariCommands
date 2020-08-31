@@ -61,13 +61,7 @@ namespace MariCommands.Utils
 
                 logger.LogDebug("No startup injected, the lib will inject the default middlewares.");
 
-                applicationBuilder.UseDefaultExceptionMiddleware();
-                applicationBuilder.UseStringMatcher();
-                applicationBuilder.UseInputCountMatcher();
-                applicationBuilder.UseParser();
-                applicationBuilder.UseParamPreconditioner();
-                applicationBuilder.UsePreconditioner();
-                applicationBuilder.UseCommandExecutor();
+                applicationBuilder.UseDefaultMiddlewares();
 
                 logger.LogDebug("Successfully injected default middlewares.");
             }
@@ -83,6 +77,19 @@ namespace MariCommands.Utils
             service.Initialize(app);
 
             logger.LogInformation("Command application is ready.");
+        }
+
+        public static ICommandApplicationBuilder UseDefaultMiddlewares(this ICommandApplicationBuilder app)
+        {
+            app.UseDefaultExceptionMiddleware();
+            app.UseStringMatcher();
+            app.UseInputCountMatcher();
+            app.UseParser();
+            app.UseParamPreconditioner();
+            app.UsePreconditioner();
+            app.UseCommandExecutor();
+
+            return app;
         }
     }
 }

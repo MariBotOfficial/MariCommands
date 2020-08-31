@@ -45,5 +45,12 @@ namespace MariCommands.Utils
             value = default;
             return false;
         }
+
+        public static bool IsNullable(IParameter param)
+            => IsNullable(param.ParameterInfo.ParameterType);
+
+        public static bool IsNullable(Type type)
+            => type.IsGenericType &&
+               type.GetGenericTypeDefinition() == typeof(Nullable<>);
     }
 }
