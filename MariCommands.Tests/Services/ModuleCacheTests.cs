@@ -451,7 +451,6 @@ namespace MariCommands.Tests.Services
             new object[] { "testmdl", "testcmd", "TestMdl TestCmd" },
             new object[] { "testmdl", "testcmd", "TestMdl testcmd" },
             new object[] { "testmdl", "testcmd", "testmdl TestCmd" },
-            new object[] { "testmdl", "testcmd", "testmdl TestCmd" },
         };
 
         [MemberData(nameof(CommandModuleOneAliasData))]

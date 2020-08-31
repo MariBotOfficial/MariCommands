@@ -87,8 +87,6 @@ namespace MariCommands.Tests.Hosting
             var host = Host.CreateDefaultBuilder()
                             .ConfigureWebHostDefaults(webBuilder =>
                             {
-                                MariCommandsHostBuilderExtensions.Clear();
-
                                 webBuilder.UseTestServer()
                                             .ConfigureServices(services => { })
                                             .Configure(app => { }); ;
@@ -100,6 +98,9 @@ namespace MariCommands.Tests.Hosting
                                         return new TestCommandApplicationBuilderFactory(props);
                                     });
                                 });
+
+                                MariCommandsHostBuilderExtensions.Clear();
+
                                 webBuilder.UseCommandStartup<TestCommandStartupAssert>();
                             })
                             .Build();
@@ -129,8 +130,6 @@ namespace MariCommands.Tests.Hosting
                                             .ConfigureServices(services => { })
                                             .Configure(app => { });
 
-                                MariCommandsHostBuilderExtensions.Clear();
-
                                 webBuilder.ConfigureServices(services =>
                                 {
                                     services.AddTransient<ICommandApplicationBuilderFactory>((sp) =>
@@ -139,6 +138,7 @@ namespace MariCommands.Tests.Hosting
                                     });
                                 });
 
+                                MariCommandsHostBuilderExtensions.Clear();
                                 webBuilder.UseCommandServiceStartup<TestCommandStartupAssert>();
                             })
                             .Build();

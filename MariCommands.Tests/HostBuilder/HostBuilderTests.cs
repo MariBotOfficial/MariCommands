@@ -35,6 +35,7 @@ namespace MariCommands.Tests.HostBuilder
         [Fact]
         public void OneStartupNotThrowsException()
         {
+            MariCommandsHostBuilderExtensions.Clear();
             Host.CreateDefaultBuilder()
                     .UseCommandStartup<TestCommandStartup>()
                     .Build();
