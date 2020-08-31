@@ -114,6 +114,8 @@ namespace MariCommands.Tests.HostBuilder
         [Fact]
         public async Task CanExecuteAnyCommandAfterAddCommandServiceStartup()
         {
+            MariCommandsHostBuilderExtensions.Clear();
+
             var host = Host.CreateDefaultBuilder()
                     .UseCommandServiceStartup<TestCommandStartup>()
                     .Build();
