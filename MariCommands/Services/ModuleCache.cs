@@ -54,7 +54,7 @@ namespace MariCommands
             {
                 foreach (var alias in module.Aliases)
                 {
-                    var path = $"{parentAlias}{_config.Separator}{alias}";
+                    var path = GetPathForModule(alias, parentAlias);
 
                     AddModuleWithPath(module, path);
                 }
@@ -63,21 +63,30 @@ namespace MariCommands
 
         private void AddModuleWithPath(IModule module, string path)
         {
-            foreach (var subModule in module.Submodules)
-                AddModuleInternal(subModule, path);
+            if (module.Submodules.HasContent())
+            {
+                foreach (var subModule in module.Submodules)
+                    AddModuleInternal(subModule, path);
+            }
 
-            foreach (var command in module.Commands)
-                AddCommandInternal(command, path);
+            if (module.Commands.HasContent())
+            {
+                foreach (var command in module.Commands)
+                    AddCommandInternal(command, path);
+            }
         }
 
         private void AddCommandInternal(ICommand command, string moduleAlias)
         {
             foreach (var alias in command.Aliases)
             {
-                var path = $"{moduleAlias}{_config.Separator}{alias}";
+                var path = GetPathForCommand(alias, moduleAlias);
 
                 if (_commands.TryGetValue(path, out var commands))
                 {
+                    if (commands.Contains(command))
+                        continue;
+
                     commands.Add(command);
                 }
                 else
@@ -105,7 +114,7 @@ namespace MariCommands
             {
                 foreach (var alias in module.Aliases)
                 {
-                    var path = $"{parentAlias}{_config.Separator}{alias}";
+                    var path = GetPathForModule(alias, parentAlias);
 
                     RemoveModuleWithPath(module, path);
                 }
@@ -125,10 +134,43 @@ namespace MariCommands
         {
             foreach (var alias in command.Aliases)
             {
-                var path = $"{moduleAlias}{_config.Separator}{alias}";
+                var path = GetPathForCommand(alias, moduleAlias);
 
-                _commands.TryRemove(path, out var _);
+                if (_commands.TryGetValue(path, out var commands))
+                {
+                    if (!commands.Contains(command))
+                        continue;
+
+                    commands.Remove(command);
+
+                    if (commands.HasNoContent())
+                        _commands.TryRemove(path, out commands);
+                }
             }
+        }
+
+        private string GetPathForModule(string alias, string parentAlias)
+        {
+            var path = string.Empty;
+
+            if (string.IsNullOrWhiteSpace(parentAlias))
+                path = $"{alias}";
+            else
+                path = $"{parentAlias}{_config.Separator}{alias}";
+
+            return path;
+        }
+
+        private string GetPathForCommand(string alias, string moduleAlias)
+        {
+            var path = string.Empty;
+
+            if (string.IsNullOrWhiteSpace(moduleAlias))
+                path = $"{alias}";
+            else
+                path = $"{moduleAlias}{_config.Separator}{alias}";
+
+            return path;
         }
 
         /// <inheritdoc />
