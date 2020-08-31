@@ -164,7 +164,6 @@ namespace MariCommands.Tests.WebHostBuilder
         [Fact]
         public async Task CanExecuteAnyCommandAfterAddCommandServiceStartup()
         {
-            MariCommandsHostBuilderExtensions.Clear();
             var host = Host.CreateDefaultBuilder()
                     .ConfigureWebHostDefaults(webBuilder =>
                     {
@@ -172,6 +171,7 @@ namespace MariCommands.Tests.WebHostBuilder
                                         .ConfigureServices(services => { })
                                         .Configure(app => { });
 
+                        MariCommandsHostBuilderExtensions.Clear();
                         webBuilder.UseCommandServiceStartup<TestCommandStartup>();
                     })
                     .Build();
