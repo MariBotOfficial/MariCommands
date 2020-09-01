@@ -82,9 +82,9 @@ namespace MariCommands
             IgnoreExtraArgs = builder.IgnoreExtraArgs;
             ArgumentParserType = builder.ArgumentParserType;
             MultiMatchHandling = builder.MultiMatchHandling;
-            Aliases = builder.Aliases.ToImmutableArray();
-            Attributes = builder.Attributes.ToImmutableArray();
-            Preconditions = builder.Preconditions.ToImmutableArray();
+            Aliases = builder.Aliases?.ToImmutableArray();
+            Attributes = builder.Attributes?.ToImmutableArray();
+            Preconditions = builder.Preconditions?.ToImmutableArray();
             Type = builder.Type;
             _isEnabled = builder.IsEnabled;
             Parent = parent;

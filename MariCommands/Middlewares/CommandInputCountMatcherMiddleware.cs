@@ -51,9 +51,18 @@ namespace MariCommands.Middlewares
             if (matchesFeature.HasNoContent() || matchesFeature.CommandMatches.HasNoContent())
                 throw new InvalidOperationException($"Can't get command matches from feature: {nameof(ICommandMatchesFeature)}.");
 
-            var multiMatches = matchesFeature.CommandMatches
-                        .Where(a => a.Command.Module.GetMatchHandling(_config) == MultiMatchHandling.Best)
-                        .ToList();
+            var multiMatches = new List<ICommandMatch>();
+
+            if (matchesFeature.CommandMatches.Count > 1)
+            {
+                multiMatches = matchesFeature.CommandMatches
+                            .Where(a => a.Command.Module.GetMatchHandling(_config) == MultiMatchHandling.Best)
+                            .ToList();
+            }
+            else
+            {
+                multiMatches = matchesFeature.CommandMatches.ToList();
+            }
 
             if (multiMatches.HasNoContent())
             {
@@ -70,7 +79,9 @@ namespace MariCommands.Middlewares
 
             foreach (var match in matchesFeature.CommandMatches)
             {
-                var inputCount = match.RemainingInput.Split(_config.Separator).Count();
+                var inputCount = string.IsNullOrWhiteSpace(match.RemainingInput)
+                    ? 0
+                    : match.RemainingInput.Split(_config.Separator).Count();
 
                 var command = match.Command;
 

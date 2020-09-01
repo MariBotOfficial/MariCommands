@@ -67,6 +67,9 @@ namespace MariCommands
             Preconditions = builder.Preconditions;
             _isEnabled = builder.IsEnabled;
             MethodInfo = builder.MethodInfo;
+            IsAsync = builder.IsAsync;
+            AsyncResultType = builder.AsyncResultType;
+            Executor = builder.Executor;
             Module = module;
 
             var parameters = ImmutableArray.CreateBuilder<IParameter>(builder.Parameters.Count);
