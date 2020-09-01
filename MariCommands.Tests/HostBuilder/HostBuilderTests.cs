@@ -44,15 +44,17 @@ namespace MariCommands.Tests.HostBuilder
         [Fact]
         public async Task CanExecuteAnyWorkerCommandAfterAddCommandStartup()
         {
+
+            var builder = Host.CreateDefaultBuilder();
+
             MariCommandsHostBuilderExtensions.Clear();
 
-            var host = Host.CreateDefaultBuilder()
-                    .UseCommandStartup<TestCommandStartup>()
-                    .ConfigureServices(services =>
-                    {
-                        services.AddHostedService<TestWorkerService>();
-                    })
-                    .Build();
+            var host = builder.UseCommandStartup<TestCommandStartup>()
+                        .ConfigureServices(services =>
+                        {
+                            services.AddHostedService<TestWorkerService>();
+                        })
+                        .Build();
 
             await host.StartAsync();
         }

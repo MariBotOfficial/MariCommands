@@ -245,7 +245,6 @@ namespace MariCommands.Tests.Middlewares
             Assert.NotEmpty((context.Result as MatchesFailedResult).FailedCommands);
         }
 
-        [InlineData("")]
         [InlineData("arg1")]
         [InlineData("arg1 arg2")]
         [InlineData("arg1 arg2 arg3")]
