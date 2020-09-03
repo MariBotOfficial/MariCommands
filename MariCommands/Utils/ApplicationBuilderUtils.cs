@@ -28,7 +28,7 @@ namespace MariCommands.Utils
             var configurer = provider.GetRequiredService<IModuleConfigurer>();
             var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
             var logger = loggerFactory.CreateLogger(LoggingUtils.HOSTING_CATEGORY_NAME);
-            var service = provider.GetRequiredService<ICommandService>();
+            var contextExecutor = provider.GetRequiredService<IContextExecutor>();
             var startup = provider.GetService<ICommandStartup>();
 
             if (startup.HasContent())
@@ -74,7 +74,7 @@ namespace MariCommands.Utils
 
             logger.LogDebug("Command application is starting.");
 
-            service.Initialize(app);
+            contextExecutor.Initialize(app);
 
             logger.LogInformation("Command application is ready.");
         }

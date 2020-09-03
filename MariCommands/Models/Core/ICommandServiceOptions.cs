@@ -3,7 +3,7 @@ using System;
 namespace MariCommands
 {
     /// <summary>
-    /// General config for <see cref="ICommandService" />
+    /// General config for this lib.
     /// </summary>
     public interface ICommandServiceOptions
     {

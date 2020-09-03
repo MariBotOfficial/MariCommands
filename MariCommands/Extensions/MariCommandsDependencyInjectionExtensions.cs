@@ -179,7 +179,6 @@ namespace MariCommands.Extensions
             services.TryAddSingleton<IContextExecutor, ContextExecutor>();
             services.TryAddSingleton<IModuleCache, ModuleCache>();
 
-            services.TryAddTransient<ICommandService, CommandService>();
             services.TryAddTransient<ICommandApplicationBuilderFactory, CommandApplicationBuilderFactory>();
             services.TryAddTransient<IModuleConfigurer, ModuleConfigurer>();
             services.TryAddTransient<IModuleFactory, ModuleFactory>();

@@ -10,7 +10,7 @@ namespace MariCommands.Builder
     public interface IModuleConfigurer
     {
         /// <summary>
-        /// General config for <see cref="ICommandService" />
+        /// General config for this lib.
         /// </summary>
         ICommandServiceOptions Options { get; }
 
