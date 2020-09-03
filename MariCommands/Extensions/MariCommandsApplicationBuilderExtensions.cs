@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using MariCommands.Builder;
 using MariCommands.Middlewares;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,17 +15,35 @@ namespace MariCommands.Extensions
         /// Add a middleware type to the command request pipeline.
         /// </summary>
         /// <param name="app">The current command aplication builder.</param>
+        /// <param name="middlewareArgs">Additional ctor args for this middleware.</param>
         /// <returns>The current command aplication builder.</returns>
-        public static ICommandApplicationBuilder UseMiddleware<TMiddleware>(this ICommandApplicationBuilder app)
+        public static ICommandApplicationBuilder UseMiddleware<TMiddleware>(this ICommandApplicationBuilder app, params object[] middlewareArgs)
             where TMiddleware : ICommandMiddleware
         {
             app.Use((next) =>
             {
-                return context =>
-                {
-                    var middleware = ActivatorUtilities.GetServiceOrCreateInstance(context.CommandServices, typeof(TMiddleware)) as ICommandMiddleware;
+                var types = middlewareArgs
+                                ?.Select(a => a.GetType())
+                                ?.ToArray() ?? new Type[0];
 
-                    return middleware.InvokeAsync(context, next);
+                var instanceFactory = ActivatorUtilities.CreateFactory(typeof(TMiddleware), types);
+
+                return async context =>
+                {
+                    var instance = instanceFactory(context.CommandServices, middlewareArgs);
+
+                    await (instance as ICommandMiddleware).InvokeAsync(context, next);
+
+                    switch (instance)
+                    {
+                        case IAsyncDisposable asyncDisposable:
+                            await asyncDisposable.DisposeAsync();
+                            break;
+
+                        case IDisposable disposable:
+                            disposable.Dispose();
+                            break;
+                    }
                 };
             });
 
