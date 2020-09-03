@@ -6,6 +6,7 @@ using MariCommands.Results;
 using MariCommands.Utils;
 using MariGlobals.Extensions;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace MariCommands.Middlewares
 {
@@ -18,7 +19,7 @@ namespace MariCommands.Middlewares
             if (context.Result.HasContent())
                 return;
 
-            var options = context.CommandServices.GetRequiredService<ICommandServiceOptions>();
+            var options = context.CommandServices.GetRequiredService<IOptions<MariCommandsOptions>>().Value;
 
             var (command, args) = GetCommandAndArgs(context);
 

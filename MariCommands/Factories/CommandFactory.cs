@@ -9,19 +9,20 @@ using MariCommands.Extensions;
 using MariCommands.Providers;
 using MariCommands.Utils;
 using MariGlobals.Extensions;
+using Microsoft.Extensions.Options;
 
 namespace MariCommands.Factories
 {
     /// <inheritdoc />
     internal sealed partial class CommandFactory : ICommandFactory
     {
-        private readonly ICommandServiceOptions _config;
+        private readonly MariCommandsOptions _config;
         private readonly IParameterFactory _parameterFactory;
         private readonly ICommandExecutorProvider _executorProvider;
 
-        public CommandFactory(ICommandServiceOptions config, IParameterFactory parameterFactory, ICommandExecutorProvider executorProvider)
+        public CommandFactory(IOptions<MariCommandsOptions> config, IParameterFactory parameterFactory, ICommandExecutorProvider executorProvider)
         {
-            _config = config;
+            _config = config.Value;
             _parameterFactory = parameterFactory;
             _executorProvider = executorProvider;
         }

@@ -23,11 +23,10 @@ namespace MariCommands.Extensions
         /// Adds a command startup to configure your app in the current ASP.NET Core app.
         /// </summary>
         /// <param name="webBuilder">The current host builder.</param>
-        /// <param name="addAllDefaultTypeParsers">If this lib wil inject all default type parsers to the dependency.</param>
-        /// <param name="createNullables">If this lib will create nullables type parsers for these type parsers.</param>
+        /// <param name="configureOptions">The configure options for this lib.</param>
         /// <typeparam name="TStartup">The startup to be added.</typeparam>
         /// <returns>The current host builder.</returns>        
-        public static IWebHostBuilder UseCommandStartup<TStartup>(this IWebHostBuilder webBuilder, bool addAllDefaultTypeParsers = true, bool createNullables = true)
+        public static IWebHostBuilder UseCommandStartup<TStartup>(this IWebHostBuilder webBuilder, Action<MariCommandsOptions> configureOptions = null)
             where TStartup : class, ICommandStartup
         {
             CheckStartup();
@@ -36,7 +35,7 @@ namespace MariCommands.Extensions
             {
                 services.AddHostedService<BackgroundStartupService>();
 
-                services.AddCommandStartup<TStartup>(addAllDefaultTypeParsers, createNullables);
+                services.AddCommandStartup<TStartup>(configureOptions);
             });
 
             return webBuilder;
@@ -46,11 +45,10 @@ namespace MariCommands.Extensions
         /// Adds a command service startup to configure your app in the current ASP.NET Core app.
         /// </summary>
         /// <param name="webBuilder">The current host builder.</param>
-        /// <param name="addAllDefaultTypeParsers">If this lib wil inject all default type parsers to the dependency.</param>
-        /// <param name="createNullables">If this lib will create nullables type parsers for these type parsers.</param>
+        /// <param name="configureOptions">The configure options for this lib.</param>
         /// <typeparam name="TStartup">The startup to be added.</typeparam>
         /// <returns>The current host builder.</returns> 
-        public static IWebHostBuilder UseCommandServiceStartup<TStartup>(this IWebHostBuilder webBuilder, bool addAllDefaultTypeParsers = true, bool createNullables = true)
+        public static IWebHostBuilder UseCommandServiceStartup<TStartup>(this IWebHostBuilder webBuilder, Action<MariCommandsOptions> configureOptions = null)
             where TStartup : class, ICommandServiceStartup
         {
             CheckStartup();
@@ -59,7 +57,7 @@ namespace MariCommands.Extensions
             {
                 services.AddHostedService<BackgroundStartupService>();
 
-                services.AddCommandServiceStartup<TStartup>(context.Configuration, context.HostingEnvironment, addAllDefaultTypeParsers, createNullables);
+                services.AddCommandServiceStartup<TStartup>(context.Configuration, context.HostingEnvironment, configureOptions);
             });
 
             return webBuilder;
@@ -68,18 +66,17 @@ namespace MariCommands.Extensions
         /// <summary>
         /// Adds a command startup to configure your app in the current ASP.NET Core app.
         /// OBS: this method is for non Web ASP.NET Core apps if you using a Web ASP.NET Core
-        /// app use <see cref="UseCommandStartup{TStartup}(IWebHostBuilder, bool, bool)" /> instead this method.
+        /// app use <see cref="UseCommandStartup{TStartup}(IWebHostBuilder, Action{MariCommandsOptions})" /> instead this method.
         /// </summary>
         /// <remarks>
         /// this method is for non Web ASP.NET Core apps if you using a Web ASP.NET Core
-        /// app use <see cref="UseCommandStartup{TStartup}(IWebHostBuilder, bool, bool)" /> instead this method.
+        /// app use <see cref="UseCommandStartup{TStartup}(IWebHostBuilder, Action{MariCommandsOptions})" /> instead this method.
         /// </remarks>
         /// <param name="hostBuilder">The current host builder.</param>
-        /// <param name="addAllDefaultTypeParsers">If this lib wil inject all default type parsers to the dependency.</param>
-        /// <param name="createNullables">If this lib will create nullables type parsers for these type parsers.</param>
+        /// <param name="configureOptions">The configure options for this lib.</param>
         /// <typeparam name="TStartup">The startup to be added.</typeparam>
         /// <returns>The current host builder.</returns>
-        public static IHostBuilder UseCommandStartup<TStartup>(this IHostBuilder hostBuilder, bool addAllDefaultTypeParsers = true, bool createNullables = true)
+        public static IHostBuilder UseCommandStartup<TStartup>(this IHostBuilder hostBuilder, Action<MariCommandsOptions> configureOptions = null)
             where TStartup : class, ICommandStartup
         {
             CheckStartup();
@@ -88,7 +85,7 @@ namespace MariCommands.Extensions
             {
                 services.AddHostedService<BackgroundStartupService>();
 
-                services.AddCommandStartup<TStartup>(addAllDefaultTypeParsers, createNullables);
+                services.AddCommandStartup<TStartup>(configureOptions);
             });
 
             return hostBuilder;
@@ -97,18 +94,17 @@ namespace MariCommands.Extensions
         /// <summary>
         /// Adds a command startup to configure your app in the current ASP.NET Core app.
         /// OBS: this method is for non Web ASP.NET Core apps if you using a Web ASP.NET Core
-        /// app use <see cref="UseCommandServiceStartup{TStartup}(IWebHostBuilder, bool, bool)" /> instead this method.
+        /// app use <see cref="UseCommandServiceStartup{TStartup}(IWebHostBuilder, Action{MariCommandsOptions})" /> instead this method.
         /// </summary>
         /// <remarks>
         /// this method is for non Web ASP.NET Core apps if you using a Web ASP.NET Core
-        /// app use <see cref="UseCommandServiceStartup{TStartup}(IWebHostBuilder, bool, bool)" /> instead this method.
+        /// app use <see cref="UseCommandServiceStartup{TStartup}(IWebHostBuilder, Action{MariCommandsOptions})" /> instead this method.
         /// </remarks>
         /// <param name="hostBuilder">The current host builder.</param>
-        /// <param name="addAllDefaultTypeParsers">If this lib wil inject all default type parsers to the dependency.</param>
-        /// <param name="createNullables">If this lib will create nullables type parsers for these type parsers.</param>
+        /// <param name="configureOptions">The configure options for this lib.</param>
         /// <typeparam name="TStartup">The startup to be added.</typeparam>
         /// <returns>The current host builder.</returns>
-        public static IHostBuilder UseCommandServiceStartup<TStartup>(this IHostBuilder hostBuilder, bool addAllDefaultTypeParsers = true, bool createNullables = true)
+        public static IHostBuilder UseCommandServiceStartup<TStartup>(this IHostBuilder hostBuilder, Action<MariCommandsOptions> configureOptions = null)
             where TStartup : class, ICommandServiceStartup
         {
             CheckStartup();
@@ -117,7 +113,7 @@ namespace MariCommands.Extensions
             {
                 services.AddHostedService<BackgroundStartupService>();
 
-                services.AddCommandServiceStartup<TStartup>(context.Configuration, context.HostingEnvironment, addAllDefaultTypeParsers, createNullables);
+                services.AddCommandServiceStartup<TStartup>(context.Configuration, context.HostingEnvironment, configureOptions);
             });
 
             return hostBuilder;
@@ -127,8 +123,7 @@ namespace MariCommands.Extensions
             this IServiceCollection services,
             IConfiguration configuration,
             IHostEnvironment hostEnvironment,
-            bool addAllDefaultTypeParsers = true,
-            bool createNullables = true)
+            Action<MariCommandsOptions> configureOptions)
                 where TStartup : class, ICommandServiceStartup
         {
             var hostBuilderProvider = new HostBuilderServiceProvider(configuration, hostEnvironment);
@@ -137,16 +132,16 @@ namespace MariCommands.Extensions
 
             commandStartup.ConfigureServices(services);
 
-            services.AddCommandStartup<TStartup>(addAllDefaultTypeParsers, createNullables);
+            services.AddCommandStartup<TStartup>(configureOptions);
 
             return services;
         }
 
-        private static IServiceCollection AddCommandStartup<TStartup>(this IServiceCollection services, bool addAllDefaultTypeParsers = true, bool createNullables = true)
+        private static IServiceCollection AddCommandStartup<TStartup>(this IServiceCollection services, Action<MariCommandsOptions> configureOptions)
             where TStartup : class, ICommandStartup
         {
             services.AddTransient<ICommandStartup, TStartup>();
-            services.AddBasicMariCommandsServices(addAllDefaultTypeParsers, createNullables);
+            services.AddBasicMariCommandsServices(configureOptions);
 
             return services;
         }

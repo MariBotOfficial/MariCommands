@@ -8,6 +8,7 @@ using MariCommands.Hosting;
 using MariGlobals.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace MariCommands.Utils
 {
@@ -49,11 +50,11 @@ namespace MariCommands.Utils
             }
             else
             {
-                var config = provider.GetRequiredService<ICommandServiceOptions>();
+                var config = provider.GetRequiredService<IOptions<MariCommandsOptions>>().Value;
 
                 if (config.AutoAddRunningAssembly)
                 {
-                    logger.LogDebug($"{nameof(ICommandServiceOptions.AutoAddRunningAssembly)}" +
+                    logger.LogDebug($"{nameof(MariCommandsOptions.AutoAddRunningAssembly)}" +
                     "is setted to true the lib will auto inject all modules in this running assembly.");
 
                     configurer.AddModules(Assembly.GetExecutingAssembly());

@@ -5,16 +5,17 @@ using MariCommands.Models;
 using MariCommands.Results;
 using MariCommands.Utils;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace MariCommands.TypeParsers
 {
     internal sealed class EnumTypeParser : ITypeParser<Enum>
     {
-        private readonly ICommandServiceOptions _config;
+        private readonly MariCommandsOptions _config;
 
-        public EnumTypeParser(ICommandServiceOptions config)
+        public EnumTypeParser(IOptions<MariCommandsOptions> config)
         {
-            _config = config;
+            _config = config.Value;
         }
 
         public bool CanParse(Type type)
@@ -42,7 +43,7 @@ namespace MariCommands.TypeParsers
                 return Task.FromResult(result);
             }
 
-            var config = context.CommandServices.GetRequiredService<ICommandServiceOptions>();
+            var config = context.CommandServices.GetRequiredService<IOptions<MariCommandsOptions>>().Value;
 
             var ignoreCase = IsIgnoreCase(config.Comparison);
 

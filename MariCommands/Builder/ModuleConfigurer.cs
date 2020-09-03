@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 using MariCommands.Factories;
+using Microsoft.Extensions.Options;
 
 namespace MariCommands.Builder
 {
@@ -19,15 +20,15 @@ namespace MariCommands.Builder
         /// <param name="options">The current command app options.</param>
         /// <param name="moduleCache">The module cache to save the added modules.</param>
         /// <param name="moduleFactory">The factory to create modules.</param>
-        public ModuleConfigurer(ICommandServiceOptions options, IModuleCache moduleCache, IModuleFactory moduleFactory)
+        public ModuleConfigurer(IOptions<MariCommandsOptions> options, IModuleCache moduleCache, IModuleFactory moduleFactory)
         {
-            Options = options;
+            Options = options.Value;
             _moduleCache = moduleCache;
             _moduleFactory = moduleFactory;
         }
 
         /// <inheritdoc />
-        public ICommandServiceOptions Options { get; }
+        public MariCommandsOptions Options { get; }
 
         /// <inheritdoc />
         public IModule AddModule(IModule module)

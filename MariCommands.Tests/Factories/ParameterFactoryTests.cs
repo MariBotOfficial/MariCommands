@@ -17,7 +17,7 @@ namespace MariCommands.Tests.Factories
         [Fact]
         public void IsInvalidParameterIfEverythingIsNotNull()
         {
-            var options = new CommandServiceOptions();
+            var options = new MariCommandsOptions();
             var factory = new ParameterFactory(options);
 
             var commandBuilder = new Mock<ICommandBuilder>().Object;
@@ -31,7 +31,7 @@ namespace MariCommands.Tests.Factories
         [Fact]
         public void IsInvalidParameterIfCommandBuilderIsNull()
         {
-            var options = new CommandServiceOptions();
+            var options = new MariCommandsOptions();
             var factory = new ParameterFactory(options);
 
             var parameter = new Mock<ParameterInfo>().Object;
@@ -44,7 +44,7 @@ namespace MariCommands.Tests.Factories
         [Fact]
         public void IsInvalidParameterIfParameterInfoIsNull()
         {
-            var options = new CommandServiceOptions();
+            var options = new MariCommandsOptions();
             var factory = new ParameterFactory(options);
 
             var commandBuilder = new Mock<ICommandBuilder>().Object;
@@ -57,7 +57,7 @@ namespace MariCommands.Tests.Factories
         [Fact]
         public void IsInvalidParameterIfEverythingIsNull()
         {
-            var options = new CommandServiceOptions();
+            var options = new MariCommandsOptions();
             var factory = new ParameterFactory(options);
 
             var result = factory.IsParameter(null, null);
@@ -68,7 +68,7 @@ namespace MariCommands.Tests.Factories
         [Fact]
         public void ThrowExceptionIfInvalidAndTryBuild()
         {
-            var options = new CommandServiceOptions();
+            var options = new MariCommandsOptions();
             var factory = new ParameterFactory(options);
 
             Assert.ThrowsAny<ArgumentException>(() =>
@@ -80,7 +80,7 @@ namespace MariCommands.Tests.Factories
         [Fact]
         public void CanGetParameterNameFromAttribute()
         {
-            var options = new CommandServiceOptions();
+            var options = new MariCommandsOptions();
             var factory = new ParameterFactory(options);
 
             var commandBuilder = new Mock<ICommandBuilder>().Object;
@@ -100,7 +100,7 @@ namespace MariCommands.Tests.Factories
         [Fact]
         public void CanGetParameterName()
         {
-            var options = new CommandServiceOptions();
+            var options = new MariCommandsOptions();
             var factory = new ParameterFactory(options);
 
             var commandBuilder = new Mock<ICommandBuilder>().Object;
@@ -120,7 +120,7 @@ namespace MariCommands.Tests.Factories
         [Fact]
         public void CanGetDescriptionIfExists()
         {
-            var options = new CommandServiceOptions();
+            var options = new MariCommandsOptions();
             var factory = new ParameterFactory(options);
 
             var commandBuilder = new Mock<ICommandBuilder>().Object;
@@ -140,7 +140,7 @@ namespace MariCommands.Tests.Factories
         [Fact]
         public void CantGetDescriptionIfNotExists()
         {
-            var options = new CommandServiceOptions();
+            var options = new MariCommandsOptions();
             var factory = new ParameterFactory(options);
 
             var commandBuilder = new Mock<ICommandBuilder>().Object;
@@ -159,7 +159,7 @@ namespace MariCommands.Tests.Factories
         [Fact]
         public void CanGetRemarksIfExists()
         {
-            var options = new CommandServiceOptions();
+            var options = new MariCommandsOptions();
             var factory = new ParameterFactory(options);
 
             var commandBuilder = new Mock<ICommandBuilder>().Object;
@@ -179,7 +179,7 @@ namespace MariCommands.Tests.Factories
         [Fact]
         public void CantGetRemarksIfNotExists()
         {
-            var options = new CommandServiceOptions();
+            var options = new MariCommandsOptions();
             var factory = new ParameterFactory(options);
 
             var commandBuilder = new Mock<ICommandBuilder>().Object;
@@ -198,7 +198,7 @@ namespace MariCommands.Tests.Factories
         [Fact]
         public void CanGetIfParams()
         {
-            var options = new CommandServiceOptions();
+            var options = new MariCommandsOptions();
             var factory = new ParameterFactory(options);
 
             var commandBuilder = new Mock<ICommandBuilder>().Object;
@@ -217,7 +217,7 @@ namespace MariCommands.Tests.Factories
         [Fact]
         public void CantGetIfNotParams()
         {
-            var options = new CommandServiceOptions();
+            var options = new MariCommandsOptions();
             var factory = new ParameterFactory(options);
 
             var commandBuilder = new Mock<ICommandBuilder>().Object;
@@ -236,7 +236,7 @@ namespace MariCommands.Tests.Factories
         [Fact]
         public void CanGetOptionalAndDefaultValue()
         {
-            var options = new CommandServiceOptions();
+            var options = new MariCommandsOptions();
             var factory = new ParameterFactory(options);
 
             var commandBuilder = new Mock<ICommandBuilder>().Object;
@@ -257,7 +257,7 @@ namespace MariCommands.Tests.Factories
         [Fact]
         public void CantGetOptionalAndDefaultValue()
         {
-            var options = new CommandServiceOptions();
+            var options = new MariCommandsOptions();
             var factory = new ParameterFactory(options);
 
             var commandBuilder = new Mock<ICommandBuilder>().Object;
@@ -277,7 +277,7 @@ namespace MariCommands.Tests.Factories
         [Fact]
         public void CanGetTypeParserType()
         {
-            var options = new CommandServiceOptions();
+            var options = new MariCommandsOptions();
             var factory = new ParameterFactory(options);
 
             var commandBuilder = new Mock<ICommandBuilder>().Object;
@@ -297,7 +297,7 @@ namespace MariCommands.Tests.Factories
         [Fact]
         public void CantGetTypeParserType()
         {
-            var options = new CommandServiceOptions();
+            var options = new MariCommandsOptions();
             var factory = new ParameterFactory(options);
 
             var commandBuilder = new Mock<ICommandBuilder>().Object;
@@ -316,7 +316,7 @@ namespace MariCommands.Tests.Factories
         [Fact]
         public void CanGetAllAttributes()
         {
-            var options = new CommandServiceOptions();
+            var options = new MariCommandsOptions();
             var factory = new ParameterFactory(options);
 
             var commandBuilder = new Mock<ICommandBuilder>().Object;
@@ -338,7 +338,7 @@ namespace MariCommands.Tests.Factories
         [Fact]
         public void CanGetAllPreconditions()
         {
-            var options = new CommandServiceOptions();
+            var options = new MariCommandsOptions();
             var factory = new ParameterFactory(options);
 
             var commandBuilder = new Mock<ICommandBuilder>().Object;
@@ -364,7 +364,7 @@ namespace MariCommands.Tests.Factories
         [Fact]
         public void CanBuild()
         {
-            var options = new CommandServiceOptions();
+            var options = new MariCommandsOptions();
             var factory = new ParameterFactory(options);
 
             var commandBuilder = new Mock<ICommandBuilder>().Object;

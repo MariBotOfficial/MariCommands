@@ -7,6 +7,7 @@ using MariCommands.Features;
 using MariCommands.Results;
 using MariGlobals.Extensions;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Moq;
 using Xunit;
 
@@ -14,16 +15,17 @@ namespace MariCommands.Tests.Middlewares
 {
     public class CommandInputCountMatcherMiddlewareTests
     {
-        private async Task ExecuteMiddlewareAsync(CommandContext context, ICommandServiceOptions config = null)
+        private async Task ExecuteMiddlewareAsync(CommandContext context, MariCommandsOptions config = null)
         {
             var services = new ServiceCollection();
 
             services.AddLogging();
 
+
             if (config.HasContent())
-                services.AddSingleton<ICommandServiceOptions>(config);
+                services.AddSingleton<IOptions<MariCommandsOptions>>(config);
             else
-                services.AddSingleton<ICommandServiceOptions, CommandServiceOptions>();
+                services.AddOptions<MariCommandsOptions>();
 
             var provider = services.BuildServiceProvider(true);
 
@@ -93,7 +95,7 @@ namespace MariCommands.Tests.Middlewares
         [Fact]
         public async Task ReturnsMultiMatchResultForNoMultiMatchHandling()
         {
-            var config = new CommandServiceOptions();
+            var config = new MariCommandsOptions();
 
             var context = new CommandContext();
 
@@ -112,7 +114,7 @@ namespace MariCommands.Tests.Middlewares
                 }
             });
 
-            await ExecuteMiddlewareAsync(context, config);
+            await ExecuteMiddlewareAsync(context);
 
             Assert.NotNull(context.Result);
             Assert.False(context.Result.Success);
@@ -125,7 +127,7 @@ namespace MariCommands.Tests.Middlewares
         [Theory]
         public async Task ReturnBestMatchesWhenHasOneOrMore(string input)
         {
-            var config = new CommandServiceOptions();
+            var config = new MariCommandsOptions();
 
             config.MatchHandling = MultiMatchHandling.Best;
 
@@ -189,7 +191,7 @@ namespace MariCommands.Tests.Middlewares
         [Theory]
         public async Task ReturnsMultiMatchResultWhenDontHasOne(string input)
         {
-            var config = new CommandServiceOptions();
+            var config = new MariCommandsOptions();
 
             config.MatchHandling = MultiMatchHandling.Best;
 
@@ -251,7 +253,7 @@ namespace MariCommands.Tests.Middlewares
         [Theory]
         public async Task ReturnsBestMatchesWhenParamsIsOptional(string input)
         {
-            var config = new CommandServiceOptions();
+            var config = new MariCommandsOptions();
             var context = new CommandContext();
 
             var paramMock1 = new Mock<IParameter>();
@@ -283,7 +285,7 @@ namespace MariCommands.Tests.Middlewares
 
             context.RawArgs = input;
 
-            await ExecuteMiddlewareAsync(context, config);
+            await ExecuteMiddlewareAsync(context);
 
             var matchesFeature = context.Features.Get<ICommandMatchesFeature>();
 
@@ -297,7 +299,7 @@ namespace MariCommands.Tests.Middlewares
         [Theory]
         public async Task OptionalButNoOptionalCorrectCount(string input)
         {
-            var config = new CommandServiceOptions();
+            var config = new MariCommandsOptions();
             var context = new CommandContext();
 
             var paramMock1 = new Mock<IParameter>();
@@ -327,7 +329,7 @@ namespace MariCommands.Tests.Middlewares
 
             context.RawArgs = input;
 
-            await ExecuteMiddlewareAsync(context, config);
+            await ExecuteMiddlewareAsync(context);
 
             var matchesFeature = context.Features.Get<ICommandMatchesFeature>();
 
@@ -344,7 +346,7 @@ namespace MariCommands.Tests.Middlewares
         [Theory]
         public async Task FailsWithoutIgnoreExtraArgsAndMoreCount(string input)
         {
-            var config = new CommandServiceOptions();
+            var config = new MariCommandsOptions();
             var context = new CommandContext();
 
             var paramMock1 = new Mock<IParameter>();
@@ -368,7 +370,7 @@ namespace MariCommands.Tests.Middlewares
 
             context.RawArgs = input;
 
-            await ExecuteMiddlewareAsync(context, config);
+            await ExecuteMiddlewareAsync(context);
 
             var matchesFeature = context.Features.Get<ICommandMatchesFeature>();
 
@@ -385,8 +387,10 @@ namespace MariCommands.Tests.Middlewares
         [Theory]
         public async Task SuccessWithIgnoreExtraArgsAndMoreCount(string input)
         {
-            var config = new CommandServiceOptions();
+            var config = new MariCommandsOptions();
             var context = new CommandContext();
+
+            config.IgnoreExtraArgs = true;
 
             var paramMock1 = new Mock<IParameter>();
 
@@ -426,7 +430,7 @@ namespace MariCommands.Tests.Middlewares
         [Theory]
         public async Task AlsoValidateCommandWithoutArgs(string input)
         {
-            var config = new CommandServiceOptions();
+            var config = new MariCommandsOptions();
             var context = new CommandContext();
 
             var paramMock1 = new Mock<IParameter>();
@@ -444,7 +448,7 @@ namespace MariCommands.Tests.Middlewares
             context.Command = command1Mock.Object;
             context.RawArgs = input;
 
-            await ExecuteMiddlewareAsync(context, config);
+            await ExecuteMiddlewareAsync(context);
 
             var matchesFeature = context.Features.Get<ICommandMatchesFeature>();
 

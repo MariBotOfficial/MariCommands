@@ -9,6 +9,7 @@ using MariCommands.Utils;
 using MariGlobals.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace MariCommands.Middlewares
 {
@@ -108,7 +109,7 @@ namespace MariCommands.Middlewares
                 return;
             }
 
-            var config = context.CommandServices.GetRequiredService<ICommandServiceOptions>();
+            var config = context.CommandServices.GetRequiredService<IOptions<MariCommandsOptions>>().Value;
 
             if (!config.ContinueMultiMatchAfterParser)
             {

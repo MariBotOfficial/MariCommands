@@ -18,7 +18,7 @@ namespace MariCommands.Tests.Factories
 
         public ModuleFactoryTests()
         {
-            var options = new CommandServiceOptions();
+            var options = new MariCommandsOptions();
             var parameterFactory = new ParameterFactory(options);
             var executorProvider = new CommandExecutorProvider();
             var commandFactory = new CommandFactory(options, parameterFactory, executorProvider);

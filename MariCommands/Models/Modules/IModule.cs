@@ -99,7 +99,7 @@ namespace MariCommands
         /// </summary>
         /// <param name="options">The options with default <see cref="RunMode" /> value.</param>
         /// <returns>The <see cref="RunMode" /> for this module.</returns>
-        RunMode GetRunMode(ICommandServiceOptions options)
+        RunMode GetRunMode(MariCommandsOptions options)
         {
             if (RunMode.HasValue)
                 return RunMode.Value;
@@ -107,7 +107,7 @@ namespace MariCommands
             if (Parent.HasContent())
                 return Parent.GetRunMode(options);
 
-            return options?.RunMode ?? new CommandServiceOptions().RunMode;
+            return options?.RunMode ?? new MariCommandsOptions().RunMode;
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace MariCommands
         /// </summary>
         /// <param name="options">The options with default ignore extra args value.</param>
         /// <returns><see langword="true" /> if this module ignore extra args.</returns>
-        bool GetIgnoreExtraArgs(ICommandServiceOptions options)
+        bool GetIgnoreExtraArgs(MariCommandsOptions options)
         {
             if (IgnoreExtraArgs.HasValue)
                 return IgnoreExtraArgs.Value;
@@ -123,7 +123,7 @@ namespace MariCommands
             if (Parent.HasContent())
                 return Parent.GetIgnoreExtraArgs(options);
 
-            return options?.IgnoreExtraArgs ?? new CommandServiceOptions().IgnoreExtraArgs;
+            return options?.IgnoreExtraArgs ?? new MariCommandsOptions().IgnoreExtraArgs;
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace MariCommands
         /// </summary>
         /// <param name="options">The options with default <see cref="MultiMatchHandling" /> value.</param>
         /// <returns>The <see cref="MultiMatchHandling" /> for this module.</returns>
-        MultiMatchHandling GetMatchHandling(ICommandServiceOptions options)
+        MultiMatchHandling GetMatchHandling(MariCommandsOptions options)
         {
             if (MultiMatchHandling.HasValue)
                 return MultiMatchHandling.Value;
@@ -139,7 +139,7 @@ namespace MariCommands
             if (Parent.HasContent())
                 return Parent.GetMatchHandling(options);
 
-            return options?.MatchHandling ?? new CommandServiceOptions().MatchHandling;
+            return options?.MatchHandling ?? new MariCommandsOptions().MatchHandling;
         }
 
         /// <summary>

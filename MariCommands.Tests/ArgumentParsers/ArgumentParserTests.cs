@@ -21,14 +21,14 @@ namespace MariCommands.Tests.ArgumentParsers
         {
         }
 
-        private (CommandContext, IArgumentParser) GetContextAndArgumentParser(ICommandServiceOptions options = null)
+        private (CommandContext, IArgumentParser) GetContextAndArgumentParser(Action<MariCommandsOptions> options = null)
         {
             var services = new ServiceCollection();
 
-            if (options.HasNoContent())
-                services.AddSingleton<ICommandServiceOptions, CommandServiceOptions>();
-            else
-                services.AddSingleton<ICommandServiceOptions>(options);
+            services.AddOptions<MariCommandsOptions>();
+
+            if (options.HasContent())
+                services.Configure<MariCommandsOptions>(options);
 
             services.AddTransient<ITypeParserProvider, TypeParserProvider>();
 
@@ -237,11 +237,10 @@ namespace MariCommands.Tests.ArgumentParsers
         {
             string input = null;
 
-            var config = new CommandServiceOptions();
-
-            config.TypeParserOfClassIsNullables = true;
-
-            var (context, parser) = GetContextAndArgumentParser(config);
+            var (context, parser) = GetContextAndArgumentParser((config) =>
+            {
+                config.TypeParserOfClassIsNullables = true;
+            });
 
             var paramMock1 = new Mock<IParameter>();
 
@@ -278,11 +277,10 @@ namespace MariCommands.Tests.ArgumentParsers
         {
             string input = null;
 
-            var config = new CommandServiceOptions();
-
-            config.TypeParserOfClassIsNullables = false;
-
-            var (context, parser) = GetContextAndArgumentParser(config);
+            var (context, parser) = GetContextAndArgumentParser((config) =>
+            {
+                config.TypeParserOfClassIsNullables = false;
+            });
 
             var paramMock1 = new Mock<IParameter>();
 
@@ -318,11 +316,10 @@ namespace MariCommands.Tests.ArgumentParsers
         {
             string input = null;
 
-            var config = new CommandServiceOptions();
-
-            config.TypeParserOfClassIsNullables = false;
-
-            var (context, parser) = GetContextAndArgumentParser(config);
+            var (context, parser) = GetContextAndArgumentParser((config) =>
+            {
+                config.TypeParserOfClassIsNullables = false;
+            });
 
             var paramMock1 = new Mock<IParameter>();
 

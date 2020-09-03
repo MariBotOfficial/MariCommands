@@ -21,7 +21,11 @@ namespace MariCommands.Tests.DependencyInjection
         {
             var services = new ServiceCollection();
 
-            services.AddBasicMariCommandsServices(addAllDefaultTypeParsers, createNullables);
+            services.AddBasicMariCommandsServices((config) =>
+            {
+                config.AddAllDefaultTypeParsers = addAllDefaultTypeParsers;
+                config.CreateNullables = createNullables;
+            });
 
             var provider = services.BuildServiceProvider(true);
         }
@@ -160,7 +164,7 @@ namespace MariCommands.Tests.DependencyInjection
         {
             var services = new ServiceCollection();
 
-            services.AddSingleton<ICommandServiceOptions, CommandServiceOptions>();
+            services.AddOptions<MariCommandsOptions>();
             services.AddTransient<ITypeParserProvider, TypeParserProvider>();
 
             services.AddEnumTypeParser();
@@ -181,7 +185,7 @@ namespace MariCommands.Tests.DependencyInjection
         {
             var services = new ServiceCollection();
 
-            services.AddSingleton<ICommandServiceOptions, CommandServiceOptions>();
+            services.AddOptions<MariCommandsOptions>();
             services.AddTransient<ITypeParserProvider, TypeParserProvider>();
 
             services.AddEnumTypeParser();
@@ -204,9 +208,9 @@ namespace MariCommands.Tests.DependencyInjection
         {
             var services = new ServiceCollection();
 
-            services.AddSingleton<ICommandServiceOptions>(new CommandServiceOptions
+            services.Configure<MariCommandsOptions>(config =>
             {
-                TypeParserOfClassIsNullables = isEnabled,
+                config.TypeParserOfClassIsNullables = isEnabled;
             });
 
             services.AddTransient<ITypeParserProvider, TypeParserProvider>();

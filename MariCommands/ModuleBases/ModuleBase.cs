@@ -30,7 +30,7 @@ namespace MariCommands
         /// <returns>A <see cref="Task" /> representing an asynchronous operation.</returns>
         public virtual async Task OnCommandExecutedAsync()
         {
-            var options = Context?.CommandServices?.GetService<ICommandServiceOptions>();
+            var options = Context?.CommandServices?.GetService<MariCommandsOptions>();
 
             if (options.HasNoContent() || !options.AutoDisposeContext)
                 return;
