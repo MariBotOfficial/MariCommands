@@ -5,6 +5,7 @@ using MariCommands.Extensions;
 using MariCommands.Features;
 using MariCommands.Parsers;
 using MariCommands.Results;
+using MariGlobals.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Xunit;
@@ -13,13 +14,17 @@ namespace MariCommands.Tests.Middlewares
 {
     public class CommandParserMiddlewareTests
     {
-        private async Task ExecuteMiddlewareAsync(CommandContext context, IArgumentParser argumentParser, ICommandServiceOptions config)
+        private async Task ExecuteMiddlewareAsync(CommandContext context, IArgumentParser argumentParser, Action<MariCommandsOptions> config = null)
         {
             var services = new ServiceCollection();
 
             services.AddLogging();
 
-            services.AddSingleton<ICommandServiceOptions>(config);
+            services.AddOptions<MariCommandsOptions>();
+
+            if (config.HasContent())
+                services.Configure(config);
+
             services.AddSingleton<IArgumentParser>(argumentParser);
 
             var provider = services.BuildServiceProvider(true);
@@ -39,14 +44,13 @@ namespace MariCommands.Tests.Middlewares
         public async Task DoAnythingIfResultSetted()
         {
             var parser = new TestArgumentParser();
-            var config = new CommandServiceOptions();
             var context = new CommandContext();
 
             var result = new SuccessResult();
 
             context.Result = result;
 
-            await ExecuteMiddlewareAsync(context, parser, config);
+            await ExecuteMiddlewareAsync(context, parser);
 
             Assert.NotNull(context.Result);
             Assert.Equal(result, context.Result);
@@ -56,7 +60,6 @@ namespace MariCommands.Tests.Middlewares
         public async Task DoAnyThingIfArgsAndCommandIsSetted()
         {
             var parser = new TestArgumentParser();
-            var config = new CommandServiceOptions();
             var context = new CommandContext();
 
             var args = new object[0];
@@ -65,7 +68,7 @@ namespace MariCommands.Tests.Middlewares
             context.Command = command;
             context.Args = args;
 
-            await ExecuteMiddlewareAsync(context, parser, config);
+            await ExecuteMiddlewareAsync(context, parser);
 
             Assert.NotNull(context.Args);
             Assert.Equal(args, context.Args);
@@ -77,12 +80,11 @@ namespace MariCommands.Tests.Middlewares
         public async Task ThrowsIfCommandNotSettedAndDontHasMatchesFeature()
         {
             var parser = new TestArgumentParser();
-            var config = new CommandServiceOptions();
             var context = new CommandContext();
 
             await Assert.ThrowsAsync<InvalidOperationException>(async () =>
             {
-                await ExecuteMiddlewareAsync(context, parser, config);
+                await ExecuteMiddlewareAsync(context, parser);
             });
         }
 
@@ -90,7 +92,7 @@ namespace MariCommands.Tests.Middlewares
         public async Task ChooseOneWhenContinueMultiMatchAfterParserIsDisabled()
         {
             var parser = new TestArgumentParser();
-            var config = new CommandServiceOptions();
+            var config = new MariCommandsOptions();
             var context = new CommandContext();
 
             config.ContinueMultiMatchAfterParser = false;
@@ -122,7 +124,10 @@ namespace MariCommands.Tests.Middlewares
                 CommandMatches = matches,
             });
 
-            await ExecuteMiddlewareAsync(context, parser, config);
+            await ExecuteMiddlewareAsync(context, parser, config =>
+            {
+                config.ContinueMultiMatchAfterParser = false;
+            });
 
             Assert.Null(context.Result);
             Assert.NotNull(context.Command);
@@ -137,7 +142,6 @@ namespace MariCommands.Tests.Middlewares
         {
             // set true for fail parsing.
             var parser = new TestArgumentParser(true);
-            var config = new CommandServiceOptions();
             var context = new CommandContext();
 
             var match1Mock = new Mock<ICommandMatch>();
@@ -161,7 +165,7 @@ namespace MariCommands.Tests.Middlewares
                 CommandMatches = matches,
             });
 
-            await ExecuteMiddlewareAsync(context, parser, config);
+            await ExecuteMiddlewareAsync(context, parser);
 
             Assert.NotNull(context.Result);
             Assert.False(context.Result.Success);
@@ -177,7 +181,7 @@ namespace MariCommands.Tests.Middlewares
 
             // set true for fail parsing.
             var parser = new TestArgumentParser(true, cmdName2);
-            var config = new CommandServiceOptions();
+            var config = new MariCommandsOptions();
             var context = new CommandContext();
 
             config.ContinueMultiMatchAfterParser = true;
@@ -205,7 +209,10 @@ namespace MariCommands.Tests.Middlewares
                 CommandMatches = matches,
             });
 
-            await ExecuteMiddlewareAsync(context, parser, config);
+            await ExecuteMiddlewareAsync(context, parser, config =>
+            {
+                config.ContinueMultiMatchAfterParser = true;
+            });
 
             var matchesFeature = context.Features.Get<ICommandMatchesFeature>();
             var argumentParserFeature = context.Features.Get<IArgumentParserFeature>();
@@ -221,7 +228,6 @@ namespace MariCommands.Tests.Middlewares
         public async Task AlsoCanParseSettedCommandWithRawArgs()
         {
             var parser = new TestArgumentParser();
-            var config = new CommandServiceOptions();
             var context = new CommandContext();
 
             var commandMock = new Mock<ICommand>();
@@ -233,7 +239,7 @@ namespace MariCommands.Tests.Middlewares
             context.Command = command;
             context.RawArgs = string.Empty;
 
-            await ExecuteMiddlewareAsync(context, parser, config);
+            await ExecuteMiddlewareAsync(context, parser);
 
             Assert.Null(context.Result);
             Assert.NotNull(context.Command);

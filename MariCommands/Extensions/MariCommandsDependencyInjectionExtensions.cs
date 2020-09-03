@@ -170,16 +170,16 @@ namespace MariCommands.Extensions
         /// Adds all basic services of the MariCommands for the dependency.
         /// </summary>
         /// <param name="services">The current service collection.</param>
-        /// <param name="addAllDefaultTypeParsers">If this lib wil inject all default type parsers to the dependency.</param>
-        /// <param name="createNullables">If this lib will create nullables type parsers for these type parsers.</param>
+        /// <param name="configureOptions">The configure options for this lib.</param>
         /// <returns>The current service collection.</returns>
-        public static IServiceCollection AddBasicMariCommandsServices(this IServiceCollection services, bool addAllDefaultTypeParsers = true, bool createNullables = true)
+        public static IServiceCollection AddBasicMariCommandsServices(this IServiceCollection services, Action<MariCommandsOptions> configureOptions = null)
         {
-            services.TryAddSingleton<ICommandServiceOptions, CommandServiceOptions>();
+            services.AddLogging();
+            services.AddOptions<MariCommandsOptions>();
+
             services.TryAddSingleton<IContextExecutor, ContextExecutor>();
             services.TryAddSingleton<IModuleCache, ModuleCache>();
 
-            services.TryAddTransient<ICommandService, CommandService>();
             services.TryAddTransient<ICommandApplicationBuilderFactory, CommandApplicationBuilderFactory>();
             services.TryAddTransient<IModuleConfigurer, ModuleConfigurer>();
             services.TryAddTransient<IModuleFactory, ModuleFactory>();
@@ -191,8 +191,18 @@ namespace MariCommands.Extensions
 
             services.TryAddScoped<ICommandContextAccessor, ScopedCommandContextAccessor>();
 
-            if (addAllDefaultTypeParsers)
-                services.AddAllDefaultTypeParsers(createNullables);
+
+            var builder = new MariCommandsOptions();
+
+            if (configureOptions.HasContent())
+            {
+                configureOptions(builder);
+
+                services.Configure(configureOptions);
+            }
+
+            if (builder.AddAllDefaultTypeParsers)
+                services.AddAllDefaultTypeParsers(builder.CreateNullables);
 
             return services;
         }

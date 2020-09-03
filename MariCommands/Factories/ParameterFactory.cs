@@ -5,17 +5,18 @@ using System.Reflection;
 using MariCommands.Extensions;
 using MariCommands.Utils;
 using MariGlobals.Extensions;
+using Microsoft.Extensions.Options;
 
 namespace MariCommands.Factories
 {
     /// <inheritdoc />
     internal sealed class ParameterFactory : IParameterFactory
     {
-        private readonly ICommandServiceOptions _config;
+        private readonly MariCommandsOptions _config;
 
-        public ParameterFactory(ICommandServiceOptions config)
+        public ParameterFactory(IOptions<MariCommandsOptions> config)
         {
-            _config = config;
+            _config = config.Value;
         }
 
         /// <inheritdoc />

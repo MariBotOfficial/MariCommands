@@ -10,9 +10,9 @@ namespace MariCommands.Builder
     public interface IModuleConfigurer
     {
         /// <summary>
-        /// General config for <see cref="ICommandService" />
+        /// General config for this lib.
         /// </summary>
-        ICommandServiceOptions Options { get; }
+        MariCommandsOptions Options { get; }
 
         /// <summary>
         /// Search all modules in your project and add them to the module cache.

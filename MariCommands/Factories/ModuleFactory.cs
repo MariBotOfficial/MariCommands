@@ -6,18 +6,19 @@ using System.Reflection;
 using MariCommands.Extensions;
 using MariCommands.Utils;
 using MariGlobals.Extensions;
+using Microsoft.Extensions.Options;
 
 namespace MariCommands.Factories
 {
     /// <inheritdoc />
     internal sealed class ModuleFactory : IModuleFactory
     {
-        private readonly ICommandServiceOptions _config;
+        private readonly MariCommandsOptions _config;
         private readonly ICommandFactory _commandFactory;
 
-        public ModuleFactory(ICommandServiceOptions config, ICommandFactory commandFactory)
+        public ModuleFactory(IOptions<MariCommandsOptions> config, ICommandFactory commandFactory)
         {
-            _config = config;
+            _config = config.Value;
             _commandFactory = commandFactory;
         }
 

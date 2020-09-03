@@ -12,7 +12,7 @@ namespace MariCommands.Tests.Services
         [Fact]
         public void CanAddModule()
         {
-            var config = new CommandServiceOptions();
+            var config = new MariCommandsOptions();
             var moduleCache = new ModuleCache(config);
 
             var commandMock1 = new Mock<ICommand>();
@@ -48,7 +48,7 @@ namespace MariCommands.Tests.Services
         [Fact]
         public void CanRemoveModule()
         {
-            var config = new CommandServiceOptions();
+            var config = new MariCommandsOptions();
             var moduleCache = new ModuleCache(config);
 
             var commandMock1 = new Mock<ICommand>();
@@ -86,7 +86,7 @@ namespace MariCommands.Tests.Services
         [Fact]
         public void CanGetAllModules()
         {
-            var config = new CommandServiceOptions();
+            var config = new MariCommandsOptions();
             var moduleCache = new ModuleCache(config);
 
             var commandMock1 = new Mock<ICommand>();
@@ -128,7 +128,7 @@ namespace MariCommands.Tests.Services
         [Fact]
         public void CanGetAllCommands()
         {
-            var config = new CommandServiceOptions();
+            var config = new MariCommandsOptions();
             var moduleCache = new ModuleCache(config);
 
             var commandMock1 = new Mock<ICommand>();
@@ -182,7 +182,7 @@ namespace MariCommands.Tests.Services
         [Theory]
         public async Task CantFindCommandWithoutIgnoreCaseAndOnceAlias(string alias, string input)
         {
-            var config = new CommandServiceOptions();
+            var config = new MariCommandsOptions();
 
             config.Comparison = StringComparison.Ordinal;
 
@@ -224,7 +224,7 @@ namespace MariCommands.Tests.Services
         [Theory]
         public async Task CanFindCommandWithIgnoreCaseAndOnceAlias(string alias, string input)
         {
-            var config = new CommandServiceOptions();
+            var config = new MariCommandsOptions();
             var comparison = StringComparison.InvariantCultureIgnoreCase;
 
             config.Comparison = comparison;
@@ -279,7 +279,7 @@ namespace MariCommands.Tests.Services
         [Theory]
         public async Task CalculateCorrectRemainingInput(string alias, string input)
         {
-            var config = new CommandServiceOptions();
+            var config = new MariCommandsOptions();
             var comparison = StringComparison.Ordinal;
 
             config.Comparison = comparison;
@@ -364,7 +364,7 @@ namespace MariCommands.Tests.Services
         [Theory]
         public async Task CantFindCommandWithoutIgnoreCaseAndMultipleAlias(string[] aliases, string input)
         {
-            var config = new CommandServiceOptions();
+            var config = new MariCommandsOptions();
 
             var comparison = StringComparison.Ordinal;
 
@@ -405,7 +405,7 @@ namespace MariCommands.Tests.Services
         [Theory]
         public async Task CanFindCommandWithIgnoreCaseAndMultipleAlias(string[] aliases, string input)
         {
-            var config = new CommandServiceOptions();
+            var config = new MariCommandsOptions();
 
             var comparison = StringComparison.InvariantCultureIgnoreCase;
 
@@ -457,7 +457,7 @@ namespace MariCommands.Tests.Services
         [Theory]
         public async Task CantFindCommandModuleWithoutIgnoreCaseAndOnceAlias(string moduleAlias, string alias, string input)
         {
-            var config = new CommandServiceOptions();
+            var config = new MariCommandsOptions();
 
             var comparison = StringComparison.Ordinal;
 
@@ -504,7 +504,7 @@ namespace MariCommands.Tests.Services
         [Theory]
         public async Task CanFindCommandModuleWithIgnoreCaseAndOnceAlias(string moduleAlias, string alias, string input)
         {
-            var config = new CommandServiceOptions();
+            var config = new MariCommandsOptions();
 
             var comparison = StringComparison.InvariantCultureIgnoreCase;
 
@@ -599,7 +599,7 @@ namespace MariCommands.Tests.Services
         [Theory]
         public async Task CantFindCommandModuleWithoutIgnoreCaseAndMultipleAlias(string[] moduleAliases, string[] aliases, string input)
         {
-            var config = new CommandServiceOptions();
+            var config = new MariCommandsOptions();
 
             var comparison = StringComparison.Ordinal;
 
@@ -640,7 +640,7 @@ namespace MariCommands.Tests.Services
         [Theory]
         public async Task CanFindCommandModuleWithIgnoreCaseAndMultipleAlias(string[] moduleAliases, string[] aliases, string input)
         {
-            var config = new CommandServiceOptions();
+            var config = new MariCommandsOptions();
 
             var comparison = StringComparison.InvariantCultureIgnoreCase;
 

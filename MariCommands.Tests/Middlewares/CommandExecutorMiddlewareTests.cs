@@ -5,7 +5,9 @@ using MariCommands.Executors;
 using MariCommands.Extensions;
 using MariCommands.Features;
 using MariCommands.Results;
+using MariGlobals.Extensions;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Moq;
 using Xunit;
 
@@ -13,12 +15,16 @@ namespace MariCommands.Tests.Middlewares
 {
     public class CommandExecutorMiddlewareTests
     {
-        private async Task ExecuteMiddlewareAsync(CommandContext context, CommandServiceOptions config)
+        private async Task ExecuteMiddlewareAsync(CommandContext context, MariCommandsOptions config = null)
         {
             var services = new ServiceCollection();
 
             services.AddLogging();
-            services.AddSingleton<ICommandServiceOptions>(config);
+
+            if (config.HasContent())
+                services.AddSingleton<IOptions<MariCommandsOptions>>(config);
+            else
+                services.AddOptions<MariCommandsOptions>();
 
             var provider = services.BuildServiceProvider(true);
 
@@ -56,13 +62,12 @@ namespace MariCommands.Tests.Middlewares
         [Fact]
         public async Task DoAnythingIfResultIsSetted()
         {
-            var config = new CommandServiceOptions();
             var context = new CommandContext();
             var result = new SuccessResult();
 
             context.Result = result;
 
-            await ExecuteMiddlewareAsync(context, config);
+            await ExecuteMiddlewareAsync(context);
 
             Assert.NotNull(context.Result);
             Assert.Equal(result, context.Result);
@@ -71,28 +76,26 @@ namespace MariCommands.Tests.Middlewares
         [Fact]
         public async Task ThrowsExceptionForEmptyCommandMatches()
         {
-            var config = new CommandServiceOptions();
             var context = new CommandContext();
 
             context.Features.Set<IArgumentParserFeature>(new ArgumentParserFeature());
 
             await Assert.ThrowsAsync<InvalidOperationException>(async () =>
             {
-                await ExecuteMiddlewareAsync(context, config);
+                await ExecuteMiddlewareAsync(context);
             });
         }
 
         [Fact]
         public async Task ThrowsExceptionForEmptyArguments()
         {
-            var config = new CommandServiceOptions();
             var context = new CommandContext();
 
             context.Features.Set<ICommandMatchesFeature>(new CommandMatchesFeature());
 
             await Assert.ThrowsAsync<InvalidOperationException>(async () =>
             {
-                await ExecuteMiddlewareAsync(context, config);
+                await ExecuteMiddlewareAsync(context);
             });
         }
 
@@ -100,7 +103,7 @@ namespace MariCommands.Tests.Middlewares
         public async Task CanExecuteSequential()
         {
             var context = new CommandContext();
-            var config = new CommandServiceOptions();
+            var config = new MariCommandsOptions();
 
             var executor = CreateExecutor();
 
@@ -116,7 +119,7 @@ namespace MariCommands.Tests.Middlewares
             context.Command = command;
             context.Args = args;
 
-            await ExecuteMiddlewareAsync(context, config);
+            await ExecuteMiddlewareAsync(context);
 
             Assert.NotNull(context.Result);
             Assert.True(context.Result.Success);
@@ -131,7 +134,9 @@ namespace MariCommands.Tests.Middlewares
         public async Task CanExecuteConcurrent()
         {
             var context = new CommandContext();
-            var config = new CommandServiceOptions();
+            var config = new MariCommandsOptions();
+
+            config.RunMode = RunMode.Concurrent;
 
             var executor = CreateExecutor();
 
@@ -169,7 +174,7 @@ namespace MariCommands.Tests.Middlewares
         public async Task ChooseHigherPriorityFromMatches()
         {
             var context = new CommandContext();
-            var config = new CommandServiceOptions();
+            var config = new MariCommandsOptions();
 
             config.AutoDisposeContext = false;
 

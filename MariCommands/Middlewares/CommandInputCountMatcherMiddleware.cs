@@ -7,18 +7,19 @@ using MariCommands.Results;
 using MariCommands.Utils;
 using MariGlobals.Extensions;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace MariCommands.Middlewares
 {
     internal sealed class CommandInputCountMatcherMiddleware : ICommandMiddleware
     {
         private readonly ILogger _logger;
-        private readonly ICommandServiceOptions _config;
+        private readonly MariCommandsOptions _config;
 
-        public CommandInputCountMatcherMiddleware(ILogger<CommandInputCountMatcherMiddleware> logger, ICommandServiceOptions config)
+        public CommandInputCountMatcherMiddleware(ILogger<CommandInputCountMatcherMiddleware> logger, IOptions<MariCommandsOptions> config)
         {
             _logger = logger;
-            _config = config;
+            _config = config.Value;
         }
 
         public async Task InvokeAsync(CommandContext context, CommandDelegate next)

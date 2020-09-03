@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MariCommands.Utils;
 using MariGlobals.Extensions;
+using Microsoft.Extensions.Options;
 
 namespace MariCommands
 {
@@ -13,14 +14,14 @@ namespace MariCommands
     public class ModuleCache : IModuleCache
     {
         private readonly ConcurrentDictionary<string, List<ICommand>> _commands;
-        private readonly ICommandServiceOptions _config;
+        private readonly MariCommandsOptions _config;
 
         /// <summary>
         /// Creates a new instance of <see cref="ModuleCache" />
         /// </summary>
-        public ModuleCache(ICommandServiceOptions config)
+        public ModuleCache(IOptions<MariCommandsOptions> config)
         {
-            _config = config;
+            _config = config.Value;
             _commands = new ConcurrentDictionary<string, List<ICommand>>(StringComparer.FromComparison(_config.Comparison));
         }
 

@@ -8,6 +8,7 @@ using MariCommands.TypeParsers;
 using MariCommands.Utils;
 using MariGlobals.Extensions;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace MariCommands.Parsers
 {
@@ -22,7 +23,7 @@ namespace MariCommands.Parsers
         {
             var provider = context.CommandServices;
 
-            var config = provider.GetRequiredService<ICommandServiceOptions>();
+            var config = provider.GetRequiredService<IOptions<MariCommandsOptions>>().Value;
 
             var rawArgs = string.IsNullOrWhiteSpace(remainingInput)
                 ? new string[0]
@@ -119,7 +120,7 @@ namespace MariCommands.Parsers
             return ArgumentParseSuccessResult.FromArgs(args);
         }
 
-        private bool IsNullableClass(IParameter param, ICommandServiceOptions config)
+        private bool IsNullableClass(IParameter param, MariCommandsOptions config)
         {
             if (!param.ParameterInfo.ParameterType.IsClass)
                 return false;

@@ -30,11 +30,15 @@ namespace MariCommands.Tests.ApplicationBuilder
         [Fact]
         public async Task CanExecuteBuildedApplication()
         {
-            var provider = new ServiceCollection()
-                                .AddLogging()
-                                .AddSingleton<ICommandServiceOptions, CommandServiceOptions>()
-                                .AddSingleton<IModuleCache, ModuleCache>()
-                                .BuildServiceProvider(true);
+            var services = new ServiceCollection();
+
+            services.AddLogging();
+            services.AddOptions<MariCommandsOptions>();
+            services.AddSingleton<IModuleCache, ModuleCache>();
+
+
+            var provider = services.BuildServiceProvider(true);
+
 
             var app = new CommandApplicationBuilder(new Dictionary<string, object>(), provider);
 
