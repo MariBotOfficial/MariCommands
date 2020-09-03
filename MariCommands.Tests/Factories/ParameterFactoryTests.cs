@@ -360,6 +360,28 @@ namespace MariCommands.Tests.Factories
             Assert.NotEmpty(builder.Preconditions);
             Assert.Equal(preconditions, builder.Preconditions);
         }
+
+        [Fact]
+        public void CanBuild()
+        {
+            var options = new CommandServiceOptions();
+            var factory = new ParameterFactory(options);
+
+            var commandBuilder = new Mock<ICommandBuilder>().Object;
+
+            var parameterInfo = typeof(TestParameterClass)
+                            .GetMethod(nameof(TestParameterClass.TestMethodAttribute))
+                            .GetParameters()
+                            .FirstOrDefault();
+
+            var builder = factory.BuildParameter(commandBuilder, parameterInfo);
+
+            var command = new Mock<ICommand>().Object;
+
+            var parameter = builder.Build(command);
+
+            Assert.NotNull(parameter);
+        }
     }
 
     public class TestParameterClass : ITypeParser

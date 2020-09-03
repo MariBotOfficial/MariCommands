@@ -475,6 +475,33 @@ namespace MariCommands.Tests.Factories
             Assert.NotNull(builder.Commands);
             Assert.Equal(commands.Length, builder.Commands.Count);
         }
+
+        [Fact]
+        public void CanBuildModule()
+        {
+            var moduleType = typeof(TestModuleClass);
+
+            var builder = _factory.BuildModule(null, moduleType);
+
+            var module = builder.Build(null);
+
+            Assert.NotNull(module);
+        }
+
+        [Fact]
+        public void CanBuildSubModule()
+        {
+            var moduleType = typeof(TestModuleClass.TestSubModuleClass);
+            var parentModuleBuilder = new Mock<IModuleBuilder>().Object;
+
+            var builder = _factory.BuildModule(parentModuleBuilder, moduleType);
+
+            var parentModule = new Mock<IModule>().Object;
+
+            var module = builder.Build(parentModule);
+
+            Assert.NotNull(module);
+        }
     }
 
     [Name(ModuleName)]

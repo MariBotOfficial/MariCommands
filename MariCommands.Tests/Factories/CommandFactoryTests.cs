@@ -684,6 +684,29 @@ namespace MariCommands.Tests.Factories
             Assert.Empty(builder.Parameters);
             Assert.Equal(parameters.Length, builder.Parameters.Count);
         }
+
+        [Fact]
+        public void CanBuild()
+        {
+            var moduleMock = new Mock<IModuleBuilder>();
+
+            moduleMock.SetupGet(a => a.Type).Returns(typeof(TestCommandClass));
+
+            var moduleBuilder = moduleMock.Object;
+
+            var method = typeof(TestCommandClass)
+                .GetMethod(nameof(TestCommandClass.ValidCommand));
+
+            var parameters = method.GetParameters();
+
+            var builder = _factory.BuildCommand(moduleBuilder, method);
+
+            var module = new Mock<IModule>().Object;
+
+            var command = builder.Build(module);
+
+            Assert.NotNull(command);
+        }
     }
 
     public class TestCommandClass : IArgumentParser
