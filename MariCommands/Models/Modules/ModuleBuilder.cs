@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using MariCommands.Invokers;
 using MariCommands.Utils;
 using MariGlobals.Extensions;
 
@@ -54,6 +55,9 @@ namespace MariCommands
         /// <inheritdoc />
         public IReadOnlyCollection<IModuleBuilder> Submodules { get; private set; }
 
+        /// <inheritdoc />
+        public IModuleInvoker Invoker { get; private set; }
+
         /// <summary>
         /// Sets the real type of this module.
         /// </summary>
@@ -84,6 +88,23 @@ namespace MariCommands
             name.NotNullOrWhiteSpace(nameof(name));
 
             Name = name;
+
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the invoker for this module.
+        /// </summary>
+        /// <param name="invoker">The invoker to be setted.</param>
+        /// <returns>The current builder.</returns>
+        /// <exception cref="ArgumentNullException">
+        /// <param ref="invoker" /> must not be null or white space.
+        /// </exception>
+        public ModuleBuilder WithInvoker(IModuleInvoker invoker)
+        {
+            invoker.NotNull(nameof(invoker));
+
+            Invoker = invoker;
 
             return this;
         }

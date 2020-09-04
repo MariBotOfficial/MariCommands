@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 using MariCommands.Extensions;
+using MariCommands.Invokers;
 using MariCommands.Utils;
 using MariGlobals.Extensions;
 using Microsoft.Extensions.Options;
@@ -44,6 +45,7 @@ namespace MariCommands.Factories
             var enabled = GetEnabled(type);
             var attributes = GetAttributes(type);
             var preconditions = GetPreconditions(attributes);
+            var invoker = GetInvoker(type);
 
             var builder = new ModuleBuilder()
                                 .WithType(type)
@@ -58,7 +60,8 @@ namespace MariCommands.Factories
                                 .WithEnabled(enabled)
                                 .WithAttributes(attributes)
                                 .WithPreconditions(preconditions)
-                                .WithParent(parent);
+                                .WithParent(parent)
+                                .WithInvoker(invoker);
 
             var subModules = GetSubModules(builder, type);
             var commands = GetCommands(builder);
@@ -68,6 +71,9 @@ namespace MariCommands.Factories
 
             return builder;
         }
+
+        private IModuleInvoker GetInvoker(Type type)
+            => DefaultModuleInvoker.Create(type);
 
         private IEnumerable<ICommandBuilder> GetCommands(IModuleBuilder builder)
         {

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using MariCommands.Invokers;
 using MariGlobals.Extensions;
 
 namespace MariCommands
@@ -83,6 +84,11 @@ namespace MariCommands
         /// Indicates if this module is enabled or not.
         /// </summary>
         bool IsEnabled { get; }
+
+        /// <summary>
+        /// The invoker for this module.
+        /// </summary>
+        IModuleInvoker Invoker { get; }
 
         /// <summary>
         /// Enable this module.
