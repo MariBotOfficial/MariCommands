@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using MariCommands.Utils;
 using MariGlobals.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -53,16 +54,7 @@ namespace MariCommands.Features
         /// <inheritdoc />
         public async ValueTask DisposeAsync()
         {
-            switch (_scope)
-            {
-                case IAsyncDisposable asyncDisposable:
-                    await asyncDisposable.DisposeAsync();
-                    break;
-
-                case IDisposable disposable:
-                    disposable.Dispose();
-                    break;
-            }
+            await MiddlewareUtils.SwitchDisposeAsync(_scope);
 
             _scope = null;
             _commandServices = null;

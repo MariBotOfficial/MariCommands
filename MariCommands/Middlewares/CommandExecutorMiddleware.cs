@@ -84,17 +84,9 @@ namespace MariCommands.Middlewares
 
         private object GetModule(CommandContext context, ICommand command)
         {
-            var module = context.CommandServices.GetService(command.Module.Type);
+            var module = command.Module.Invoker.CreateInstance(context.CommandServices);
 
-            if (module.HasContent())
-                return module;
-
-            module = ActivatorUtilities.CreateInstance(context.CommandServices, command.Module.Type);
-
-            if (module is IAsyncDisposable asyncDisposable)
-                context.RegisterForDisposeAsync(asyncDisposable);
-            else if (module is IDisposable disposable)
-                context.RegisterForDispose(disposable);
+            MiddlewareUtils.RegisterForDispose(module, context);
 
             return module;
         }

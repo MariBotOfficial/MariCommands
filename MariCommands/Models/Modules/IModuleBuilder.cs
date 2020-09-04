@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using MariCommands.Invokers;
 
 namespace MariCommands
 {
@@ -82,6 +83,11 @@ namespace MariCommands
         /// Submodules for this module.
         /// </summary>
         IReadOnlyCollection<IModuleBuilder> Submodules { get; }
+
+        /// <summary>
+        /// The invoker for this module.
+        /// </summary>
+        IModuleInvoker Invoker { get; }
 
         /// <summary>
         /// Finishes the building of this module.

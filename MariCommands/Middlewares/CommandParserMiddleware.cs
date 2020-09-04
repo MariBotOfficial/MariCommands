@@ -62,9 +62,20 @@ namespace MariCommands.Middlewares
             var argumentParserType = command.GetArgumentParserType();
 
             if (argumentParserType.HasContent())
-                argumentParser = ActivatorUtilities.GetServiceOrCreateInstance(provider, argumentParserType) as IArgumentParser;
+            {
+                argumentParser = provider.GetService(argumentParserType) as IArgumentParser;
+
+                if (argumentParser.HasNoContent())
+                {
+                    argumentParser = ActivatorUtilities.CreateInstance(provider, argumentParserType) as IArgumentParser;
+
+                    MiddlewareUtils.RegisterForDispose(argumentParser, context);
+                }
+            }
             else
+            {
                 argumentParser = provider.GetRequiredService<IArgumentParser>();
+            }
 
 
             return await argumentParser.ParseAsync(context, command, rawArgs);

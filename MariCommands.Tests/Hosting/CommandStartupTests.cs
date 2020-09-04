@@ -100,7 +100,6 @@ namespace MariCommands.Tests.Hosting
                                 });
 
                                 MariCommandsHostBuilderExtensions.Clear();
-
                                 webBuilder.UseCommandStartup<TestCommandStartupAssert>();
                             })
                             .Build();

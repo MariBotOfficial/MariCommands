@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading;
+using MariCommands.Invokers;
 using MariCommands.Utils;
 using MariGlobals.Extensions;
 
@@ -53,6 +54,9 @@ namespace MariCommands
         public Type Type { get; }
 
         /// <inheritdoc />
+        public IModuleInvoker Invoker { get; }
+
+        /// <inheritdoc />
         public bool IsEnabled
         {
             get
@@ -88,6 +92,7 @@ namespace MariCommands
             Type = builder.Type;
             _isEnabled = builder.IsEnabled;
             Parent = parent;
+            Invoker = builder.Invoker;
 
             var subModules = ImmutableArray.CreateBuilder<IModule>(builder.Submodules.Count);
 

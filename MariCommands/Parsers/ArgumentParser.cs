@@ -21,9 +21,7 @@ namespace MariCommands.Parsers
 
         public async Task<IArgumentParserResult> ParseAsync(CommandContext context, ICommand command, string remainingInput)
         {
-            var provider = context.CommandServices;
-
-            var config = provider.GetRequiredService<IOptions<MariCommandsOptions>>().Value;
+            var config = context.CommandServices.GetRequiredService<IOptions<MariCommandsOptions>>().Value;
 
             var rawArgs = string.IsNullOrWhiteSpace(remainingInput)
                 ? new string[0]
@@ -41,7 +39,7 @@ namespace MariCommands.Parsers
                 if (param.HasNoContent())
                     break;
 
-                var typeParser = GetTypeParser(provider, param);
+                var typeParser = GetTypeParser(context, param);
 
                 if (typeParser.HasNoContent())
                     return MissingTypeParserResult.FromParam(param);
@@ -94,7 +92,7 @@ namespace MariCommands.Parsers
                     }
                     else if (ParsingUtils.IsNullable(param))
                     {
-                        var typeParser = GetTypeParser(provider, param);
+                        var typeParser = GetTypeParser(context, param);
 
                         if (typeParser.HasNoContent())
                             return MissingTypeParserResult.FromParam(param);
@@ -135,14 +133,25 @@ namespace MariCommands.Parsers
                         .ToList();
         }
 
-        private ITypeParser GetTypeParser(IServiceProvider provider, IParameter param)
+        private ITypeParser GetTypeParser(CommandContext context, IParameter param)
         {
             var typeParserType = param.TypeParserType;
 
             if (typeParserType.HasContent())
-                return ActivatorUtilities.GetServiceOrCreateInstance(provider, typeParserType) as ITypeParser;
+            {
+                var typeParser = context.CommandServices.GetService(typeParserType) as ITypeParser;
 
-            var typeParserProvider = provider.GetRequiredService<ITypeParserProvider>();
+                if (typeParser.HasNoContent())
+                {
+                    typeParser = ActivatorUtilities.CreateInstance(context.CommandServices, typeParserType) as ITypeParser;
+
+                    MiddlewareUtils.RegisterForDispose(typeParser, context);
+                }
+
+                return typeParser;
+            }
+
+            var typeParserProvider = context.CommandServices.GetRequiredService<ITypeParserProvider>();
 
             var parameterType = param.IsParams
                 ? param.ParameterInfo.ParameterType.GetElementType()
