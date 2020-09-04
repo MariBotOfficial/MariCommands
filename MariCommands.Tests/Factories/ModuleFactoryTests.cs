@@ -477,6 +477,17 @@ namespace MariCommands.Tests.Factories
         }
 
         [Fact]
+        public void CanGetInvoker()
+        {
+            var module = typeof(TestModuleClass);
+
+            var builder = _factory.BuildModule(null, module);
+
+            Assert.NotNull(builder);
+            Assert.NotNull(builder.Invoker);
+        }
+
+        [Fact]
         public void CanBuildModule()
         {
             var moduleType = typeof(TestModuleClass);
