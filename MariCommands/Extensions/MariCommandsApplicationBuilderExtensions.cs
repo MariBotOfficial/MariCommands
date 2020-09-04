@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using MariCommands.Builder;
 using MariCommands.Middlewares;
+using MariCommands.Utils;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace MariCommands.Extensions
@@ -34,16 +35,7 @@ namespace MariCommands.Extensions
 
                     await (instance as ICommandMiddleware).InvokeAsync(context, next);
 
-                    switch (instance)
-                    {
-                        case IAsyncDisposable asyncDisposable:
-                            await asyncDisposable.DisposeAsync();
-                            break;
-
-                        case IDisposable disposable:
-                            disposable.Dispose();
-                            break;
-                    }
+                    await MiddlewareUtils.SwitchDisposeAsync(instance);
                 };
             });
 

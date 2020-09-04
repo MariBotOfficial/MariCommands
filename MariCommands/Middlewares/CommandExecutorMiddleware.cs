@@ -86,16 +86,7 @@ namespace MariCommands.Middlewares
         {
             var module = command.Module.Invoker.CreateInstance(context.CommandServices);
 
-            switch (module)
-            {
-                case IAsyncDisposable asyncDisposable:
-                    context.RegisterForDisposeAsync(asyncDisposable);
-                    break;
-
-                case IDisposable disposable:
-                    context.RegisterForDispose(disposable);
-                    break;
-            }
+            MiddlewareUtils.RegisterForDispose(module, context);
 
             return module;
         }
