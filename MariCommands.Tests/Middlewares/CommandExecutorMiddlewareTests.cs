@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using MariCommands.Executors;
 using MariCommands.Extensions;
 using MariCommands.Features;
+using MariCommands.Invokers;
 using MariCommands.Results;
 using MariGlobals.Extensions;
 using Microsoft.Extensions.DependencyInjection;
@@ -110,6 +111,7 @@ namespace MariCommands.Tests.Middlewares
             var commandMock = new Mock<ICommand>();
 
             commandMock.SetupGet(a => a.Module.Type).Returns(typeof(TestModuleClassExecutor));
+            commandMock.SetupGet(a => a.Module.Invoker).Returns(DefaultModuleInvoker.Create(typeof(TestModuleClassExecutor)));
             commandMock.Setup(a => a.GetRunMode(config)).Returns(RunMode.Sequential);
             commandMock.SetupGet(a => a.Executor).Returns(executor);
 
@@ -143,6 +145,7 @@ namespace MariCommands.Tests.Middlewares
             var commandMock = new Mock<ICommand>();
 
             commandMock.SetupGet(a => a.Module.Type).Returns(typeof(TestModuleClassExecutor));
+            commandMock.SetupGet(a => a.Module.Invoker).Returns(DefaultModuleInvoker.Create(typeof(TestModuleClassExecutor)));
             commandMock.Setup(a => a.GetRunMode(config)).Returns(RunMode.Concurrent);
             commandMock.SetupGet(a => a.Executor).Returns(executor);
 
@@ -185,11 +188,13 @@ namespace MariCommands.Tests.Middlewares
             var command2Mock = new Mock<ICommand>();
 
             command1Mock.SetupGet(a => a.Module.Type).Returns(typeof(TestModuleClassExecutor));
+            command1Mock.SetupGet(a => a.Module.Invoker).Returns(DefaultModuleInvoker.Create(typeof(TestModuleClassExecutor)));
             command1Mock.Setup(a => a.GetRunMode(config)).Returns(RunMode.Sequential);
             command1Mock.SetupGet(a => a.Executor).Returns(executor);
             command1Mock.SetupGet(a => a.Priority).Returns(3);
 
             command2Mock.SetupGet(a => a.Module.Type).Returns(typeof(TestModuleClassExecutor));
+            command2Mock.SetupGet(a => a.Module.Invoker).Returns(DefaultModuleInvoker.Create(typeof(TestModuleClassExecutor)));
             command2Mock.Setup(a => a.GetRunMode(config)).Returns(RunMode.Sequential);
             command2Mock.SetupGet(a => a.Executor).Returns(executor);
             command2Mock.SetupGet(a => a.Priority).Returns(2);
