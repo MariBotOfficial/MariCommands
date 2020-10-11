@@ -3,7 +3,7 @@ namespace MariCommands.Filters
     /// <summary>
     /// Defines all available filters types.
     /// </summary>
-    public enum FilterType
+    public enum CommandFilterType
     {
         /// <summary>
         /// Invoked after a command execution.
