@@ -8,6 +8,11 @@ namespace MariCommands.Filters
     public interface ICommandFilterFactory : ICommandFilter
     {
         /// <summary>
+        /// Gets the <see cref="Type"/> of the command filter to create.
+        /// </summary>
+        Type ImplementationType { get; }
+
+        /// <summary>
         /// Creates an instance of this command filter.
         /// </summary>
         /// <param name="serviceProvider">The command service provider.</param>
