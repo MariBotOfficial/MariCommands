@@ -38,7 +38,7 @@ namespace MariCommands.Builder
         /// </summary>
         /// <typeparam ref="T">Any module type.</typeparam>
         IModule AddModule<T>()
-            where T : class
+            where T : class, IModuleBase
         {
             return AddModule(typeof(T));
         }
