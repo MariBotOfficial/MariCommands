@@ -18,17 +18,11 @@ namespace MariCommands
         /// </summary>
         public T Context { get; private set; }
 
-        /// <summary>
-        /// An asynchronous operation that will be executed before the command execution.
-        /// </summary>
-        /// <returns>A <see cref="Task" /> representing an asynchronous operation.</returns>
+        /// <inheritdoc />
         public virtual Task OnCommandExecutingAsync()
             => Task.CompletedTask;
 
-        /// <summary>
-        /// An asynchronous operation that will be executed after the command execution.
-        /// </summary>
-        /// <returns>A <see cref="Task" /> representing an asynchronous operation.</returns>
+        /// <inheritdoc />
         public virtual async Task OnCommandExecutedAsync()
         {
             var options = Context?.CommandServices?.GetService<MariCommandsOptions>();
