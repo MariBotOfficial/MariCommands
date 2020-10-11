@@ -27,7 +27,7 @@ namespace MariCommands.Extensions
                                 ?.Select(a => a.GetType())
                                 ?.ToArray() ?? new Type[0];
 
-                var instanceFactory = ActivatorUtilities.CreateFactory(typeof(TMiddleware), types);
+                var instanceFactory = ActivatorUtilities.CreateFactory(typeof(TMiddleware), types ?? Type.EmptyTypes);
 
                 return async context =>
                 {
