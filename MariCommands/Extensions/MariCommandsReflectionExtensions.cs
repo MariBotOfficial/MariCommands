@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace MariCommands.Extensions
@@ -15,6 +17,20 @@ namespace MariCommands.Extensions
             where T : Attribute
         {
             return parameterInfo.GetCustomAttribute(typeof(T)) as T;
+        }
+
+        public static IEnumerable<Attribute> GetAllAttributes(this MemberInfo memberInfo)
+        {
+            return memberInfo.GetCustomAttributes(false)
+                                .Select(a => (Attribute)a)
+                                .ToList();
+        }
+
+        public static IEnumerable<Attribute> GetAllAttributes(this ParameterInfo memberInfo)
+        {
+            return memberInfo.GetCustomAttributes(false)
+                                .Select(a => (Attribute)a)
+                                .ToList();
         }
     }
 }
