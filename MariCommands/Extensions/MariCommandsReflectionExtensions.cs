@@ -21,14 +21,15 @@ namespace MariCommands.Extensions
 
         public static IEnumerable<Attribute> GetAllAttributes(this MemberInfo memberInfo)
         {
-            return memberInfo.GetCustomAttributes(false)
+            return memberInfo.GetCustomAttributes(true)
                                 .Select(a => (Attribute)a)
+                                .OrderBy(a => ((Type)a.TypeId).MetadataToken)
                                 .ToList();
         }
 
         public static IEnumerable<Attribute> GetAllAttributes(this ParameterInfo memberInfo)
         {
-            return memberInfo.GetCustomAttributes(false)
+            return memberInfo.GetCustomAttributes(true)
                                 .Select(a => (Attribute)a)
                                 .ToList();
         }
