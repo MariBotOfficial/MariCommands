@@ -1,52 +1,20 @@
-using System;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MariCommands.Filters
 {
     /// <summary>
-    /// An interface that can provide filter for the specified type.
+    /// A provider that can execute all filters to the specified context.
     /// </summary>
     public interface IFilterProvider
     {
         /// <summary>
-        /// Determine if this filter provider can invoke the specified <see cref="CommandFilterType" />.
+        /// Invoke all filters for the specified context.
         /// </summary>
-        /// <param name="context">The current filter context.</param>
-        /// <param name="filterType">The filter type to determine.</param>
-        /// <returns><c>true</c> if this provider can provide filters for the specified type; otherwise, <c>false</c>.</returns>
-        bool CanInvoke(IFilterContext context, CommandFilterType filterType);
-
-        /// <summary>
-        /// Get a builded delegate that can process the filter context.
-        /// </summary>
-        /// <returns>A builded delegate that can process the filter context.</returns>
-        Delegate GetFiltersDelegate();
-    }
-
-    /// <inheritdoc />
-    public interface IFilterProvider<TFilter, TFilterDelegate> : IFilterProvider
-        where TFilter : ICommandFilter
-        where TFilterDelegate : Delegate
-    {
-
-        bool IFilterProvider.CanInvoke(IFilterContext context, CommandFilterType filterType)
-        {
-            // TODO: Utils/Helper logic, will be used for filter factory too.
-            var currentFilterType = typeof(TFilter);
-
-            if (filterType == CommandFilterType.Result && typeof(ICommandResultFilter).IsAssignableFrom(currentFilterType))
-                return true;
-
-            if (filterType == CommandFilterType.Exception && typeof(ICommandExceptionFilter).IsAssignableFrom(currentFilterType))
-                return true;
-
-            return false;
-        }
-
-        Delegate IFilterProvider.GetFiltersDelegate()
-            => GetFiltersDelegate();
-
-        /// <inheritdoc />
-        new TFilterDelegate GetFiltersDelegate();
+        /// <param name="context">The context to be filtered.</param>
+        /// <param name="filterType">The type of filter to be invoked.</param>
+        /// <typeparam name="TContext">The filter context type.</typeparam>
+        /// <returns>A <see cref="Task" /> representing an asynchronous operation.</returns>
+        Task InvokeFiltersAsync<TContext>(TContext context, CommandFilterType filterType)
+            where TContext : IFilterContext;
     }
 }
