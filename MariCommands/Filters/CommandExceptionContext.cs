@@ -6,7 +6,7 @@ namespace MariCommands.Filters
     /// <summary>
     /// Represents a command exception context.
     /// </summary>
-    public class CommandExceptionContext
+    public class CommandExceptionContext : IFilterContext
     {
         /// <summary>
         /// Creates a new instance of <see cref="CommandExceptionContext" />.
@@ -29,9 +29,7 @@ namespace MariCommands.Filters
         /// </summary>
         public virtual Exception Exception => ExceptionDispatchInfo.SourceException;
 
-        /// <summary>
-        /// The current command context.
-        /// </summary>
+        /// <inheritdoc />
         public virtual CommandContext CommandContext { get; }
 
         /// <summary>

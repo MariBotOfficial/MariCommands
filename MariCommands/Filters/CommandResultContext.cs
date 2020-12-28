@@ -3,7 +3,7 @@ namespace MariCommands.Filters
     /// <summary>
     /// A context that represents a result of a command request.
     /// </summary>
-    public class CommandResultContext
+    public class CommandResultContext : IFilterContext
     {
         /// <summary>
         /// Creates a new instance of <see cref="CommandResultContext" />.
@@ -14,9 +14,7 @@ namespace MariCommands.Filters
             CommandContext = commandContext;
         }
 
-        /// <summary>
-        /// The current command context.
-        /// </summary>
+        /// <inheritdoc />
         public virtual CommandContext CommandContext { get; }
 
         /// <summary>
