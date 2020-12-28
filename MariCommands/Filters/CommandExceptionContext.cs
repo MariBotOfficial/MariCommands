@@ -3,20 +3,40 @@ using System.Runtime.ExceptionServices;
 
 namespace MariCommands.Filters
 {
+    /// <summary>
+    /// Represents a command exception context.
+    /// </summary>
     public class CommandExceptionContext
     {
+        /// <summary>
+        /// Creates a new instance of <see cref="CommandExceptionContext" />.
+        /// </summary>
+        /// <param name="commandContext">The current command context.</param>
+        /// <param name="exceptionDispatchInfo">The exception dispatch info captured.</param>
         public CommandExceptionContext(CommandContext commandContext, ExceptionDispatchInfo exceptionDispatchInfo)
         {
             ExceptionDispatchInfo = exceptionDispatchInfo;
             CommandContext = commandContext;
         }
 
-        public virtual ExceptionDispatchInfo ExceptionDispatchInfo { get; set; }
+        /// <summary>
+        /// The exception dispatch info captured.
+        /// </summary>
+        public virtual ExceptionDispatchInfo ExceptionDispatchInfo { get; }
 
-        public virtual Exception Exception { get; set; }
+        /// <summary>
+        /// The exception captured.
+        /// </summary>
+        public virtual Exception Exception => ExceptionDispatchInfo.SourceException;
 
+        /// <summary>
+        /// The current command context.
+        /// </summary>
         public virtual CommandContext CommandContext { get; }
 
+        /// <summary>
+        /// Gets or sets if the exception was handled.
+        /// </summary>
         public virtual bool ExceptionHandled { get; set; }
     }
 }
