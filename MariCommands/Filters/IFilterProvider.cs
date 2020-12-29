@@ -11,10 +11,11 @@ namespace MariCommands.Filters
         /// Invoke all filters for the specified context.
         /// </summary>
         /// <param name="context">The context to be filtered.</param>
-        /// <param name="filterType">The type of filter to be invoked.</param>
         /// <typeparam name="TContext">The filter context type.</typeparam>
+        /// <typeparam name="TFilter">The type of filter to be invoked.</typeparam>
         /// <returns>A <see cref="Task" /> representing an asynchronous operation.</returns>
-        Task InvokeFiltersAsync<TContext>(TContext context, CommandFilterType filterType)
+        Task InvokeFiltersAsync<TContext, TFilter>(TContext context)
+            where TFilter : ICommandFilter
             where TContext : IFilterContext;
     }
 }
