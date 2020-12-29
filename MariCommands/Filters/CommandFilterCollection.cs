@@ -7,7 +7,7 @@ namespace MariCommands.Filters
     /// <summary>
     /// A collection of <see cref="ICommandFilter" />.
     /// </summary>
-    public class CommandFilterCollection : Collection<ICommandFilter>
+    public class CommandFilterCollection : ObservableCollection<ICommandFilter>
     {
         /// <summary>
         /// Adds a type representing a <see cref="ICommandFilter"/>.
