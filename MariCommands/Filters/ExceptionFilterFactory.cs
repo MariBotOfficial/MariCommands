@@ -34,13 +34,16 @@ namespace MariCommands.Filters
                                             {
                                                 CommandExceptionDelegate component(CommandExceptionDelegate next)
                                                 {
+                                                    var factory = a;
+                                                    var factoryType = factory.GetType();
+
                                                     return async ctx =>
                                                     {
-                                                        var instance = (ICommandExceptionFilter)a.CreateInstance(ctx.CommandContext.CommandServices);
+                                                        var instance = (ICommandExceptionFilter)factory.CreateInstance(ctx.CommandContext.CommandServices);
 
                                                         await instance.InvokeAsync(ctx, next);
 
-                                                        await MiddlewareUtils.SwitchDisposeAsync(instance);
+                                                        await FilterUtils.SwitchDisposeAsync(instance, factoryType);
                                                     };
                                                 }
 
