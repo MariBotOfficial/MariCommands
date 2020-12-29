@@ -11,10 +11,9 @@ namespace MariCommands.Filters
         /// <summary>
         /// Determine if this factory can create a delegate for the specified filter type.
         /// </summary>
-        /// <param name="context">The current filter context.</param>
         /// <param name="filterType">The filter type to determine.</param>
         /// <returns><c>true</c> if this factory can create a delegate for the specified type, otherwise, <c>false</c>.</returns>
-        bool CanInvoke(IFilterContext context, Type filterType);
+        bool CanInvoke(Type filterType);
 
         /// <summary>
         /// Get a builded delegate that can process the filter context.
@@ -35,7 +34,7 @@ namespace MariCommands.Filters
         where TFilterDelegate : Delegate
     {
 
-        bool IFilterFactory.CanInvoke(IFilterContext context, Type filterType)
+        bool IFilterFactory.CanInvoke(Type filterType)
         {
             if (typeof(TFilter).IsAssignableFrom(filterType))
                 return true;

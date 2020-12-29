@@ -1,23 +1,90 @@
 using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using MariGlobals.Extensions;
+using Microsoft.Extensions.Options;
 
 namespace MariCommands.Filters
 {
     internal sealed class FilterProvider : IFilterProvider
     {
+        private readonly MariCommandsOptions _options;
         private readonly IEnumerable<IFilterFactory> _filterFactories;
         private readonly ConcurrentDictionary<Type, Func<IFilterContext, Task>> _cachedDelegates;
 
-        public FilterProvider(IEnumerable<IFilterFactory> filterFactories)
+        public FilterProvider(IEnumerable<IFilterFactory> filterFactories, IOptions<MariCommandsOptions> options)
         {
             _filterFactories = filterFactories;
             _cachedDelegates = new ConcurrentDictionary<Type, Func<IFilterContext, Task>>();
+
+            _options = options.Value;
+
+            if (_options?.Filters != null)
+                _options.Filters.CollectionChanged += FiltersChanged;
+        }
+
+        private void FiltersChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action != NotifyCollectionChangedAction.Move)
+            {
+                // Always clear all cached delegates, i.e it will be rebuilded.
+                _cachedDelegates.Clear();
+            }
+
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                NotifySpecificFilterFactories(e.NewItems.Cast<ICommandFilter>());
+            }
+            else if (e.Action == NotifyCollectionChangedAction.Remove)
+            {
+                NotifySpecificFilterFactories(e.OldItems.Cast<ICommandFilter>());
+            }
+            else if (e.Action == NotifyCollectionChangedAction.Replace)
+            {
+                NotifySpecificFilterFactories(e.NewItems.Cast<ICommandFilter>());
+                NotifySpecificFilterFactories(e.OldItems.Cast<ICommandFilter>());
+            }
+            else if (e.Action == NotifyCollectionChangedAction.Reset)
+            {
+                NotifyAllFilterFactories();
+            }
+        }
+
+        private void NotifySpecificFilterFactories(IEnumerable<ICommandFilter> filtersChanged)
+        {
+            var types = filtersChanged
+                            .Select(a =>
+                            {
+                                if (a is ICommandFilterFactory commandFilterFactory)
+                                    return commandFilterFactory.ImplementationType;
+
+                                return a.GetType();
+                            })
+                            .ToList();
+
+            foreach (var filterFactory in _filterFactories)
+            {
+                foreach (var type in types)
+                {
+                    if (filterFactory.CanInvoke(type))
+                    {
+                        filterFactory.FiltersDefinitionWasChanged(_options.Filters);
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void NotifyAllFilterFactories()
+        {
+            foreach (var filterFactory in _filterFactories)
+                filterFactory.FiltersDefinitionWasChanged(_options.Filters);
         }
 
         public Task InvokeFiltersAsync<TContext, TFilter>(TContext context)
@@ -29,12 +96,11 @@ namespace MariCommands.Filters
             if (_cachedDelegates.TryGetValue(filterType, out var proccessDelegate))
                 return proccessDelegate(context);
 
-            var filterFactories = _filterFactories ?? Array.Empty<IFilterFactory>();
             IFilterFactory selectedFilterFactory = null;
 
-            foreach (var filterFactory in filterFactories)
+            foreach (var filterFactory in _filterFactories)
             {
-                if (filterFactory.CanInvoke(context, filterType))
+                if (filterFactory.CanInvoke(filterType))
                 {
                     selectedFilterFactory = filterFactory;
                     break;
