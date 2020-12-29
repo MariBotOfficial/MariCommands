@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MariCommands.Utils;
@@ -8,15 +7,15 @@ using Microsoft.Extensions.Options;
 
 namespace MariCommands.Filters
 {
-    internal sealed class ResultFilterFactory : BaseFilterFactory<ICommandResultFilter, CommandResultDelegate>
+    internal sealed class ExceptionFilterFactory : BaseFilterFactory<ICommandExceptionFilter, CommandExceptionDelegate>
     {
-        private CommandResultDelegate _delegate;
+        private CommandExceptionDelegate _delegate;
 
-        public ResultFilterFactory(IOptions<MariCommandsOptions> options) : base(options)
+        public ExceptionFilterFactory(IOptions<MariCommandsOptions> options) : base(options)
         {
         }
 
-        public override CommandResultDelegate GetFiltersDelegate()
+        public override CommandExceptionDelegate GetFiltersDelegate()
         {
             if (_delegate.HasContent())
                 return _delegate;
@@ -33,11 +32,11 @@ namespace MariCommands.Filters
             var components = filterFactories
                                             .Select(a =>
                                             {
-                                                CommandResultDelegate component(CommandResultDelegate next)
+                                                CommandExceptionDelegate component(CommandExceptionDelegate next)
                                                 {
                                                     return async ctx =>
                                                     {
-                                                        var instance = (ICommandResultFilter)a.CreateInstance(ctx.CommandContext.CommandServices);
+                                                        var instance = (ICommandExceptionFilter)a.CreateInstance(ctx.CommandContext.CommandServices);
 
                                                         await instance.InvokeAsync(ctx, next);
 
@@ -45,19 +44,19 @@ namespace MariCommands.Filters
                                                     };
                                                 }
 
-                                                return (Func<CommandResultDelegate, CommandResultDelegate>)component;
+                                                return (Func<CommandExceptionDelegate, CommandExceptionDelegate>)component;
                                             })
                                             .ToList();
 
-            CommandResultDelegate commandResultDelegate = ctx =>
+            CommandExceptionDelegate commandExceptionDelegate = ctx =>
             {
                 return Task.CompletedTask;
             };
 
             foreach (var component in components)
-                commandResultDelegate = component(commandResultDelegate);
+                commandExceptionDelegate = component(commandExceptionDelegate);
 
-            _delegate = commandResultDelegate;
+            _delegate = commandExceptionDelegate;
         }
     }
 }

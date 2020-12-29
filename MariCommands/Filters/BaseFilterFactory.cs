@@ -59,7 +59,12 @@ namespace MariCommands.Filters
 
             filterFactories.AddRange(remainingFilterFactories);
 
-            return filterFactories;
+            return filterFactories
+                            .OrderBy(a => a is IOrderedCommandFilter orderedCommandFilter
+                                                    ? orderedCommandFilter.Order
+                                                    : 0
+                            )
+                            .ToList();
         }
     }
 }
