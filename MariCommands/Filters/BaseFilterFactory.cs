@@ -43,7 +43,7 @@ namespace MariCommands.Filters
         /// <returns>All registered filters as factories for the specified <typeparamref name="TFilter" />.</returns>
         protected virtual IEnumerable<ICommandFilterFactory> GetFilterFactories()
         {
-            var filters = _filters ?? new List<ICommandFilter>();
+            var filters = _filters ?? Array.Empty<ICommandFilter>();
 
             var filterFactories = filters
                                     .Where(a => a is ICommandFilterFactory filterFactory && typeof(TFilter).IsAssignableFrom(filterFactory.ImplementationType))
