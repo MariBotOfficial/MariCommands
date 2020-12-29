@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using MariCommands.Utils;
 using MariGlobals.Extensions;
@@ -10,24 +11,25 @@ namespace MariCommands.Filters
 {
     internal sealed class ResultFilterFactory : BaseFilterFactory<ICommandResultFilter, CommandResultDelegate>
     {
-        private CommandResultDelegate _delegate;
+        private readonly SemaphoreSlim _delegateLock;
 
         public ResultFilterFactory(IOptions<MariCommandsOptions> options) : base(options)
         {
+            _delegateLock = new SemaphoreSlim(1, 1);
         }
 
-        public override CommandResultDelegate GetFiltersDelegate()
+        protected override void BuildDelegate()
         {
-            if (_delegate.HasContent())
-                return _delegate;
+            if (_delegateLock.CurrentCount <= 0)
+            {
+                // if we alreading building the delegate wait until the delegate is ready.
+                _delegateLock.Wait();
+                _delegateLock.Release();
+                return;
+            }
 
-            BuildDelegate();
+            _delegateLock.Wait();
 
-            return _delegate;
-        }
-
-        private void BuildDelegate()
-        {
             var filterFactories = GetFilterFactories();
 
             var components = filterFactories
@@ -60,7 +62,9 @@ namespace MariCommands.Filters
             foreach (var component in components)
                 commandResultDelegate = component(commandResultDelegate);
 
-            _delegate = commandResultDelegate;
+            Delegate = commandResultDelegate;
+
+            _delegateLock.Release();
         }
     }
 }

@@ -21,6 +21,12 @@ namespace MariCommands.Filters
         /// </summary>
         /// <returns>A builded delegate that can process the filter context.</returns>
         Delegate GetFiltersDelegate();
+
+        /// <summary>
+        /// Notify to this factory that the filters collection was changed.
+        /// </summary>
+        /// <param name="filters">The new filters to be used.</param>
+        void FiltersDefinitionWasChanged(IEnumerable<ICommandFilter> filters);
     }
 
     /// <inheritdoc />
