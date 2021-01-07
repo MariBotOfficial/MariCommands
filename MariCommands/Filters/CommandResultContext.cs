@@ -1,3 +1,5 @@
+using MariCommands.Results;
+
 namespace MariCommands.Filters
 {
     /// <summary>
@@ -9,13 +11,18 @@ namespace MariCommands.Filters
         /// Creates a new instance of <see cref="CommandResultContext" />.
         /// </summary>
         /// <param name="commandContext">The current command context.</param>
-        public CommandResultContext(CommandContext commandContext)
+        /// <param name="result">The result of the command.</param>
+        public CommandResultContext(CommandContext commandContext, IResult result)
         {
             CommandContext = commandContext;
+            Result = result;
         }
 
         /// <inheritdoc />
         public virtual CommandContext CommandContext { get; }
+
+        /// <inheritdoc />
+        public virtual IResult Result { get; }
 
         /// <summary>
         /// Gets or sets if the result was cancelled.
