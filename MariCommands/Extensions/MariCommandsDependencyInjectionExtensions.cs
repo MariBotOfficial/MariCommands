@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using MariCommands.Builder;
 using MariCommands.Factories;
+using MariCommands.Filters;
 using MariCommands.Parsers;
 using MariCommands.Providers;
 using MariCommands.TypeParsers;
@@ -10,6 +11,7 @@ using MariGlobals.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace MariCommands.Extensions
 {
@@ -179,6 +181,10 @@ namespace MariCommands.Extensions
 
             services.TryAddSingleton<IContextExecutor, ContextExecutor>();
             services.TryAddSingleton<IModuleCache, ModuleCache>();
+            services.TryAddSingleton(sp =>
+            {
+                return sp.GetRequiredService<IOptions<MariCommandsOptions>>().Value;
+            });
 
             services.TryAddTransient<ICommandApplicationBuilderFactory, CommandApplicationBuilderFactory>();
             services.TryAddTransient<IModuleConfigurer, ModuleConfigurer>();
@@ -191,6 +197,10 @@ namespace MariCommands.Extensions
 
             services.TryAddScoped<ICommandContextAccessor, ScopedCommandContextAccessor>();
 
+            services.Configure<MariCommandsOptions>(options =>
+            {
+                options.Filters.Add(typeof(DisposeFilter), int.MinValue);
+            });
 
             var builder = new MariCommandsOptions();
 

@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using MariGlobals.Extensions;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace MariCommands.Filters
 {
@@ -12,7 +13,7 @@ namespace MariCommands.Filters
         /// <inheritdoc />
         public async Task InvokeAsync(CommandResultContext context, CommandResultDelegate next)
         {
-            var options = context?.CommandContext.CommandServices?.GetService<MariCommandsOptions>();
+            var options = context?.CommandContext.CommandServices?.GetService<IOptions<MariCommandsOptions>>()?.Value;
 
             if (options.HasNoContent() || !options.AutoDisposeContext)
                 return;
