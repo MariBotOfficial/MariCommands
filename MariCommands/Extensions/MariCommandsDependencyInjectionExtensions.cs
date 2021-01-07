@@ -21,6 +21,64 @@ namespace MariCommands.Extensions
     public static class MariCommandsDependencyInjectionExtensions
     {
         /// <summary>
+        /// Add a filter factory to the dependency.
+        /// </summary>
+        /// <remarks>
+        /// If <typeparamref name="TFilterFactory" /> is a generic filter factory (<see cref="IFilterFactory{TFilter, TFilterDelegate}" />)
+        /// use <see cref="AddFilterFactory{TFilterFactory, TFilter, TFilterDelegate}(IServiceCollection)" /> instead this method.
+        /// </remarks>
+        /// <param name="services">The current service collection.</param>
+        /// <typeparam name="TFilterFactory">The filter factory to be injected.</typeparam>
+        /// <returns>The current service collection.</returns>
+        public static IServiceCollection AddFilterFactory<TFilterFactory>(this IServiceCollection services)
+            where TFilterFactory : class, IFilterFactory
+        {
+            return services.AddSingleton<IFilterFactory, TFilterFactory>();
+        }
+
+        /// <summary>
+        /// Add a filter factory of the specified filter type to the dependency.
+        /// </summary>
+        /// <param name="services">The current service collection.</param>
+        /// <typeparam name="TFilterFactory">The filter factory to be injected.</typeparam>
+        /// <typeparam name="TFilter">The type of this filter factory can create delegates.</typeparam>
+        /// <typeparam name="TFilterDelegate">The delegate type of the filter type.</typeparam>
+        /// <returns>The current service collection.</returns>
+        public static IServiceCollection AddFilterFactory<TFilterFactory, TFilter, TFilterDelegate>(this IServiceCollection services)
+            where TFilterFactory : class, IFilterFactory<TFilter, TFilterDelegate>
+            where TFilter : ICommandFilter
+            where TFilterDelegate : Delegate
+        {
+            services.AddSingleton<IFilterFactory<TFilter, TFilterDelegate>, TFilterFactory>();
+            services.AddSingleton<IFilterFactory>(sp =>
+            {
+                return sp.GetRequiredService<IFilterFactory<TFilter, TFilterDelegate>>();
+            });
+
+            return services;
+        }
+
+        /// <summary>
+        /// Add a filter factory of the specified filter type to the dependency if isn't already present
+        /// a filter factory of the specified types.
+        /// </summary>
+        /// <param name="services">The current service collection.</param>
+        /// <typeparam name="TFilterFactory">The filter factory to be injected.</typeparam>
+        /// <typeparam name="TFilter">The type of this filter factory can create delegates.</typeparam>
+        /// <typeparam name="TFilterDelegate">The delegate type of the filter type.</typeparam>
+        /// <returns>The current service collection.</returns>
+        public static IServiceCollection TryAddFilterFactory<TFilterFactory, TFilter, TFilterDelegate>(this IServiceCollection services)
+            where TFilterFactory : class, IFilterFactory<TFilter, TFilterDelegate>
+            where TFilter : ICommandFilter
+            where TFilterDelegate : Delegate
+        {
+            if (services.Any(a => a.ServiceType == typeof(IFilterFactory<TFilter, TFilterDelegate>)))
+                return services;
+
+            return services.AddFilterFactory<TFilterFactory, TFilter, TFilterDelegate>();
+        }
+
+        /// <summary>
         /// Add a type parser to the dependency.
         /// </summary>
         /// <remarks>
@@ -179,12 +237,16 @@ namespace MariCommands.Extensions
             services.AddLogging();
             services.AddOptions<MariCommandsOptions>();
 
+            services.TryAddSingleton<IFilterProvider, FilterProvider>();
             services.TryAddSingleton<IContextExecutor, ContextExecutor>();
             services.TryAddSingleton<IModuleCache, ModuleCache>();
             services.TryAddSingleton(sp =>
             {
                 return sp.GetRequiredService<IOptions<MariCommandsOptions>>().Value;
             });
+
+            services.TryAddFilterFactory<ResultFilterFactory, ICommandResultFilter, CommandResultDelegate>();
+            services.TryAddFilterFactory<ExceptionFilterFactory, ICommandExceptionFilter, CommandExceptionDelegate>();
 
             services.TryAddTransient<ICommandApplicationBuilderFactory, CommandApplicationBuilderFactory>();
             services.TryAddTransient<IModuleConfigurer, ModuleConfigurer>();

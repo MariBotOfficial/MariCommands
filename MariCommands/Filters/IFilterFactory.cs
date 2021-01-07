@@ -28,7 +28,11 @@ namespace MariCommands.Filters
         void FiltersDefinitionWasChanged(IEnumerable<ICommandFilter> filters);
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// A generic factory that can create a delegate for the specified filter type.
+    /// </summary>
+    /// <typeparam name="TFilter">The filter type to be created.</typeparam>
+    /// <typeparam name="TFilterDelegate">The delegate type of the filter type.</typeparam>
     public interface IFilterFactory<TFilter, TFilterDelegate> : IFilterFactory
         where TFilter : ICommandFilter
         where TFilterDelegate : Delegate
