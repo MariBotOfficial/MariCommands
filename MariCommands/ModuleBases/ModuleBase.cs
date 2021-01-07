@@ -23,15 +23,8 @@ namespace MariCommands
             => Task.CompletedTask;
 
         /// <inheritdoc />
-        public virtual async Task OnCommandExecutedAsync()
-        {
-            var options = Context?.CommandServices?.GetService<MariCommandsOptions>();
-
-            if (options.HasNoContent() || !options.AutoDisposeContext)
-                return;
-
-            await Context.DisposeAsync();
-        }
+        public virtual Task OnCommandExecutedAsync()
+            => Task.CompletedTask;
 
         void IModuleBase.SetContext(CommandContext context)
         {
