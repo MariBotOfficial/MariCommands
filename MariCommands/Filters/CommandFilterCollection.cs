@@ -1,5 +1,6 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Runtime.CompilerServices;
 using MariCommands.Utils;
 
 namespace MariCommands.Filters
@@ -145,7 +146,8 @@ namespace MariCommands.Filters
             return filter;
         }
 
-        private void CheckFilterDefinition(Type filterType)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static void CheckFilterDefinition(Type filterType)
         {
             if (!typeof(ICommandFilter).IsAssignableFrom(filterType))
                 throw new ArgumentException($"{nameof(filterType)} must derive from {nameof(ICommandFilter)}", nameof(filterType));
