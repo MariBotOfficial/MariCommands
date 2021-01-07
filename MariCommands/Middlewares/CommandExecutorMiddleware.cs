@@ -13,13 +13,6 @@ namespace MariCommands.Middlewares
 {
     internal sealed class CommandExecutorMiddleware : ICommandMiddleware
     {
-        private readonly IFilterProvider _filterProvider;
-
-        public CommandExecutorMiddleware(IFilterProvider filterProvider)
-        {
-            _filterProvider = filterProvider;
-        }
-
         public async Task InvokeAsync(CommandContext context, CommandDelegate next)
         {
             context.NotNull(nameof(context));
@@ -59,7 +52,9 @@ namespace MariCommands.Middlewares
 
             await module.OnCommandExecutedAsync();
 
-            await _filterProvider.InvokeFiltersAsync<CommandResultContext, ICommandResultFilter>(new CommandResultContext(context, result));
+            var filterProvider = context.CommandServices.GetRequiredService<IFilterProvider>();
+
+            await filterProvider.InvokeFiltersAsync<CommandResultContext, ICommandResultFilter>(new CommandResultContext(context, result));
 
             return result;
         }

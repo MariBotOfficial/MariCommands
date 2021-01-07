@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 using MariCommands.Features;
+using MariCommands.Filters;
 using MariCommands.Results;
 using MariGlobals.Extensions;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace MariCommands.Middlewares
@@ -42,10 +44,10 @@ namespace MariCommands.Middlewares
                 edi = ExceptionDispatchInfo.Capture(ex);
             }
 
-            HandleException(context, edi);
+            await HandleExceptionAsync(context, edi);
         }
 
-        private void HandleException(CommandContext context, ExceptionDispatchInfo edi)
+        private async Task HandleExceptionAsync(CommandContext context, ExceptionDispatchInfo edi)
         {
             _unhandledException(_logger, edi.SourceException);
 
@@ -62,6 +64,10 @@ namespace MariCommands.Middlewares
                 var exceptionHandlerFeature = new ExceptionHandlerFeature(edi.SourceException);
 
                 context.Features.Set<IExceptionHandlerFeature>(exceptionHandlerFeature);
+
+                var filterProvider = context.CommandServices.GetRequiredService<IFilterProvider>();
+
+                await filterProvider.InvokeFiltersAsync<CommandExceptionContext, ICommandExceptionFilter>(new CommandExceptionContext(context, edi));
 
                 return;
             }
