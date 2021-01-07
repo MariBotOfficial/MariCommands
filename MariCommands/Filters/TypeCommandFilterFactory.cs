@@ -16,21 +16,20 @@ namespace MariCommands.Filters
     /// Primarily used in <see cref="M:CommandFilterCollection.Add"/> calls.
     /// </para>
     /// <para>
-    /// Similar to the <see cref="ServiceCommandFilterAttribute"/> in that both use constructor injection. Use
-    /// <see cref="ServiceCommandFilterAttribute"/> instead if the filter is itself a service.
+    /// Similar to the <see cref="ServiceCommandFilterFactory"/> in that both use constructor injection. Use
+    /// <see cref="ServiceCommandFilterFactory"/> instead if the filter is itself a service.
     /// </para>
     /// </remarks>
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
     [DebuggerDisplay("TypeCommandFilter: Type={ServiceType} Order={Order}")]
-    public class TypeCommandFilterAttribute : Attribute, ICommandFilterFactory, IOrderedCommandFilter
+    public class TypeCommandFilterFactory : ICommandFilterFactory, IOrderedCommandFilter
     {
         private ObjectFactory _factory;
 
         /// <summary>
-        /// Creates a new instance of <see cref="TypeCommandFilterAttribute" />.
+        /// Creates a new instance of <see cref="TypeCommandFilterFactory" />.
         /// </summary>
         /// <param name="implementationType">The <see cref="Type" /> of the command filter to find.</param>
-        public TypeCommandFilterAttribute(Type implementationType)
+        public TypeCommandFilterFactory(Type implementationType)
         {
             implementationType.NotNull(nameof(implementationType));
 

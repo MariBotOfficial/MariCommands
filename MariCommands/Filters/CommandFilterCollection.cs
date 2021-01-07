@@ -70,7 +70,7 @@ namespace MariCommands.Filters
 
             CheckFilterDefinition(filterType);
 
-            var filter = new TypeCommandFilterAttribute(filterType) { Order = order };
+            var filter = new TypeCommandFilterFactory(filterType) { Order = order };
 
             base.Add(filter);
 
@@ -138,7 +138,7 @@ namespace MariCommands.Filters
 
             CheckFilterDefinition(filterType);
 
-            var filter = new ServiceCommandFilterAttribute(filterType) { Order = order };
+            var filter = new ServiceCommandFilterFactory(filterType) { Order = order };
 
             base.Add(filter);
 

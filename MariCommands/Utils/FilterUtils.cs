@@ -8,7 +8,7 @@ namespace MariCommands.Utils
     {
         public static async ValueTask SwitchDisposeAsync(object instance, Type factoryType)
         {
-            if (factoryType == typeof(ServiceCommandFilterAttribute))
+            if (factoryType == typeof(ServiceCommandFilterFactory))
                 return;
 
             switch (instance)

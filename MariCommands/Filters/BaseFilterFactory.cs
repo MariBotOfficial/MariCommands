@@ -87,7 +87,7 @@ namespace MariCommands.Filters
 
             var remainingFilterFactories = filters
                                     .Where(a => typeof(TFilter).IsAssignableFrom(a.GetType()))
-                                    .Select(a => new TypeCommandFilterAttribute(a.GetType()))
+                                    .Select(a => new TypeCommandFilterFactory(a.GetType()))
                                     .ToList();
 
             filterFactories.AddRange(remainingFilterFactories);
