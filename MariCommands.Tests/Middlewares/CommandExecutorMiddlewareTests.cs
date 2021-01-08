@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using MariCommands.Executors;
 using MariCommands.Extensions;
 using MariCommands.Features;
+using MariCommands.Filters;
 using MariCommands.Invokers;
 using MariCommands.Results;
 using MariGlobals.Extensions;
@@ -26,6 +27,8 @@ namespace MariCommands.Tests.Middlewares
                 services.AddSingleton<IOptions<MariCommandsOptions>>(config);
             else
                 services.AddOptions<MariCommandsOptions>();
+
+            services.AddSingleton<IFilterProvider, FilterProvider>();
 
             var provider = services.BuildServiceProvider(true);
 
@@ -136,9 +139,10 @@ namespace MariCommands.Tests.Middlewares
         public async Task CanExecuteConcurrent()
         {
             var context = new CommandContext();
-            var config = new MariCommandsOptions();
-
-            config.RunMode = RunMode.Concurrent;
+            var config = new MariCommandsOptions
+            {
+                RunMode = RunMode.Concurrent
+            };
 
             var executor = CreateExecutor();
 

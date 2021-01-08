@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using MariCommands.Builder;
 using MariCommands.Extensions;
 using MariCommands.Features;
+using MariCommands.Filters;
 using MariCommands.Results;
 using MariGlobals.Extensions;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,6 +24,7 @@ namespace MariCommands.Tests.Middlewares
                                     if (onLog.HasContent())
                                         logging.AddProvider(new TestLoggerProvider(onLog));
                                 })
+                                .AddSingleton<IFilterProvider, FilterProvider>()
                                 .BuildServiceProvider(true);
 
             context.ServiceScopeFactory = provider.GetRequiredService<IServiceScopeFactory>();
@@ -39,9 +41,10 @@ namespace MariCommands.Tests.Middlewares
         [Fact]
         public async Task RethrowsIfResultIsSetted()
         {
-            var context = new CommandContext();
-
-            context.Result = new SuccessResult();
+            var context = new CommandContext
+            {
+                Result = new SuccessResult()
+            };
 
             await Assert.ThrowsAsync<InvalidOperationException>(async () =>
             {
