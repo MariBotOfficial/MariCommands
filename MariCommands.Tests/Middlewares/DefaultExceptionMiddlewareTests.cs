@@ -16,16 +16,28 @@ namespace MariCommands.Tests.Middlewares
 {
     public class DefaultExceptionMiddlewareTests
     {
-        private async Task ExecuteMiddlewareAsync(CommandContext context, OnLog onLog = null)
+        private async Task ExecuteMiddlewareAsync(CommandContext context, OnLog onLog = null, bool addFilter = false)
         {
-            var provider = new ServiceCollection()
+            var services = new ServiceCollection()
                                 .AddLogging(logging =>
                                 {
                                     if (onLog.HasContent())
                                         logging.AddProvider(new TestLoggerProvider(onLog));
                                 })
-                                .AddSingleton<IFilterProvider, FilterProvider>()
-                                .BuildServiceProvider(true);
+                                .AddSingleton<IFilterProvider, FilterProvider>();
+
+            if (addFilter)
+            {
+                services.AddFilterFactory<ExceptionFilterFactory, ICommandExceptionFilter, CommandExceptionDelegate>();
+                services.AddSingleton<SingletonDependency>();
+                services.AddOptions<MariCommandsOptions>();
+                services.Configure<MariCommandsOptions>(options =>
+                {
+                    options.Filters.Add(typeof(TestExceptionFilter));
+                });
+            }
+
+            var provider = services.BuildServiceProvider(true);
 
             context.ServiceScopeFactory = provider.GetRequiredService<IServiceScopeFactory>();
 
@@ -205,7 +217,7 @@ namespace MariCommands.Tests.Middlewares
 
             var context = new CommandContext();
 
-            OnLog onLog = (logLevel, eventId, exception, message) =>
+            void onLog(LogLevel logLevel, EventId eventId, Exception exception, string message)
             {
                 if (logLevel == LogLevel.Error)
                 {
@@ -227,7 +239,7 @@ namespace MariCommands.Tests.Middlewares
 
                 if (isFailed)
                     failed = true;
-            };
+            }
 
             await Assert.ThrowsAsync<InvalidOperationException>(async () =>
             {
@@ -235,6 +247,40 @@ namespace MariCommands.Tests.Middlewares
             });
 
             Assert.True(failed);
+        }
+
+        [Fact]
+        public async Task InvokeExceptionFiltersWhenExceptionHandled()
+        {
+            // Act
+            await using var context = new CommandContext();
+
+            await ExecuteMiddlewareAsync(context, null, true);
+
+            var singletonDependency = context.CommandServices.GetRequiredService<SingletonDependency>();
+
+            Assert.True(singletonDependency.Invoked);
+        }
+
+        private class TestExceptionFilter : ICommandExceptionFilter
+        {
+            private readonly SingletonDependency _singletonDependency;
+
+            public TestExceptionFilter(SingletonDependency singletonDependency)
+            {
+                _singletonDependency = singletonDependency;
+            }
+
+            public Task InvokeAsync(CommandExceptionContext context, CommandExceptionDelegate next)
+            {
+                _singletonDependency.Invoked = true;
+                return next(context);
+            }
+        }
+
+        private class SingletonDependency
+        {
+            public bool Invoked { get; set; }
         }
     }
 
