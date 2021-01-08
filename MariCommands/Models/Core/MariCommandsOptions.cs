@@ -1,4 +1,5 @@
 using System;
+using MariCommands.Filters;
 using Microsoft.Extensions.Options;
 
 namespace MariCommands
@@ -8,6 +9,11 @@ namespace MariCommands
     /// </summary>
     public class MariCommandsOptions : IOptions<MariCommandsOptions>
     {
+        /// <summary>
+        /// Gets a collection of all global filters for this app.
+        /// </summary>
+        public CommandFilterCollection Filters { get; } = new CommandFilterCollection();
+
         /// <summary>
         /// Gets or sets the default runmode for commands.
         /// </summary>

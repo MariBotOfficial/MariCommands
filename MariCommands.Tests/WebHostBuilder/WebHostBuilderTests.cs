@@ -7,9 +7,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using System.Linq.Expressions;
+using System.Linq;
 
 namespace MariCommands.Tests.WebHostBuilder
 {
+    public delegate Task TestDelegate(string obj);
+
     public class WebHostBuilderTests
     {
         public WebHostBuilderTests()
@@ -20,6 +24,17 @@ namespace MariCommands.Tests.WebHostBuilder
         [Fact]
         public void TwoStartupsThrowsException()
         {
+            TestDelegate test = obj => Task.CompletedTask;
+
+            var contextParameter = Expression.Parameter(typeof(object));
+            var instanceCast = Expression.Convert(contextParameter, test.Method.GetParameters().First().ParameterType);
+            var callExpression = Expression.Call(Expression.Constant(test.Target), test.Method, instanceCast);
+
+            var lambda = Expression.Lambda<Func<object, Task>>(callExpression, contextParameter);
+            var buildedDelegate = lambda.Compile();
+
+            buildedDelegate("AISDHJDUASH").GetAwaiter().GetResult();
+
             MariCommandsHostBuilderExtensions.Clear();
 
             var builder = Host.CreateDefaultBuilder();

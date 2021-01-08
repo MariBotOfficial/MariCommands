@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using MariCommands.Features;
+using MariCommands.Filters;
 using MariCommands.Results;
 using MariCommands.Utils;
 using MariGlobals.Extensions;
@@ -33,17 +34,17 @@ namespace MariCommands.Middlewares
 
             if (runMode == RunMode.Sequential)
             {
-                result = await ExecuteSequentialAsync(command, module, args);
+                result = await ExecuteSequentialAsync(context, command, module, args);
             }
             else
             {
-                result = ExecuteConcurrent(command, module, args);
+                result = ExecuteConcurrent(context, command, module, args);
             }
 
             context.Result = result;
         }
 
-        private async Task<IResult> ExecuteSequentialAsync(ICommand command, IModuleBase module, object[] args)
+        private async Task<IResult> ExecuteSequentialAsync(CommandContext context, ICommand command, IModuleBase module, object[] args)
         {
             await module.OnCommandExecutingAsync();
 
@@ -51,16 +52,20 @@ namespace MariCommands.Middlewares
 
             await module.OnCommandExecutedAsync();
 
+            var filterProvider = context.CommandServices.GetRequiredService<IFilterProvider>();
+
+            await filterProvider.InvokeFiltersAsync<CommandResultContext, ICommandResultFilter>(new CommandResultContext(context, result));
+
             return result;
         }
 
-        private IResult ExecuteConcurrent(ICommand command, IModuleBase module, object[] args)
+        private IResult ExecuteConcurrent(CommandContext context, ICommand command, IModuleBase module, object[] args)
         {
             var tsc = new TaskCompletionSource<IResult>();
 
             _ = Task.Run(() =>
             {
-                return ExecuteSequentialAsync(command, module, args);
+                return ExecuteSequentialAsync(context, command, module, args);
             }).ContinueWith(async task =>
             {
                 IResult result = null;
