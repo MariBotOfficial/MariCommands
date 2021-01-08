@@ -20,7 +20,7 @@ namespace MariCommands.Filters
     /// <see cref="ServiceCommandFilterFactory"/> instead if the filter is itself a service.
     /// </para>
     /// </remarks>
-    [DebuggerDisplay("TypeCommandFilter: Type={ServiceType} Order={Order}")]
+    [DebuggerDisplay("TypeCommandFilter: Type={ImplementationType} Order={Order}")]
     public class TypeCommandFilterFactory : ICommandFilterFactory, IOrderedCommandFilter
     {
         private ObjectFactory _factory;
