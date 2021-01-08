@@ -18,20 +18,5 @@ namespace MariCommands.Extensions
         {
             return parameterInfo.GetCustomAttribute(typeof(T)) as T;
         }
-
-        public static IEnumerable<Attribute> GetAllAttributes(this MemberInfo memberInfo)
-        {
-            return memberInfo.GetCustomAttributes(true)
-                                .Select(a => (Attribute)a)
-                                .OrderBy(a => ((Type)a.TypeId).MetadataToken)
-                                .ToList();
-        }
-
-        public static IEnumerable<Attribute> GetAllAttributes(this ParameterInfo memberInfo)
-        {
-            return memberInfo.GetCustomAttributes(true)
-                                .Select(a => (Attribute)a)
-                                .ToList();
-        }
     }
 }

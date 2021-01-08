@@ -151,7 +151,7 @@ namespace MariCommands.Factories
 
         private IEnumerable<Attribute> GetAttributes(MethodInfo methodInfo)
         {
-            return methodInfo.GetAllAttributes();
+            return methodInfo.GetCustomAttributes();
         }
 
         private IEnumerable<string> GetAlias(MethodInfo methodInfo)

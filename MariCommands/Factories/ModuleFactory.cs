@@ -131,7 +131,7 @@ namespace MariCommands.Factories
 
         private IEnumerable<Attribute> GetAttributes(Type type)
         {
-            return type.GetAllAttributes();
+            return type.GetCustomAttributes();
         }
 
         private IEnumerable<string> GetAlias(Type type)

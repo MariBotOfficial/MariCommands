@@ -65,7 +65,7 @@ namespace MariCommands.Factories
 
         private IEnumerable<Attribute> GetAttributes(ParameterInfo parameterInfo)
         {
-            return parameterInfo.GetAllAttributes();
+            return parameterInfo.GetCustomAttributes();
         }
 
         private Type GetTypeParserType(ParameterInfo parameterInfo)
