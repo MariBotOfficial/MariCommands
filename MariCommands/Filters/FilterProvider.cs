@@ -75,7 +75,6 @@ namespace MariCommands.Filters
                     if (filterFactory.CanInvoke(type))
                     {
                         filterFactory.FiltersDefinitionWasChanged(_options.Filters);
-                        break;
                     }
                 }
             }
@@ -146,7 +145,7 @@ namespace MariCommands.Filters
             if (!filterDelegate.Method.GetParameters().Any())
                 ThrowInvalidDelegate(filterFactory, $"the process delegate should contains at least one parameter.");
 
-            if (!typeof(IFilterFactory).IsAssignableFrom(filterDelegate.Method.GetParameters().First().ParameterType))
+            if (!typeof(IFilterContext).IsAssignableFrom(filterDelegate.Method.GetParameters().First().ParameterType))
                 ThrowInvalidDelegate(filterFactory, $"the process delegate parameter should implements '{nameof(IFilterContext)}'.");
         }
 
