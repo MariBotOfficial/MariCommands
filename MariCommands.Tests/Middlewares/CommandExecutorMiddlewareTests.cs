@@ -17,7 +17,7 @@ namespace MariCommands.Tests.Middlewares
 {
     public class CommandExecutorMiddlewareTests
     {
-        private async Task ExecuteMiddlewareAsync(CommandContext context, MariCommandsOptions config = null)
+        private async Task ExecuteMiddlewareAsync(CommandContext context, MariCommandsOptions config = null, bool addFilter = false)
         {
             var services = new ServiceCollection();
 
@@ -29,6 +29,12 @@ namespace MariCommands.Tests.Middlewares
                 services.AddOptions<MariCommandsOptions>();
 
             services.AddSingleton<IFilterProvider, FilterProvider>();
+
+            if (addFilter)
+            {
+                services.AddFilterFactory<ResultFilterFactory, ICommandResultFilter, CommandResultDelegate>();
+                services.AddSingleton<SingletonDependency>();
+            }
 
             var provider = services.BuildServiceProvider(true);
 
@@ -181,9 +187,10 @@ namespace MariCommands.Tests.Middlewares
         public async Task ChooseHigherPriorityFromMatches()
         {
             var context = new CommandContext();
-            var config = new MariCommandsOptions();
-
-            config.AutoDisposeContext = false;
+            var config = new MariCommandsOptions
+            {
+                AutoDisposeContext = false
+            };
 
             var alias = "testAlias";
             var executor = CreateExecutor();
@@ -255,6 +262,68 @@ namespace MariCommands.Tests.Middlewares
             Assert.Equal(command1, context.Command);
             Assert.Equal(args, context.Args);
             Assert.Equal(alias, context.Alias);
+        }
+
+        [Fact]
+        public async Task InvokeResultFiltersWhenExecuted()
+        {
+            // Act
+            await using var context = new CommandContext();
+
+            var config = new MariCommandsOptions();
+
+            config.Filters.Add(typeof(TestResultFilter));
+
+            var executor = CreateExecutor();
+
+            var commandMock = new Mock<ICommand>();
+
+            commandMock.SetupGet(a => a.Module.Type).Returns(typeof(TestModuleClassExecutor));
+            commandMock.SetupGet(a => a.Module.Invoker).Returns(DefaultModuleInvoker.Create(typeof(TestModuleClassExecutor)));
+            commandMock.Setup(a => a.GetRunMode(config)).Returns(RunMode.Sequential);
+            commandMock.SetupGet(a => a.Executor).Returns(executor);
+
+            var command = commandMock.Object;
+            var args = new object[0];
+
+            context.Command = command;
+            context.Args = args;
+
+            // Arrange
+            await ExecuteMiddlewareAsync(context, config, true);
+
+            var singletonDependency = context.CommandServices.GetRequiredService<SingletonDependency>();
+
+            // Assert
+            Assert.NotNull(context.Result);
+            Assert.True(context.Result.Success);
+            Assert.IsType<SuccessResult>(context.Result);
+            Assert.NotNull(context.Command);
+            Assert.Equal(command, context.Command);
+            Assert.NotNull(context.Args);
+            Assert.Equal(args, context.Args);
+            Assert.True(singletonDependency.Invoked);
+        }
+
+        private class TestResultFilter : ICommandResultFilter
+        {
+            private readonly SingletonDependency _singletonDependency;
+
+            public TestResultFilter(SingletonDependency singletonDependency)
+            {
+                _singletonDependency = singletonDependency;
+            }
+
+            public Task InvokeAsync(CommandResultContext context, CommandResultDelegate next)
+            {
+                _singletonDependency.Invoked = true;
+                return next(context);
+            }
+        }
+
+        private class SingletonDependency
+        {
+            public bool Invoked { get; set; }
         }
     }
 
